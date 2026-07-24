@@ -1,0 +1,339 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts Schemas API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Schemas
+paths:
+  /v1/schemas/{entity}:
+    get:
+      tags:
+      - Schemas
+      summary: Get Field Schemas for an Entity
+      description: 'Lists fields for `entity`, which must be one of `accounts`, `contacts`, `meetings`, `opportunities`, `sequences`, or `tasks`.
+
+
+        Use each entry''s `key` in `filters[].field` and `sort` on the corresponding list endpoint. The `allowed_operators` array lists the valid values for `filters[].condition` on that field.
+
+
+        Custom fields use `custom_field_{uuid}` keys. Enum and select fields expose their accepted values under `enum_field_settings.allowed_values`, and callers must pass the `key` rather than the display value.
+
+
+        For `date` and `datetime` fields the `allowed_values` are semantic periods used with the `is` operator. The `equals`, `greater_than`, and `less_than` operators take raw `YYYY-MM-DD` values instead.'
+      operationId: get_field_schemas_for_entity
+      parameters:
+      - name: entity
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entity
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_list_FieldSchemaResponse__'
+              example:
+                data:
+                - name: Name
+                  key: name
+                  type: string
+                  filterable: true
+                  sortable: true
+                  allowed_operators:
+                  - contains
+                  - not_contains
+                  - is
+                  - is_not
+                  - is_empty
+                  - is_not_empty
+                - name: Status
+                  key: status
+                  type: enum
+                  filterable: true
+                  sortable: true
+                  allowed_operators:
+                  - is
+                  - is_not
+                  - is_empty
+                  - is_not_empty
+                  enum_field_settings:
+                    allowed_values:
+                    - key: NEW
+                      display_value: New
+                    - key: PROSPECTING
+                      display_value: Prospecting
+                    - key: ENGAGED
+                      display_value: Engaged
+                    - key: CUSTOMER
+                      display_value: Customer
+                - name: Owner
+                  key: owner
+                  type: uuid
+                  filterable: true
+                  sortable: false
+                  allowed_operators:
+                  - is
+                  - is_not
+                  - is_empty
+                  - is_not_empty
+                  enum_field_settings:
+                    allowed_values:
+                    - key: usr_abc123
+                      display_value: Jane Smith
+                    - key: usr_def456
+                      display_value: John Doe
+                - name: Employee Count
+                  key: employee_count
+                  type: number
+                  parent: company
+                  filterable: true
+                  sortable: true
+                  allowed_operators:
+                  - equals
+                  - greater_than
+                  - less_than
+                  - is_empty
+                  - is_not_empty
+                - name: Last Funding Date
+                  key: last_funding_date
+                  type: date
+                  parent: company
+                  filterable: true
+                  sortable: true
+                  allowed_operators:
+                  - is
+                  - equals
+                  - greater_than
+                  - less_than
+                  - is_empty
+                  - is_not_empty
+                  enum_field_settings:
+                    allowed_values:
+                    - key: previous_week
+                      display_value: Previous week
+                    - key: previous_month
+                      display_value: Previous month
+                    - key: previous_quarter
+                      display_value: Previous quarter
+                - name: Customer Fit
+                  key: custom_field_550e8400-e29b-41d4-a716-446655440001
+                  type: enum
+                  filterable: true
+                  sortable: true
+                  allowed_operators:
+                  - is
+                  - is_not
+                  - is_empty
+                  - is_not_empty
+                  custom_field_settings:
+                    id: 550e8400-e29b-41d4-a716-446655440001
+                    is_ai_auto_filled: false
+                  enum_field_settings:
+                    allowed_values:
+                    - key: high
+                      display_value: High
+                    - key: medium
+                      display_value: Medium
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    FieldSchemaResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Display name of the field
+          examples:
+          - Account Status
+        key:
+          type: string
+          title: Key
+          description: Internal key used for filtering and sorting
+          examples:
+          - status
+        type:
+          type: string
+          enum:
+          - string
+          - number
+          - time
+          - boolean
+          - enum
+          - array
+          - date
+          - datetime
+          - text
+          - uuid
+          - object
+          title: Type
+          description: Data type of the field
+          examples:
+          - enum
+        parent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent
+          description: The key of the parent object field this field belongs to. For example, 'employee_count' has parent 'company'. Top-level fields have no parent.
+          examples:
+          - company
+        filterable:
+          type: boolean
+          title: Filterable
+          description: Whether this field can be used in filter rules on list endpoints
+          examples:
+          - true
+        sortable:
+          type: boolean
+          title: Sortable
+          description: Whether this field can be used for sorting on list endpoints
+          examples:
+          - true
+        allowed_operators:
+          items:
+            type: string
+          type: array
+          title: Allowed Operators
+          description: Operators that can be used to filter this field
+          examples:
+          - - is
+            - is_not
+            - is_empty
+            - is_not_empty
+        custom_field_settings:
+          anyOf:
+          - $ref: '#/components/schemas/CustomFieldSettings'
+          - type: 'null'
+          description: Settings for custom fields. Only present if this is a custom field.
+        enum_field_settings:
+          anyOf:
+          - $ref: '#/components/schemas/EnumFieldSettings'
+          - type: 'null'
+          description: Settings for enum/select fields. Only present if this field has enum values. For date and datetime fields, these are semantic period values (e.g. 'previous_week') used with the 'is' operator. Other operators like 'equals' and 'greater_than' accept actual date values (YYYY-MM-DD) instead.
+      type: object
+      required:
+      - name
+      - key
+      - type
+      - filterable
+      - sortable
+      - allowed_operators
+      title: FieldSchemaResponse
+    CustomFieldSettings:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier of the custom field schema
+          examples:
+          - cf_abc123
+        is_ai_auto_filled:
+          type: boolean
+          title: Is Ai Auto Filled
+          description: Whether this custom field is automatically populated by AI
+          examples:
+          - false
+      type: object
+      required:
+      - id
+      - is_ai_auto_filled
+      title: CustomFieldSettings
+      description: Settings present only for custom fields.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    EnumFieldSettings:
+      properties:
+        allowed_values:
+          items:
+            $ref: '#/components/schemas/EnumValueOption'
+          type: array
+          title: Allowed Values
+          description: The list of valid values that can be used in filters
+          examples:
+          - - display_value: Active
+              key: active
+      type: object
+      required:
+      - allowed_values
+      title: EnumFieldSettings
+      description: Settings present only for enum/select fields.
+    PublicItemResponse_list_FieldSchemaResponse__:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/FieldSchemaResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[list[FieldSchemaResponse]]
+    EnumValueOption:
+      properties:
+        key:
+          type: string
+          title: Key
+          description: The value to use in filter rules
+          examples:
+          - usr_abc123
+        display_value:
+          type: string
+          title: Display Value
+          description: Human-readable label for the value
+          examples:
+          - Jane Smith
+      type: object
+      required:
+      - key
+      - display_value
+      title: EnumValueOption
+      description: A single allowed value for an enum field.
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail

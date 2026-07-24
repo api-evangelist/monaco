@@ -1,0 +1,939 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts Contacts API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Contacts
+paths:
+  /v1/contacts/list:
+    post:
+      tags:
+      - Contacts
+      summary: List Contacts
+      description: Returns a paginated list of contacts.
+      operationId: list_contacts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicListResponse_ContactResponse_'
+              example:
+                data:
+                - id: con_abc123
+                  account_id: acc_def456
+                  first_name: Jane
+                  last_name: Smith
+                  email: jane@acme.com
+                  title: VP of Engineering
+                  phone_number: +1-555-123-4567
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  location: San Francisco, CA
+                  source: api
+                  do_not_contact: false
+                  notes: Met at SaaStr 2025
+                  scoring:
+                    heat_score: Hot
+                  tags:
+                  - Decision Maker
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-16T10:30:00Z'
+                  custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d: buyer
+                  custom_field_2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e: '2026-04-18'
+                pagination:
+                  page: 1
+                  page_size: 50
+                  total_count: 87
+                  total_pages: 2
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/contacts/:
+    put:
+      tags:
+      - Contacts
+      summary: Upsert a Contact
+      description: 'Creates a new contact or updates an existing one.
+
+
+        **Identifiers** — either `email` or `linkedin_url` **must** be provided. If only `linkedin_url` is supplied, you must also provide `account_id` or `domain` so the contact can be associated with an account.
+
+
+        **Duplicate resolution** — the request is matched against existing contacts in the org in this order: (1) exact match on `email` (case-insensitive), then (2) exact match on `linkedin_url`. If a match is found, that contact is updated in place with the provided fields and returned; otherwise a new contact is created. Unlike `POST /contacts`, no 409 is raised on a duplicate identifier — the existing record is updated instead.
+
+
+        **Account resolution priority** — when creating a new contact, Monaco resolves the contact''s account in this order:
+
+        1. `account_id` (if provided)
+
+        2. `domain` (if provided)
+
+        3. the domain parsed from `email`
+
+
+        **Enrichment** — when this call creates a new contact (no existing match), Monaco synchronously enriches the contact and, if needed, resolves or creates the associated account. This can make those requests take several seconds to complete; clients should use generous timeouts (10s+) and avoid issuing upserts on hot paths.
+
+
+        Any `tags` list provided is **appended** to the existing tags on the contact.'
+      operationId: upsert_contact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactCreateRequest'
+            examples:
+              complete:
+                summary: Upsert contact with every field
+                value:
+                  email: jane@acme.com
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  first_name: Jane
+                  last_name: Smith
+                  title: VP of Engineering
+                  phone_number: +1-555-123-4567
+                  location: San Francisco, CA
+                  account_id: 550e8400-e29b-41d4-a716-446655440000
+                  domain: acme.com
+                  do_not_contact: false
+                  tags:
+                  - 550e8400-e29b-41d4-a716-446655440001
+                  custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d: economic_buyer
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_ContactResponse_'
+              example:
+                data:
+                  id: con_abc123
+                  account_id: acc_def456
+                  first_name: Jane
+                  last_name: Smith
+                  email: jane@acme.com
+                  title: VP of Engineering
+                  phone_number: +1-555-123-4567
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  location: San Francisco, CA
+                  source: api
+                  do_not_contact: false
+                  notes: Met at SaaStr 2025
+                  scoring:
+                    heat_score: Hot
+                  tags:
+                  - Decision Maker
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2026-04-21T12:00:00Z'
+                  custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d: economic_buyer
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    post:
+      tags:
+      - Contacts
+      summary: Create a Contact
+      description: 'Creates a new contact.
+
+
+        **Identifiers** — either `email` or `linkedin_url` **must** be provided. If only `linkedin_url` is supplied, you must also provide `account_id` or `domain` so the contact can be associated with an account.
+
+
+        **Account resolution priority** — Monaco resolves the contact''s account in this order:
+
+        1. `account_id` (if provided)
+
+        2. `domain` (if provided)
+
+        3. the domain parsed from `email`
+
+
+        **Enrichment** — on creation, Monaco synchronously enriches the contact (name, title, company association, etc.) and, if needed, resolves or creates the associated account. This can make create requests take several seconds to complete; clients should use generous timeouts (10s+) and avoid issuing creates on hot paths.'
+      operationId: create_contact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactCreateRequest'
+            examples:
+              complete:
+                summary: Create contact with every field
+                value:
+                  email: jane@acme.com
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  first_name: Jane
+                  last_name: Smith
+                  title: VP of Engineering
+                  phone_number: +1-555-123-4567
+                  location: San Francisco, CA
+                  account_id: 550e8400-e29b-41d4-a716-446655440000
+                  domain: acme.com
+                  do_not_contact: false
+                  tags:
+                  - 550e8400-e29b-41d4-a716-446655440001
+                  custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d: economic_buyer
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_ContactResponse_'
+              example:
+                data:
+                  id: con_abc123
+                  account_id: acc_def456
+                  first_name: Jane
+                  last_name: Smith
+                  email: jane@acme.com
+                  title: VP of Engineering
+                  phone_number: +1-555-123-4567
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  location: San Francisco, CA
+                  source: api
+                  do_not_contact: false
+                  notes: Met at SaaStr 2025
+                  scoring:
+                    heat_score: Hot
+                  tags: []
+                  created_at: '2026-04-21T12:00:00Z'
+                  updated_at: '2026-04-21T12:00:00Z'
+                  custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d: economic_buyer
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/contacts/{contact_id}:
+    patch:
+      tags:
+      - Contacts
+      summary: Update a Contact
+      description: Updates an existing contact by its `contact_id`. Any `tags` list provided **replaces** the existing tags on the contact.
+      operationId: update_contact
+      parameters:
+      - name: contact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Contact Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_ContactResponse_'
+              example:
+                data:
+                  id: con_abc123
+                  account_id: acc_def456
+                  first_name: Jane
+                  last_name: Smith
+                  email: jane@acme.com
+                  title: VP of Engineering
+                  phone_number: +1-555-123-4567
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  location: San Francisco, CA
+                  source: api
+                  notes: Met at SaaStr 2025
+                  do_not_contact: false
+                  scoring:
+                    heat_score: Hot
+                  tags:
+                  - Decision Maker
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2026-04-21T12:00:00Z'
+                  custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d: economic_buyer
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    get:
+      tags:
+      - Contacts
+      summary: Get a Contact
+      description: Gets a single contact by its `contact_id`. The detail response includes scoring, source attribution, and custom fields.
+      operationId: get_contact
+      parameters:
+      - name: contact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Contact Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_ContactResponse_'
+              example:
+                data:
+                  id: con_abc123
+                  account_id: acc_def456
+                  first_name: Jane
+                  last_name: Smith
+                  email: jane@acme.com
+                  title: VP of Engineering
+                  phone_number: +1-555-123-4567
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  location: San Francisco, CA
+                  source: linkedin
+                  do_not_contact: false
+                  notes: Met at SaaStr 2025
+                  scoring:
+                    heat_score: Hot
+                  tags:
+                  - Interested
+                  - Decision Maker
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-16T10:30:00Z'
+                  custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d: economic_buyer
+                  custom_field_2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e: '2026-04-18'
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    delete:
+      tags:
+      - Contacts
+      summary: Delete a Contact
+      description: Deletes a contact by its `contact_id`. Returns 204 No Content on success. This is irreversible.
+      operationId: delete_contact
+      parameters:
+      - name: contact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Contact Id
+      responses:
+        '204':
+          description: Contact deleted
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    ContactResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the contact
+          examples:
+          - con_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_def456
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact
+          examples:
+          - jane@acme.com
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-555-123-4567
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL
+          examples:
+          - https://linkedin.com/in/janesmith
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: Source from which the contact was added
+          examples:
+          - linkedin
+        do_not_contact:
+          type: boolean
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+          default: false
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the contact
+          examples:
+          - Met at SaaStr 2025
+        scoring:
+          anyOf:
+          - $ref: '#/components/schemas/api__public_api__schemas__contacts__ScoringInfo'
+          - type: 'null'
+          description: Contact scoring information
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: List of tag names associated with the contact
+          examples:
+          - - Interested
+            - Decision Maker
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the contact was created
+          examples:
+          - '2025-06-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the contact was last updated
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Activity At
+          description: Date and time of the contact's most recent activity (inbound or outbound)
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Activity Type
+          description: Type of the contact's most recent activity
+          examples:
+          - outbound_email
+        last_outbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Outbound At
+          description: Date and time of the most recent outbound interaction with the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_outbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Outbound Type
+          description: Type of the most recent outbound interaction with the contact
+          examples:
+          - email
+        last_inbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Inbound At
+          description: Date and time of the most recent inbound interaction from the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_inbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Inbound Type
+          description: Type of the most recent inbound interaction from the contact
+          examples:
+          - email
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      title: ContactResponse
+      description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
+    PublicListResponse_ContactResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ContactResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[ContactResponse]
+    api__public_api__schemas__contacts__ScoringInfo:
+      properties:
+        heat_score:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Heat Score
+          description: Heat score tier
+          examples:
+          - Hot
+      type: object
+      title: ScoringInfo
+    ContactListRequest:
+      properties:
+        filters:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: contains
+              field: name
+              value: Acme
+            - condition: is
+              field: status
+              value: active
+          - filters:
+            - condition: is
+              field: status
+              value: active
+            - filters:
+              - condition: contains
+                field: name
+                value: Acme
+              - condition: greater_than
+                field: created_at
+                value: '2026-01-01'
+            operator: or
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+        include_custom_fields:
+          type: boolean
+          title: Include Custom Fields
+          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned contact. Defaults to true. Set false to omit them for leaner responses; GET /v1/contacts/{contact_id} always returns them.
+          default: true
+      type: object
+      title: ContactListRequest
+    PublicItemResponse_ContactResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ContactResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[ContactResponse]
+    ContactCreateRequest:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact. Either email or linkedin_url is required.
+          examples:
+          - jane@acme.com
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL. Either email or linkedin_url is required.
+          examples:
+          - https://linkedin.com/in/janesmith
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-555-123-4567
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        account_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Account Id
+          description: ID of the account to associate the contact with
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+          description: Domain of the contact's company (used for account resolution)
+          examples:
+          - acme.com
+        do_not_contact:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: List of tag IDs to associate with the contact
+      additionalProperties: true
+      type: object
+      title: ContactCreateRequest
+      description: 'Request body for creating a contact via POST or upserting via PUT.
+
+
+        Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
+    ContactUpdateRequest:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact
+          examples:
+          - jane@acme.com
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-555-123-4567
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL
+          examples:
+          - https://linkedin.com/in/janesmith
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the contact
+          examples:
+          - Met at SaaStr 2025
+        do_not_contact:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: Tags for the contact
+      additionalProperties: true
+      type: object
+      title: ContactUpdateRequest
+      description: Request body for updating a contact via PATCH.
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'

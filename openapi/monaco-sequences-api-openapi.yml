@@ -1,0 +1,821 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts Sequences API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Sequences
+paths:
+  /v1/sequences/list:
+    post:
+      tags:
+      - Sequences
+      summary: List Sequences
+      description: Returns a paginated list of sequences.
+      operationId: list_sequences
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicListResponse_SequenceResponse_'
+              example:
+                data:
+                - id: seq_abc123
+                  contact_id: con_def456
+                  name: Enterprise Onboarding
+                  description: Multi-touch onboarding sequence for enterprise accounts
+                  status: started
+                  template_id: seqt_789ghi
+                  created_at: '2026-01-15T10:30:00Z'
+                  updated_at: '2026-05-10T14:22:00Z'
+                  last_interaction: Email today
+                  enqueued_at: '2026-01-16T09:00:00Z'
+                  started_at: '2026-01-16T09:05:00Z'
+                  responded_at: '2026-01-20T11:30:00Z'
+                  meeting_booked_at: '2026-01-22T15:00:00Z'
+                  sender_id: usr_jkl012
+                  sender_name: Alex Rivera
+                pagination:
+                  page: 1
+                  page_size: 50
+                  total_count: 142
+                  total_pages: 3
+                meta:
+                  timestamp: '2026-05-11T17:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/sequences/{sequence_id}:
+    get:
+      tags:
+      - Sequences
+      summary: Get a Sequence
+      description: Gets a single sequence by its `sequence_id`. The detail response includes the sequence's ordered list of tasks.
+      operationId: get_sequence
+      parameters:
+      - name: sequence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sequence Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_SequenceDetailResponse_'
+              example:
+                data:
+                  id: seq_abc123
+                  contact_id: con_def456
+                  name: Enterprise Onboarding
+                  description: Multi-touch onboarding sequence for enterprise accounts
+                  status: started
+                  template_id: seqt_789ghi
+                  created_at: '2026-01-15T10:30:00Z'
+                  updated_at: '2026-05-10T14:22:00Z'
+                  tasks:
+                  - id: tsk_abc123
+                    sequence_id: seq_abc123
+                    order: 1
+                    name: Send linkedin connection request
+                    type: auto_linkedin_connection
+                    status: completed
+                    scheduled_at: '2025-10-14T23:36:09+00:00'
+                    completed_at: '2025-10-13T22:40:17.862589+00:00'
+                    task_body: <p>Some message</p>
+                    outcome: accepted
+                meta:
+                  timestamp: '2026-05-11T17:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    patch:
+      tags:
+      - Sequences
+      summary: Update a Sequence
+      description: Applies a state transition to a sequence (see the `action` field for valid values and their meanings). Returns the refreshed sequence representation, including its tasks.
+      operationId: update_sequence
+      parameters:
+      - name: sequence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sequence Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSequenceRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_SequenceDetailResponse_'
+              example:
+                data:
+                  id: seq_abc123
+                  contact_id: con_def456
+                  name: Enterprise Onboarding
+                  description: Multi-touch onboarding sequence for enterprise accounts
+                  status: started
+                  template_id: seqt_789ghi
+                  created_at: '2026-05-18T10:30:00Z'
+                  updated_at: '2026-05-18T10:35:00Z'
+                  tasks: []
+                meta:
+                  timestamp: '2026-05-18T10:35:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+        '404':
+          description: Sequence not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+        '409':
+          description: Invalid state transition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    PublicListResponse_SequenceResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/SequenceResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[SequenceResponse]
+    SequenceResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the sequence
+          examples:
+          - seq_abc123
+        contact_id:
+          type: string
+          title: Contact Id
+          description: ID of the contact this sequence is associated with
+          examples:
+          - con_def456
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Name of the sequence
+          examples:
+          - Enterprise Onboarding
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Description of the sequence
+          examples:
+          - Multi-touch onboarding sequence for enterprise accounts
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Current status of the sequence.
+          examples:
+          - started
+        template_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Template Id
+          description: ID of the sequence template this sequence was created from
+          examples:
+          - seqt_789ghi
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the sequence was created
+          examples:
+          - '2026-01-15T10:30:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: Date and time the sequence was last updated
+          examples:
+          - '2026-05-10T14:22:00Z'
+        last_interaction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Interaction
+          description: Human-readable summary of the most recent interaction on this sequence (e.g. "Email today", "No interactions yet").
+          examples:
+          - Email today
+        enqueued_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Enqueued At
+          description: Date and time the sequence was enqueued
+          examples:
+          - '2026-01-16T09:00:00Z'
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+          description: Date and time the sequence was started
+          examples:
+          - '2026-01-16T09:05:00Z'
+        responded_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Responded At
+          description: Date and time the contact responded on this sequence
+          examples:
+          - '2026-01-20T11:30:00Z'
+        meeting_booked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Meeting Booked At
+          description: Date and time a meeting was booked off this sequence
+          examples:
+          - '2026-01-22T15:00:00Z'
+        sender_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Id
+          description: ID of the user sending this sequence
+          examples:
+          - usr_jkl012
+        sender_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Name
+          description: Full name of the user sending this sequence
+          examples:
+          - Alex Rivera
+      type: object
+      required:
+      - id
+      - contact_id
+      - created_at
+      title: SequenceResponse
+      description: Sequence resource.
+    PublicSequenceActionEnum:
+      type: string
+      enum:
+      - pause
+      - resume
+      - stop
+      - enqueue
+      title: PublicSequenceActionEnum
+      description: 'User-callable state transitions on a sequence.
+
+
+        Intentionally a subset of `campaigns.schemas.SequenceActionEnum`: system-only
+
+        transitions (`success`, `fail`) and the payload-bearing `update_copy`
+
+        transition are excluded.'
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    UpdateSequenceRequest:
+      properties:
+        action:
+          $ref: '#/components/schemas/PublicSequenceActionEnum'
+          description: 'State transition to apply:
+
+            - `enqueue` — move a suggested sequence into the queue
+
+            - `pause` — temporarily halt execution
+
+            - `resume` — resume a paused sequence
+
+            - `stop` — end the sequence as failed'
+          examples:
+          - enqueue
+      type: object
+      required:
+      - action
+      title: UpdateSequenceRequest
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    PublicItemResponse_SequenceDetailResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/SequenceDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[SequenceDetailResponse]
+    SequenceTaskResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the task
+          examples:
+          - tsk_abc123
+        sequence_id:
+          type: string
+          title: Sequence Id
+          description: ID of the sequence this task belongs to
+          examples:
+          - seq_def456
+        order:
+          type: integer
+          title: Order
+          description: Position of the task within the sequence (1-indexed)
+          examples:
+          - 1
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Display name of the task
+          examples:
+          - Send intro email
+        type:
+          $ref: '#/components/schemas/TaskTypeEnum'
+          description: Type of task
+          examples:
+          - auto_linkedin_connection
+        status:
+          $ref: '#/components/schemas/TaskStatusEnum'
+          description: Current status of the task
+          examples:
+          - pending
+        scheduled_at:
+          type: string
+          format: date-time
+          title: Scheduled At
+          description: Date and time the task is scheduled for
+          examples:
+          - '2026-05-15T09:00:00Z'
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+          description: Date and time the task was completed
+          examples:
+          - '2026-05-15T10:00:00Z'
+        task_body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Body
+          description: Task message body
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+          description: Subject line, for subject-bearing channels (email, InMail, gifting email)
+        outcome:
+          anyOf:
+          - $ref: '#/components/schemas/TaskOutcomeEnum'
+          - type: 'null'
+          description: Observed outcome of the task
+          examples:
+          - positive_reply
+      type: object
+      required:
+      - id
+      - sequence_id
+      - order
+      - type
+      - status
+      - scheduled_at
+      title: SequenceTaskResponse
+      description: Task within a sequence.
+    TaskStatusEnum:
+      type: string
+      enum:
+      - unknown
+      - scheduled
+      - pending
+      - in_progress
+      - paused
+      - completed
+      - failed
+      - cancelled
+      - skipped
+      title: TaskStatusEnum
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    TaskOutcomeEnum:
+      type: string
+      enum:
+      - cannot_send
+      - positive_reply
+      - negative_reply
+      - noncommital_reply
+      - email_not_found
+      - email_bounced
+      - out_of_office
+      - message_opened
+      - link_opened
+      - accepted
+      - declined
+      - profile_unreachable
+      - linkedin_not_found
+      - linkedin_connection_limit_exceeded
+      - linkedin_already_invited_recently
+      - linkedin_cannot_resend_yet
+      - linkedin_invitation_declined_previously
+      - linkedin_account_disconnected
+      - linkedin_no_inmail_credits
+      - linkedin_transient_provider_error
+      - linkedin_account_paused
+      - incoming_comms_blocked
+      - not_connected
+      - connection_note_too_long
+      - gift_shipped
+      - gift_delivered
+      - gift_opened
+      - gift_thank_you_added
+      - gift_refunded
+      - gift_cancelled
+      - connection_not_accepted
+      - previous_task_incomplete
+      - do_not_contact
+      - message_evaluation_blocked
+      - account_status_excluded
+      title: TaskOutcomeEnum
+    SequenceDetailResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the sequence
+          examples:
+          - seq_abc123
+        contact_id:
+          type: string
+          title: Contact Id
+          description: ID of the contact this sequence is associated with
+          examples:
+          - con_def456
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Name of the sequence
+          examples:
+          - Enterprise Onboarding
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Description of the sequence
+          examples:
+          - Multi-touch onboarding sequence for enterprise accounts
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Current status of the sequence.
+          examples:
+          - started
+        template_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Template Id
+          description: ID of the sequence template this sequence was created from
+          examples:
+          - seqt_789ghi
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the sequence was created
+          examples:
+          - '2026-01-15T10:30:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: Date and time the sequence was last updated
+          examples:
+          - '2026-05-10T14:22:00Z'
+        last_interaction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Interaction
+          description: Human-readable summary of the most recent interaction on this sequence (e.g. "Email today", "No interactions yet").
+          examples:
+          - Email today
+        enqueued_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Enqueued At
+          description: Date and time the sequence was enqueued
+          examples:
+          - '2026-01-16T09:00:00Z'
+        started_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Started At
+          description: Date and time the sequence was started
+          examples:
+          - '2026-01-16T09:05:00Z'
+        responded_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Responded At
+          description: Date and time the contact responded on this sequence
+          examples:
+          - '2026-01-20T11:30:00Z'
+        meeting_booked_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Meeting Booked At
+          description: Date and time a meeting was booked off this sequence
+          examples:
+          - '2026-01-22T15:00:00Z'
+        sender_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Id
+          description: ID of the user sending this sequence
+          examples:
+          - usr_jkl012
+        sender_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Name
+          description: Full name of the user sending this sequence
+          examples:
+          - Alex Rivera
+        tasks:
+          items:
+            $ref: '#/components/schemas/SequenceTaskResponse'
+          type: array
+          title: Tasks
+          description: Ordered list of tasks in the sequence
+      type: object
+      required:
+      - id
+      - contact_id
+      - created_at
+      title: SequenceDetailResponse
+      description: Sequence resource with its ordered list of tasks.
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    TaskTypeEnum:
+      type: string
+      enum:
+      - generic
+      - auto_email
+      - manual_email
+      - auto_linkedin_connection
+      - manual_linkedin_connection
+      - auto_linkedin_message
+      - manual_linkedin_message
+      - auto_linkedin_inmail
+      - manual_linkedin_inmail
+      - auto_phone
+      - manual_phone
+      - internal_email
+      - gifting_via_email
+      - gifting_via_address
+      - complete_sequence
+      title: TaskTypeEnum
+    PublicListRequest:
+      properties:
+        filters:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: contains
+              field: name
+              value: Acme
+            - condition: is
+              field: status
+              value: active
+          - filters:
+            - condition: is
+              field: status
+              value: active
+            - filters:
+              - condition: contains
+                field: name
+                value: Acme
+              - condition: greater_than
+                field: created_at
+                value: '2026-01-01'
+            operator: or
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+      type: object
+      title: PublicListRequest
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'

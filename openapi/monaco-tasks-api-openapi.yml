@@ -1,0 +1,754 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts Tasks API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Tasks
+paths:
+  /v1/tasks/list:
+    post:
+      tags:
+      - Tasks
+      summary: List Tasks
+      description: Returns a paginated list of tasks.
+      operationId: list_tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicListResponse_TaskResponse_'
+              example:
+                data:
+                - id: tsk_abc123
+                  account_id: acc_def456
+                  opportunity_id: opp_ghi789
+                  title: Send follow-up proposal
+                  description: Send the updated pricing proposal to the procurement team
+                  task_type: General Action Item
+                  assignee:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  status: To Do
+                  due_at: '2025-07-01T17:00:00Z'
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-16T10:30:00Z'
+                pagination:
+                  page: 1
+                  page_size: 50
+                  total_count: 58
+                  total_pages: 2
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/tasks/{task_id}:
+    get:
+      tags:
+      - Tasks
+      summary: Get a Task
+      description: Gets a single task by its `task_id`.
+      operationId: get_task
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_TaskResponse_'
+              example:
+                data:
+                  id: tsk_abc123
+                  account_id: acc_def456
+                  opportunity_id: opp_ghi789
+                  title: Send follow-up proposal
+                  description: Send the updated pricing proposal to the procurement team
+                  task_type: General Action Item
+                  assignee:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  status: Done
+                  due_at: '2025-07-01T17:00:00Z'
+                  completed_at: '2025-06-28T11:00:00Z'
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-28T11:00:00Z'
+                  message_draft:
+                    recipients:
+                    - name: Jane Smith
+                      email: jane@acme.com
+                    cc:
+                    - name: John Doe
+                      email: john@acme.com
+                    subject: Pricing follow-up
+                    body: Hi Jane, following up on the proposal we discussed...
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    patch:
+      tags:
+      - Tasks
+      summary: Update a Task
+      description: Updates an existing task by its `task_id`. Marking a task as `DONE` or `CANCELLED` sets `completed_at`; moving out of those states clears it. Updating `account_id` is only supported for manually created tasks.
+      operationId: update_task
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Task Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_TaskResponse_'
+              example:
+                data:
+                  id: tsk_abc123
+                  account_id: acc_def456
+                  title: Send follow-up proposal
+                  description: Send the updated pricing proposal to the procurement team
+                  task_type: General Action Item
+                  assignee:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  status: Done
+                  due_at: '2025-07-01T17:00:00Z'
+                  completed_at: '2025-06-28T11:00:00Z'
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-28T11:00:00Z'
+                  message_draft:
+                    recipients:
+                    - name: Jane Smith
+                      email: jane@acme.com
+                    cc:
+                    - name: John Doe
+                      email: john@acme.com
+                    subject: Pricing follow-up
+                    body: Hi Jane, following up on the proposal we discussed...
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/tasks/:
+    post:
+      tags:
+      - Tasks
+      summary: Create a Task
+      description: 'Creates a new task.
+
+
+        Tasks can be associated with an account (via `account_id`) and/or an opportunity (via `opportunity_id`). If no `assignee_id` is provided, the task is assigned to the caller.'
+      operationId: create_task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreateRequest'
+            examples:
+              complete:
+                summary: Create task with every field
+                value:
+                  title: Send follow-up proposal
+                  description: Send the updated pricing proposal to the procurement team
+                  account_id: 550e8400-e29b-41d4-a716-446655440000
+                  opportunity_id: 550e8400-e29b-41d4-a716-446655440001
+                  task_type: EMAIL
+                  assignee_id: 550e8400-e29b-41d4-a716-446655440002
+                  due_at: '2025-07-01T17:00:00Z'
+                  message_draft:
+                    recipients:
+                    - name: Jane Smith
+                      email: jane@acme.com
+                    cc:
+                    - name: John Doe
+                      email: john@acme.com
+                    subject: Pricing follow-up
+                    body: Hi Jane, following up on the proposal we discussed...
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_TaskResponse_'
+              example:
+                data:
+                  id: tsk_abc123
+                  account_id: acc_def456
+                  title: Send follow-up proposal
+                  description: Send the updated pricing proposal to the procurement team
+                  task_type: General Action Item
+                  assignee:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  status: To Do
+                  due_at: '2025-07-01T17:00:00Z'
+                  created_at: '2026-04-21T12:00:00Z'
+                  updated_at: '2026-04-21T12:00:00Z'
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    MessageDraft:
+      properties:
+        recipients:
+          items:
+            $ref: '#/components/schemas/EmailRecipient'
+          type: array
+          title: Recipients
+          description: Primary recipients (To) of the email
+        cc:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/EmailRecipient'
+            type: array
+          - type: 'null'
+          title: Cc
+          description: Carbon-copy recipients of the email
+        subject:
+          type: string
+          title: Subject
+          description: Subject line of the email
+          examples:
+          - Pricing follow-up
+        body:
+          type: string
+          title: Body
+          description: Body of the email (plain text or HTML)
+          examples:
+          - Hi Jane, following up on the proposal we discussed...
+        sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sent At
+          description: ISO timestamp the email was sent (read-only; ignored on write).
+      type: object
+      required:
+      - recipients
+      - subject
+      - body
+      title: MessageDraft
+      description: Draft message contents stored on a task with `task_type=EMAIL`.
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    TaskResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the task
+          examples:
+          - tsk_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_def456
+        opportunity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Opportunity Id
+          description: ID of the associated opportunity
+          examples:
+          - opp_ghi789
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Title of the task
+          examples:
+          - Send follow-up proposal
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Detailed description of the task
+          examples:
+          - Send the updated pricing proposal to the procurement team
+        task_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Type
+          description: Type of task
+          examples:
+          - General Action Item
+        assignee:
+          anyOf:
+          - $ref: '#/components/schemas/OwnerInfo'
+          - type: 'null'
+          description: User assigned to the task
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Current status of the task
+          examples:
+          - To Do
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Due At
+          description: Due date and time for the task
+          examples:
+          - '2025-07-01T17:00:00Z'
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+          description: Date and time the task was completed
+          examples:
+          - '2025-06-28T11:00:00Z'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the task was created
+          examples:
+          - '2025-06-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the task was last updated
+          examples:
+          - '2025-06-16T10:30:00Z'
+        message_draft:
+          anyOf:
+          - $ref: '#/components/schemas/MessageDraft'
+          - type: 'null'
+          description: Draft message contents. Populated on single-task GET and create/update responses for `task_type=EMAIL`; always omitted from list responses.
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      title: TaskResponse
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    PublicListResponse_TaskResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[TaskResponse]
+    TaskCreateRequest:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: Title of the task
+          examples:
+          - Send follow-up proposal
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Detailed description of the task
+          examples:
+          - Send the updated pricing proposal to the procurement team
+        account_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Account Id
+          description: ID of the account to associate the task with
+        opportunity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Opportunity Id
+          description: ID of the opportunity to associate the task with
+        task_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Type
+          description: Type of task. One of GENERAL_ACTION_ITEM, EMAIL.
+          default: GENERAL_ACTION_ITEM
+          examples:
+          - GENERAL_ACTION_ITEM
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+          description: User ID to assign the task to. Defaults to the caller if not provided.
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Due At
+          description: Due date and time for the task
+          examples:
+          - '2025-07-01T17:00:00Z'
+        message_draft:
+          anyOf:
+          - $ref: '#/components/schemas/MessageDraft'
+          - type: 'null'
+          description: Optional draft message contents. Only valid when `task_type` is `EMAIL`.
+      type: object
+      required:
+      - title
+      title: TaskCreateRequest
+      description: Request body for creating a task via POST.
+    TaskUpdateRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Title of the task
+          examples:
+          - Send follow-up proposal
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Detailed description of the task
+          examples:
+          - Send the updated pricing proposal to the procurement team
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Current status of the task. One of TODO, DONE, CANCELLED.
+          examples:
+          - DONE
+        account_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Account Id
+          description: ID of the account to associate the task with. Only supported for manually created tasks.
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+          description: User ID to assign the task to
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Due At
+          description: Due date and time for the task
+          examples:
+          - '2025-07-01T17:00:00Z'
+        message_draft:
+          anyOf:
+          - $ref: '#/components/schemas/MessageDraft'
+          - type: 'null'
+          description: Draft message contents. Only valid when the task's `task_type` is `EMAIL`. Replaces the existing draft when provided.
+      type: object
+      title: TaskUpdateRequest
+      description: Request body for updating a task via PATCH.
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    OwnerInfo:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier of the user
+          examples:
+          - usr_abc123
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the user
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the user
+          examples:
+          - Smith
+      type: object
+      required:
+      - id
+      title: OwnerInfo
+    PublicItemResponse_TaskResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/TaskResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[TaskResponse]
+    PublicListRequest:
+      properties:
+        filters:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: contains
+              field: name
+              value: Acme
+            - condition: is
+              field: status
+              value: active
+          - filters:
+            - condition: is
+              field: status
+              value: active
+            - filters:
+              - condition: contains
+                field: name
+                value: Acme
+              - condition: greater_than
+                field: created_at
+                value: '2026-01-01'
+            operator: or
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+      type: object
+      title: PublicListRequest
+    EmailRecipient:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Display name of the recipient
+          examples:
+          - Jane Smith
+        email:
+          type: string
+          title: Email
+          description: Email address of the recipient
+          examples:
+          - jane@acme.com
+      type: object
+      required:
+      - name
+      - email
+      title: EmailRecipient
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'

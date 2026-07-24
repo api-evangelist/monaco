@@ -1,0 +1,127 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts Auth API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Auth
+paths:
+  /v1/me:
+    get:
+      tags:
+      - Auth
+      summary: Get Authenticated User
+      description: Returns the user and organization resolved from the bearer token.
+      operationId: get_me
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_MeResponse_'
+              example:
+                data:
+                  org_id: org_abc123
+                  user_id: usr_abc123
+                  user_email: ada@example.com
+                  user_first_name: Ada
+                  user_last_name: Lovelace
+                  org_name: Example Inc.
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    MeResponse:
+      properties:
+        org_id:
+          type: string
+          title: Org Id
+          description: Authenticated organization ID
+        user_id:
+          type: string
+          title: User Id
+          description: Authenticated user ID
+        user_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Email
+          description: Authenticated user email
+        user_first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User First Name
+          description: Authenticated user first name
+        user_last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Last Name
+          description: Authenticated user last name
+        org_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Org Name
+          description: Authenticated organization name
+      type: object
+      required:
+      - org_id
+      - user_id
+      title: MeResponse
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    PublicItemResponse_MeResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/MeResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[MeResponse]
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail

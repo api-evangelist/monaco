@@ -1,0 +1,685 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts Meetings API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Meetings
+paths:
+  /v1/meetings/list:
+    post:
+      tags:
+      - Meetings
+      summary: List Meetings
+      description: Returns a paginated list of meetings.
+      operationId: list_meetings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicListResponse_MeetingResponse_'
+              example:
+                data:
+                - id: mtg_abc123
+                  account_id: acc_abc123
+                  opportunity_id: opp_abc123
+                  title: Discovery Call
+                  description: Initial discovery call with Acme
+                  start_time: '2026-03-01T10:00:00Z'
+                  end_time: '2026-03-01T10:30:00Z'
+                  meeting_platform: Zoom
+                  meeting_url: https://zoom.us/j/123456789
+                  organizer:
+                    email: jane@acme.com
+                    display_name: Jane Smith
+                  attendees:
+                  - email: john@acme.com
+                    display_name: John Doe
+                    response_status: accepted
+                  next_actions:
+                  - Send pricing proposal by Friday
+                  - Schedule technical deep-dive
+                  created_at: '2026-03-01T09:00:00Z'
+                  updated_at: '2026-03-01T09:30:00Z'
+                pagination:
+                  page: 1
+                  page_size: 50
+                  total_count: 12
+                  total_pages: 1
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/meetings/{meeting_id}:
+    get:
+      tags:
+      - Meetings
+      summary: Get a Meeting
+      description: Gets a single meeting by its `meeting_id`. The detail response includes the AI-generated summary, a presigned video URL, and the full transcript with speaker attribution.
+      operationId: get_meeting
+      parameters:
+      - name: meeting_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Meeting Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_MeetingDetailResponse_'
+              example:
+                data:
+                  id: mtg_abc123
+                  account_id: acc_abc123
+                  opportunity_id: opp_abc123
+                  title: Discovery Call
+                  description: Initial discovery call with Acme
+                  start_time: '2026-03-01T10:00:00Z'
+                  end_time: '2026-03-01T10:30:00Z'
+                  meeting_platform: Zoom
+                  meeting_url: https://zoom.us/j/123456789
+                  organizer:
+                    email: jane@acme.com
+                    display_name: Jane Smith
+                  attendees:
+                  - email: john@acme.com
+                    display_name: John Doe
+                    response_status: accepted
+                  next_actions:
+                  - Send pricing proposal by Friday
+                  - Schedule technical deep-dive
+                  meeting_summary: Discovery call with Acme. Strong interest in enterprise tier, budget confirmed for Q3.
+                  video_url: https://monaco-recordings.s3.amazonaws.com/...
+                  transcript:
+                  - speaker: Jane Smith
+                    language: en
+                    words:
+                    - text: Thanks
+                      start_timestamp: 0.5
+                      end_timestamp: 0.9
+                    - text: everyone
+                      start_timestamp: 1.0
+                      end_timestamp: 1.5
+                  created_at: '2026-03-01T09:00:00Z'
+                  updated_at: '2026-03-01T09:30:00Z'
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    MeetingDetailResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the meeting
+          examples:
+          - mtg_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_abc123
+        opportunity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Opportunity Id
+          description: ID of the associated opportunity
+          examples:
+          - opp_abc123
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Meeting title from calendar event
+          examples:
+          - Discovery Call
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Meeting description
+          examples:
+          - Initial discovery call with Acme
+        start_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Start Time
+          description: Meeting start time (ISO 8601)
+          examples:
+          - '2026-03-01T10:00:00Z'
+        end_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Time
+          description: Meeting end time (ISO 8601)
+          examples:
+          - '2026-03-01T10:30:00Z'
+        occurred_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Occurred At
+          description: 'When the meeting actually occurred: recording start time of the completed conversation (ISO 8601). Null for meetings that were never recorded, including future and declined calendar events.'
+          examples:
+          - '2026-03-01T10:02:14Z'
+        meeting_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Platform
+          description: Video conferencing platform
+          examples:
+          - Zoom
+        meeting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Url
+          description: URL to join the meeting
+        organizer:
+          anyOf:
+          - $ref: '#/components/schemas/MeetingOrganizerInfo'
+          - type: 'null'
+          description: Meeting organizer
+        attendees:
+          items:
+            $ref: '#/components/schemas/MeetingAttendeeInfo'
+          type: array
+          title: Attendees
+          description: List of meeting attendees
+        next_actions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Next Actions
+          description: AI-generated action items from the meeting
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+          description: When the meeting was created in Monaco
+          examples:
+          - '2026-03-01T09:00:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: When the meeting was last updated in Monaco
+          examples:
+          - '2026-03-01T09:30:00Z'
+        meeting_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Summary
+          description: AI-generated meeting summary
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+          description: Presigned URL to the meeting recording video
+        transcript:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/TranscriptSegment'
+            type: array
+          - type: 'null'
+          title: Transcript
+          description: Meeting transcript segments with speaker attribution
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      title: MeetingDetailResponse
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    TranscriptWord:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: The transcribed word
+        start_timestamp:
+          type: number
+          title: Start Timestamp
+          description: Start time in seconds
+        end_timestamp:
+          type: number
+          title: End Timestamp
+          description: End time in seconds
+      type: object
+      required:
+      - text
+      - start_timestamp
+      - end_timestamp
+      title: TranscriptWord
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    TranscriptSegment:
+      properties:
+        speaker:
+          type: string
+          title: Speaker
+          description: Name of the speaker
+        language:
+          type: string
+          title: Language
+          description: Language code of the segment
+        words:
+          items:
+            $ref: '#/components/schemas/TranscriptWord'
+          type: array
+          title: Words
+          description: Words in this segment
+      type: object
+      required:
+      - speaker
+      - language
+      title: TranscriptSegment
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    MeetingAttendeeInfo:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the attendee
+          examples:
+          - john@acme.com
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+          description: Display name of the attendee
+          examples:
+          - John Doe
+        response_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Status
+          description: RSVP response status
+          examples:
+          - accepted
+      type: object
+      title: MeetingAttendeeInfo
+    MeetingOrganizerInfo:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the organizer
+          examples:
+          - jane@acme.com
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+          description: Display name of the organizer
+          examples:
+          - Jane Smith
+      type: object
+      title: MeetingOrganizerInfo
+    MeetingResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the meeting
+          examples:
+          - mtg_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_abc123
+        opportunity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Opportunity Id
+          description: ID of the associated opportunity
+          examples:
+          - opp_abc123
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Meeting title from calendar event
+          examples:
+          - Discovery Call
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Meeting description
+          examples:
+          - Initial discovery call with Acme
+        start_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Start Time
+          description: Meeting start time (ISO 8601)
+          examples:
+          - '2026-03-01T10:00:00Z'
+        end_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Time
+          description: Meeting end time (ISO 8601)
+          examples:
+          - '2026-03-01T10:30:00Z'
+        occurred_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Occurred At
+          description: 'When the meeting actually occurred: recording start time of the completed conversation (ISO 8601). Null for meetings that were never recorded, including future and declined calendar events.'
+          examples:
+          - '2026-03-01T10:02:14Z'
+        meeting_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Platform
+          description: Video conferencing platform
+          examples:
+          - Zoom
+        meeting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Url
+          description: URL to join the meeting
+        organizer:
+          anyOf:
+          - $ref: '#/components/schemas/MeetingOrganizerInfo'
+          - type: 'null'
+          description: Meeting organizer
+        attendees:
+          items:
+            $ref: '#/components/schemas/MeetingAttendeeInfo'
+          type: array
+          title: Attendees
+          description: List of meeting attendees
+        next_actions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Next Actions
+          description: AI-generated action items from the meeting
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+          description: When the meeting was created in Monaco
+          examples:
+          - '2026-03-01T09:00:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: When the meeting was last updated in Monaco
+          examples:
+          - '2026-03-01T09:30:00Z'
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      title: MeetingResponse
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    PublicItemResponse_MeetingDetailResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/MeetingDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[MeetingDetailResponse]
+    PublicListResponse_MeetingResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/MeetingResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[MeetingResponse]
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    PublicListRequest:
+      properties:
+        filters:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: contains
+              field: name
+              value: Acme
+            - condition: is
+              field: status
+              value: active
+          - filters:
+            - condition: is
+              field: status
+              value: active
+            - filters:
+              - condition: contains
+                field: name
+                value: Acme
+              - condition: greater_than
+                field: created_at
+                value: '2026-01-01'
+            operator: or
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+      type: object
+      title: PublicListRequest
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'

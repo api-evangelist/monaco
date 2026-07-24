@@ -1,0 +1,810 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Accounts
+paths:
+  /v1/accounts/list:
+    post:
+      tags:
+      - Accounts
+      summary: List Accounts
+      description: Returns a paginated list of accounts.
+      operationId: list_accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicListResponse_AccountResponse_'
+              example:
+                data:
+                - id: acc_abc123
+                  name: Acme Corp
+                  status: active
+                  owner:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  notes: Key enterprise prospect
+                  company:
+                    domain: acme.com
+                    linkedin_url: https://linkedin.com/company/acme
+                    description: Enterprise software company specializing in AI-driven sales tools
+                    employee_count: 250
+                    founded_year: 2019
+                    industries:
+                    - Software
+                    - Artificial Intelligence
+                    total_funding_usd: 50000000.0
+                    last_funding_date: '2024-03-15'
+                  scoring:
+                    tier: A
+                    heat_score: Hot
+                  tags:
+                  - Enterprise
+                  - High Priority
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-16T10:30:00Z'
+                  custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c: high
+                  custom_field_8b2d1f3c-4e5a-4b9f-ac2d-3e4f5a6b7c8d: '2026-09-30'
+                pagination:
+                  page: 1
+                  page_size: 50
+                  total_count: 142
+                  total_pages: 3
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/accounts/:
+    put:
+      tags:
+      - Accounts
+      summary: Upsert an Account
+      description: 'Creates a new account or updates an existing one. `domain` is required and is used as the primary identifier for matching.
+
+
+        **Duplicate resolution** — the request is matched against existing accounts in the org by exact match on `domain`. If a match is found, that account is updated in place with the provided fields and returned; otherwise a new account is created (a company record for the domain must exist in our data sources).
+
+
+        **Enrichment** — on creation, Monaco synchronously enriches the account with company firmographic data (industry, employee count, funding, etc.). This can make create requests take several seconds to complete; clients should use generous timeouts (10s+) and avoid issuing creates on hot paths.
+
+
+        Any `tags` list provided is **appended** to the existing tags on the account.'
+      operationId: upsert_account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpsertRequest'
+            examples:
+              complete:
+                summary: Upsert account with every field
+                value:
+                  domain: acme.com
+                  linkedin_url: https://linkedin.com/company/acme
+                  name: Acme Corp
+                  status: NEW
+                  notes: Key enterprise prospect
+                  owner: 550e8400-e29b-41d4-a716-446655440000
+                  tags:
+                  - 550e8400-e29b-41d4-a716-446655440001
+                  custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c: high
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_AccountResponse_'
+              example:
+                data:
+                  id: acc_abc123
+                  name: Acme Corp
+                  status: NEW
+                  owner:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  notes: Key enterprise prospect
+                  company:
+                    domain: acme.com
+                    linkedin_url: https://linkedin.com/company/acme
+                    description: Enterprise software company specializing in AI-driven sales tools
+                    employee_count: 250
+                    founded_year: 2019
+                    industries:
+                    - Software
+                    - Artificial Intelligence
+                    total_funding_usd: 50000000.0
+                    last_funding_date: '2024-03-15'
+                  scoring:
+                    tier: A
+                    heat_score: Hot
+                  tags:
+                  - Enterprise
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-15T10:30:00Z'
+                  custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c: high
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/accounts/{account_id}:
+    patch:
+      tags:
+      - Accounts
+      summary: Update an Account
+      description: Updates an existing account by its `account_id`. Any `tags` list provided **replaces** the existing tags on the account.
+      operationId: update_account
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_AccountResponse_'
+              example:
+                data:
+                  id: acc_abc123
+                  name: Acme Corp
+                  status: PROSPECTING
+                  owner:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  notes: Key enterprise prospect
+                  company:
+                    domain: acme.com
+                    linkedin_url: https://linkedin.com/company/acme
+                    description: Enterprise software company specializing in AI-driven sales tools
+                    employee_count: 250
+                    founded_year: 2019
+                    industries:
+                    - Software
+                    - Artificial Intelligence
+                    total_funding_usd: 50000000.0
+                    last_funding_date: '2024-03-15'
+                  scoring:
+                    tier: A
+                    heat_score: Hot
+                  tags:
+                  - Enterprise
+                  - High Priority
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2026-04-21T12:00:00Z'
+                  custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c: high
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    get:
+      tags:
+      - Accounts
+      summary: Get an Account
+      description: Gets a single account by its `account_id`. The detail response includes enriched company information, scoring, and custom fields.
+      operationId: get_account
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_AccountResponse_'
+              example:
+                data:
+                  id: acc_abc123
+                  name: Acme Corp
+                  status: active
+                  owner:
+                    id: usr_abc123
+                    first_name: Jane
+                    last_name: Smith
+                  notes: Key enterprise prospect
+                  company:
+                    domain: acme.com
+                    linkedin_url: https://linkedin.com/company/acme
+                    description: Enterprise software company specializing in AI-driven sales tools
+                    employee_count: 250
+                    founded_year: 2019
+                    industries:
+                    - Software
+                    - Artificial Intelligence
+                    total_funding_usd: 50000000.0
+                    last_funding_date: '2024-03-15'
+                  scoring:
+                    tier: A
+                    heat_score: Hot
+                  tags:
+                  - Enterprise
+                  - High Priority
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-16T10:30:00Z'
+                  custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c: high
+                  custom_field_8b2d1f3c-4e5a-4b9f-ac2d-3e4f5a6b7c8d: '2026-09-30'
+                  custom_field_9c3e2a4d-5f6b-4cad-bd3e-4f5a6b7c8d9e: 125000
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    delete:
+      tags:
+      - Accounts
+      summary: Delete an Account
+      description: Deletes an account by its `account_id`. Returns 204 No Content on success. This is irreversible — associated contacts and opportunities are not deleted but may become unlinked.
+      operationId: delete_account
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Account Id
+      responses:
+        '204':
+          description: Account deleted
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    api__public_api__schemas__accounts__ScoringInfo:
+      properties:
+        tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tier
+          description: Firmographic tier
+          examples:
+          - A
+        heat_score:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Heat Score
+          description: Heat score tier
+          examples:
+          - Hot
+      type: object
+      title: ScoringInfo
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    AccountListRequest:
+      properties:
+        filters:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: contains
+              field: name
+              value: Acme
+            - condition: is
+              field: status
+              value: active
+          - filters:
+            - condition: is
+              field: status
+              value: active
+            - filters:
+              - condition: contains
+                field: name
+                value: Acme
+              - condition: greater_than
+                field: created_at
+                value: '2026-01-01'
+            operator: or
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+        include_custom_fields:
+          type: boolean
+          title: Include Custom Fields
+          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned account. Defaults to true. Set false to omit them for leaner responses; GET /v1/accounts/{account_id} always returns them.
+          default: true
+      type: object
+      title: AccountListRequest
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    CompanyInfo:
+      properties:
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+          description: Primary website domain
+          examples:
+          - acme.com
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn company page URL
+          examples:
+          - https://linkedin.com/company/acme
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Company description
+          examples:
+          - Enterprise software company specializing in AI-driven sales tools
+        employee_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Employee Count
+          description: Number of employees
+          examples:
+          - 250
+        founded_year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Founded Year
+          description: Year the company was founded
+          examples:
+          - 2019
+        industries:
+          items:
+            type: string
+          type: array
+          title: Industries
+          description: List of industry classifications
+          examples:
+          - - Software
+            - Artificial Intelligence
+        total_funding_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Total Funding Usd
+          description: Total funding raised in USD
+          examples:
+          - 50000000.0
+        last_funding_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Funding Date
+          description: Date of the most recent funding round
+          examples:
+          - '2024-03-15'
+      type: object
+      title: CompanyInfo
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    AccountUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Display name for the account
+          examples:
+          - Acme Corp
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Account status
+          examples:
+          - PROSPECTING
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the account
+        owner:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Owner
+          description: User ID to assign as account owner
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: List of tag IDs to associate with the account
+      additionalProperties: true
+      type: object
+      title: AccountUpdateRequest
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    AccountUpsertRequest:
+      properties:
+        domain:
+          type: string
+          title: Domain
+          description: Company domain for matching or creating the account
+          examples:
+          - acme.com
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn company page URL for matching or creating the account
+          examples:
+          - https://linkedin.com/company/acme
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Display name for the account
+          examples:
+          - Acme Corp
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Account status
+          examples:
+          - NEW
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the account
+          examples:
+          - Key enterprise prospect
+        owner:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Owner
+          description: User ID to assign as account owner
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: List of tag IDs to associate with the account
+      additionalProperties: true
+      type: object
+      required:
+      - domain
+      title: AccountUpsertRequest
+      description: 'Request body for upserting an account.
+
+
+        Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
+    AccountResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the account
+          examples:
+          - acc_abc123
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Name of the account
+          examples:
+          - Acme Corp
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Current status of the account
+          examples:
+          - active
+        owner:
+          anyOf:
+          - $ref: '#/components/schemas/OwnerInfo'
+          - type: 'null'
+          description: User who owns the account
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the account
+          examples:
+          - Key enterprise prospect
+        company:
+          anyOf:
+          - $ref: '#/components/schemas/CompanyInfo'
+          - type: 'null'
+          description: Company information associated with the account
+        scoring:
+          anyOf:
+          - $ref: '#/components/schemas/api__public_api__schemas__accounts__ScoringInfo'
+          - type: 'null'
+          description: Account scoring information
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: List of tag names associated with the account
+          examples:
+          - - Enterprise
+            - High Priority
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the account was created
+          examples:
+          - '2025-06-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the account was last updated
+          examples:
+          - '2025-06-15T10:30:00Z'
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      title: AccountResponse
+      description: Account resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
+    OwnerInfo:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier of the user
+          examples:
+          - usr_abc123
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the user
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the user
+          examples:
+          - Smith
+      type: object
+      required:
+      - id
+      title: OwnerInfo
+    PublicListResponse_AccountResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/AccountResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[AccountResponse]
+    PublicItemResponse_AccountResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[AccountResponse]
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'

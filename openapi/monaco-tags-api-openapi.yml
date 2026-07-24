@@ -1,0 +1,341 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Accounts Tags API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Tags
+paths:
+  /v1/tags/:
+    get:
+      tags:
+      - Tags
+      summary: List Tags
+      description: Returns every tag defined for the object type given by the required `object` query parameter (one of `contacts`, `accounts`, `opportunities`).
+      operationId: list_tags
+      parameters:
+      - name: object
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/TagObject'
+          description: Object type to list tags for
+        description: Object type to list tags for
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_list_TagResponse__'
+              example:
+                data:
+                - id: 550e8400-e29b-41d4-a716-446655440000
+                  name: Enterprise
+                  color: blue
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    post:
+      tags:
+      - Tags
+      summary: Create a Tag
+      description: Creates a new tag for the `object` given in the request body. Tag names must be unique per object type within the organization.
+      operationId: create_tag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreateRequest'
+            examples:
+              complete:
+                summary: Create a tag with every field
+                value:
+                  object: accounts
+                  name: Enterprise
+                  color: blue
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_TagResponse_'
+              example:
+                data:
+                  id: 550e8400-e29b-41d4-a716-446655440000
+                  name: Enterprise
+                  color: blue
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/tags/{tag_id}:
+    get:
+      tags:
+      - Tags
+      summary: Get a Tag
+      description: Gets a single tag by its `tag_id`.
+      operationId: get_tag
+      parameters:
+      - name: tag_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Tag Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_TagResponse_'
+              example:
+                data:
+                  id: 550e8400-e29b-41d4-a716-446655440000
+                  name: Enterprise
+                  color: blue
+                meta:
+                  timestamp: '2026-04-21T12:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    patch:
+      tags:
+      - Tags
+      summary: Update a Tag
+      description: Updates a tag's `name` and/or `color` by its `tag_id`. The object type of a tag cannot be changed.
+      operationId: update_tag
+      parameters:
+      - name: tag_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Tag Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_TagResponse_'
+              example:
+                data:
+                  id: 550e8400-e29b-41d4-a716-446655440000
+                  name: Strategic Enterprise
+                  color: purple
+                meta:
+                  timestamp: '2026-04-22T09:30:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    delete:
+      tags:
+      - Tags
+      summary: Delete a Tag
+      description: Deletes a tag by its `tag_id`. The tag is removed from all entities it was applied to. Returns 204 No Content on success. This is irreversible.
+      operationId: delete_tag
+      parameters:
+      - name: tag_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Tag Id
+      responses:
+        '204':
+          description: Tag deleted
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    PublicItemResponse_TagResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/TagResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[TagResponse]
+    TagUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+            pattern: ^[a-zA-Z0-9\s]+$
+          - type: 'null'
+          title: Name
+          description: Display name of the tag. Letters, numbers, and spaces only.
+          examples:
+          - Enterprise
+        color:
+          anyOf:
+          - $ref: '#/components/schemas/DisplayColorEnum'
+          - type: 'null'
+          description: Display color of the tag.
+          examples:
+          - blue
+      type: object
+      title: TagUpdateRequest
+      description: Request body for updating a tag via PATCH.
+    TagObject:
+      type: string
+      enum:
+      - contacts
+      - accounts
+      - opportunities
+      title: TagObject
+      description: Object type a tag applies to, as exposed in the public API.
+    TagCreateRequest:
+      properties:
+        object:
+          $ref: '#/components/schemas/TagObject'
+          description: Object type the tag applies to. One of contacts, accounts, opportunities.
+          examples:
+          - accounts
+        name:
+          type: string
+          maxLength: 100
+          minLength: 1
+          pattern: ^[a-zA-Z0-9\s]+$
+          title: Name
+          description: Display name of the tag. Letters, numbers, and spaces only.
+          examples:
+          - Enterprise
+        color:
+          anyOf:
+          - $ref: '#/components/schemas/DisplayColorEnum'
+          - type: 'null'
+          description: Display color of the tag.
+          examples:
+          - blue
+      type: object
+      required:
+      - object
+      - name
+      title: TagCreateRequest
+      description: Request body for creating a tag via POST.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    DisplayColorEnum:
+      type: string
+      enum:
+      - green
+      - blue
+      - red
+      - yellow
+      - purple
+      - berry
+      - peach
+      - gray
+      title: DisplayColorEnum
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PublicItemResponse_list_TagResponse__:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/TagResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[list[TagResponse]]
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    TagResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Unique identifier for the tag
+        name:
+          type: string
+          title: Name
+          description: Display name of the tag
+          examples:
+          - Enterprise
+        color:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Color
+          description: Display color of the tag
+          examples:
+          - blue
+      type: object
+      required:
+      - id
+      - name
+      title: TagResponse
