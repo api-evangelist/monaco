@@ -1,0 +1,21 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.monaco.com/beta-notice
+versioning:
+  scheme: uri-path
+  current: v1
+  docs: https://docs.monaco.com/api-reference
+stability:
+  stage: beta
+  notice: >-
+    Monaco's API and MCP server are currently in Beta. There may be changes to
+    API methods, responses, and parameters — as well as to MCP tools and their
+    schemas — while feedback is incorporated. Monaco aims to extend functionality
+    with as few disruptive changes as possible.
+  source: https://docs.monaco.com/beta-notice
+status_page: https://status.monaco.com
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No formal deprecation policy or RFC 8594 Sunset/Deprecation header support published as of this pass.
+deprecated_operations: []

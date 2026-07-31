@@ -1,0 +1,49 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.monaco.com/auth
+docs: https://docs.monaco.com/auth
+summary:
+  types: [apiKey]
+  api_key_in: [header]
+  api_key_scheme: bearer
+  oauth2_flows: []
+  note: >-
+    The OpenAPI spec (api.monaco.com/openapi.json) declares no securitySchemes;
+    the authentication model below is captured from the published docs. The MCP
+    server (mcp.monaco.com) uses OAuth 2.0 in addition to API-key bearer auth.
+schemes:
+- name: apiKeyBearer
+  type: http
+  scheme: bearer
+  in: header
+  header: Authorization
+  format: "Bearer mks_<48-char-url-safe-token>"
+  key_prefix: mks_
+  description: >-
+    Monaco's public REST API uses API-key authentication. Every request must
+    include a valid API key in the Authorization header as a bearer token. Keys
+    are created in the Monaco app (Settings > API Keys); the plaintext value
+    (prefix mks_) is shown only once and stored as a hash server-side.
+  scoping: >-
+    Each API key is scoped to an organization and optionally tied to a specific
+    user. If no user is set, the key operates as the user who created it.
+  sources: [docs]
+- name: oauth2Mcp
+  type: oauth2
+  description: >-
+    The hosted MCP server at https://mcp.monaco.com/mcp authenticates via OAuth
+    2.0; the MCP client handles the authorization flow on first connection.
+    Every request is authenticated as the user who completed login and respects
+    that user's Monaco permissions. API-key bearer auth is also supported for
+    Codex/ChatGPT MCP connections.
+  sources: [docs]
+key_management:
+  deactivation: Keys can be deactivated from Settings; deactivated keys are immediately rejected.
+  rotation: No in-place rotation. Create a new key, migrate, then deactivate the old key.
+auth_errors:
+- status: 401
+  meaning: Missing or invalid API key.
+- status: 403
+  meaning: API key is valid but lacks required access.
+- status: 429
+  meaning: Rate limit exceeded.

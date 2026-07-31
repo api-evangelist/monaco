@@ -1,8 +1,29 @@
 aid: monaco
 name: Monaco
-description: 'Monaco is a company surfaced as a portfolio company of founders-fund and added to the API
-  Evangelist network as a stub for enrichment. Sector: unknown. This profile is a lead awaiting the enrichment
-  pipeline.'
+description: >-
+  Monaco is an AI-native revenue platform for startups that replaces legacy CRM
+  systems and disparate sales point solutions with a single revenue engine.
+  It unifies a contacts/accounts database, buying signals, sequences, pipeline
+  and opportunity tracking, meeting/call recording with AI summaries, and CRO
+  copilot coaching. Monaco exposes a public REST API (api.monaco.com) covering
+  contacts, accounts, opportunities, tasks, tags, meetings, sequences, and
+  sequence templates, plus a hosted, OAuth-secured MCP server (mcp.monaco.com)
+  and shipped Agent Skills so AI agents can query and act on revenue data in
+  natural language. Founded by Sam Blond and backed by Founders Fund; the API
+  and MCP surface are currently in Beta.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.monaco.com/favicon.ico
 url: https://raw.githubusercontent.com/api-evangelist/monaco/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -12,13 +33,382 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
-- Unknown
-apis: []
+- CRM
+- Sales
+- Revenue Operations
+- Artificial Intelligence
+- Contacts
+- Accounts
+- Opportunities
+- Pipeline
+- Go To Market
+- MCP
+apis:
+- aid: monaco:monaco-accounts-api
+  name: Monaco Accounts API
+  description: The Accounts API from Monaco — 3 operation(s) for accounts.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-auth-api
+  name: Monaco Auth API
+  description: The Auth API from Monaco — 1 operation(s) for auth.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Auth
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-auth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-contacts-api
+  name: Monaco Contacts API
+  description: The Contacts API from Monaco — 3 operation(s) for contacts.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-contacts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-meetings-api
+  name: Monaco Meetings API
+  description: The Meetings API from Monaco — 2 operation(s) for meetings.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Meetings
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-meetings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-opportunities-api
+  name: Monaco Opportunities API
+  description: The Opportunities API from Monaco — 3 operation(s) for opportunities.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Opportunities
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-opportunities-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-schemas-api
+  name: Monaco Schemas API
+  description: The Schemas API from Monaco — 1 operation(s) for schemas.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Schemas
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-schemas-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-sequence-templates-api
+  name: Monaco Sequence Templates API
+  description: The Sequence Templates API from Monaco — 2 operation(s) for sequence templates.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Sequence Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-sequence-templates-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-sequences-api
+  name: Monaco Sequences API
+  description: The Sequences API from Monaco — 2 operation(s) for sequences.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Sequences
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-sequences-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-tags-api
+  name: Monaco Tags API
+  description: The Tags API from Monaco — 2 operation(s) for tags.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-tags-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-tasks-api
+  name: Monaco Tasks API
+  description: The Tasks API from Monaco — 3 operation(s) for tasks.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-users-api
+  name: Monaco Users API
+  description: The Users API from Monaco — 1 operation(s) for users.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+common:
+- type: DeveloperPortal
+  url: https://docs.monaco.com
+- type: Documentation
+  url: https://docs.monaco.com
+- type: APIReference
+  url: https://docs.monaco.com/api-reference
+- type: GettingStarted
+  url: https://docs.monaco.com/auth
+- type: Website
+  url: https://www.monaco.com
+- type: Blog
+  url: https://www.monaco.com/blog
+- type: SignUp
+  url: https://app.monaco.com/login
+- type: Login
+  url: https://app.monaco.com/login
+- type: TermsOfService
+  url: https://www.monaco.com/terms
+- type: PrivacyPolicy
+  url: https://www.monaco.com/privacy
+- type: StatusPage
+  url: https://status.monaco.com
+- type: TrustCenter
+  url: https://trust.monaco.com
+- type: Security
+  url: https://www.monaco.com/security
+- type: VulnerabilityDisclosure
+  url: security/monaco-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/monaco-domain-security.yml
+- type: SecurityTxt
+  url: well-known/monaco-security.txt
+- type: WellKnown
+  url: well-known/monaco-well-known.yml
+- type: Authentication
+  url: authentication/monaco-authentication.yml
+- type: MCPServer
+  url: mcp/monaco-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/monaco-llms.txt
+- type: Lifecycle
+  url: lifecycle/monaco-lifecycle.yml
+- type: AgenticAccess
+  url: agentic-access/monaco-agentic-access.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1

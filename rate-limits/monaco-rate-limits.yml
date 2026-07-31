@@ -1,0 +1,26 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.monaco.com/auth
+docs:
+- https://docs.monaco.com/auth
+- https://docs.monaco.com/mcp/overview
+limit_count: 100
+window: minute
+scope: organization
+algorithm: sliding-window
+detail: >-
+  All endpoints enforce per-organization rate limiting at 100 requests per
+  minute. The limit is shared across the public REST API and all MCP tool calls,
+  regardless of which user makes the request.
+over_limit:
+  status: 429
+  behavior: Compatible MCP clients back off and retry automatically.
+signal_headers:
+- name: X-RateLimit-Limit
+  description: Maximum requests allowed per window
+- name: X-RateLimit-Remaining
+  description: Requests remaining in the current window
+- name: X-RateLimit-Reset
+  description: Unix timestamp when the current window resets
+- name: Retry-After
+  description: Seconds to wait before retrying

@@ -1,0 +1,34 @@
+{
+  "provider": "monaco",
+  "sources": [
+    "monaco-accounts-api-openapi.yml",
+    "monaco-auth-api-openapi.yml",
+    "monaco-contacts-api-openapi.yml",
+    "monaco-meetings-api-openapi.yml",
+    "monaco-opportunities-api-openapi.yml",
+    "monaco-schemas-api-openapi.yml",
+    "monaco-sequence-templates-api-openapi.yml",
+    "monaco-sequences-api-openapi.yml",
+    "monaco-tags-api-openapi.yml",
+    "monaco-tasks-api-openapi.yml",
+    "monaco-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "monaco-accounts-api-openapi.yml",
+    "monaco-auth-api-openapi.yml",
+    "monaco-contacts-api-openapi.yml",
+    "monaco-meetings-api-openapi.yml",
+    "monaco-opportunities-api-openapi.yml",
+    "monaco-schemas-api-openapi.yml",
+    "monaco-sequence-templates-api-openapi.yml",
+    "monaco-sequences-api-openapi.yml",
+    "monaco-tags-api-openapi.yml",
+    "monaco-tasks-api-openapi.yml",
+    "monaco-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

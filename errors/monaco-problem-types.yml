@@ -1,0 +1,50 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/monaco-openapi-original.json
+docs: https://docs.monaco.com/auth
+format: custom-envelope
+envelope:
+  shape: '{"error": {"code": "<string>", "message": "<string>"}}'
+  fields:
+    code: Machine-readable error code (e.g. not_found)
+    message: Human-readable error message
+  note: >-
+    Application errors use the PublicErrorResponse/ErrorDetail envelope above.
+    Authentication-layer failures may instead return a simpler {"detail": "..."}
+    body (e.g. {"detail": "No key found"} on 401). Not RFC 9457.
+problems:
+- status: 401
+  code: unauthorized
+  title: Missing or invalid API key
+  remediation: Include a valid Authorization Bearer mks_ key.
+  source: docs (https://docs.monaco.com/auth)
+- status: 403
+  code: forbidden
+  title: API key valid but lacks required access
+  remediation: Use a key scoped to the required organization/user or permissions.
+  source: docs
+- status: 404
+  code: not_found
+  title: Resource not found
+  remediation: Verify the resource id.
+  source: openapi (get_account, get_contact and other GET-by-id operations)
+- status: 409
+  code: conflict
+  title: Conflict
+  remediation: Resolve the conflicting state (e.g. duplicate/unique constraint) and retry.
+  source: openapi (create/upsert operations)
+- status: 422
+  code: unprocessable_entity
+  title: Validation error
+  remediation: Fix invalid fields; e.g. sorting an unsupported field returns 422.
+  source: docs (pagination-sorting-and-filtering)
+- status: 429
+  code: rate_limited
+  title: Rate limit exceeded
+  remediation: Read Retry-After and X-RateLimit-* headers; back off with exponential retry.
+  source: docs (100 req/min per org)
+- status: "4XX"
+  code: client_error
+  title: Client error
+  remediation: Inspect error.code and error.message in the response body.
+  source: openapi (shared 4XX default response on all operations)

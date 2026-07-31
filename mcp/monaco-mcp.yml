@@ -1,0 +1,96 @@
+generated: '2026-07-20'
+method: searched
+status: published
+source: https://docs.monaco.com/mcp/overview
+server:
+  name: monaco
+  transport: http
+  url: https://mcp.monaco.com/mcp
+  auth: oauth2
+  auth_detail: >-
+    OAuth 2.0; the MCP client handles the flow on first connection. API-key
+    bearer auth is also supported for Codex/ChatGPT (bearer-token env var).
+  permissions: >-
+    Every request is authenticated as the user who completed login and respects
+    that user's existing Monaco permissions. Reads are auto-approved by the AI
+    client; writes and deletes prompt for confirmation by default.
+  rate_limits: 100 requests/minute per organization, shared with the REST API (429 on exceed).
+  stability: beta
+clients:
+- Claude Desktop / Cowork
+- ChatGPT (Business/Enterprise/Edu, Developer Mode)
+- Codex
+- Any MCP-compliant custom client
+tools:
+- name: list_accounts
+  description: Search accounts with filters, sorting, and pagination.
+  source_operation: openapi/monaco-openapi-original.json#list_accounts
+- name: get_account
+  description: Fetch a single account.
+  source_operation: openapi/monaco-openapi-original.json#get_account
+- name: upsert_account
+  description: Create or update an account by domain.
+  source_operation: openapi/monaco-openapi-original.json#upsert_account
+- name: delete_account
+  description: Delete an account.
+  source_operation: openapi/monaco-openapi-original.json#delete_account
+- name: list_contacts
+  description: Search contacts.
+  source_operation: openapi/monaco-openapi-original.json#list_contacts
+- name: get_contact
+  description: Fetch a single contact.
+  source_operation: openapi/monaco-openapi-original.json#get_contact
+- name: create_contact
+  description: Create a contact.
+  source_operation: openapi/monaco-openapi-original.json#create_contact
+- name: update_contact
+  description: Update a contact.
+  source_operation: openapi/monaco-openapi-original.json#update_contact
+- name: delete_contact
+  description: Delete a contact.
+  source_operation: openapi/monaco-openapi-original.json#delete_contact
+- name: list_opportunities
+  description: Search opportunities.
+  source_operation: openapi/monaco-openapi-original.json#list_opportunities
+- name: get_opportunity
+  description: Fetch a single opportunity.
+  source_operation: openapi/monaco-openapi-original.json#get_opportunity
+- name: create_opportunity
+  description: Create an opportunity (supports idempotency_key).
+  source_operation: openapi/monaco-openapi-original.json#create_opportunity
+- name: update_opportunity
+  description: Update an opportunity.
+  source_operation: openapi/monaco-openapi-original.json#update_opportunity
+- name: delete_opportunity
+  description: Delete an opportunity.
+  source_operation: openapi/monaco-openapi-original.json#delete_opportunity
+- name: list_meetings
+  description: Search meetings.
+  source_operation: openapi/monaco-openapi-original.json#list_meetings
+- name: get_meeting
+  description: Fetch a meeting including AI summary and full transcript.
+  source_operation: openapi/monaco-openapi-original.json#get_meeting
+- name: list_tasks
+  description: Search tasks.
+  source_operation: openapi/monaco-openapi-original.json#list_tasks
+- name: get_task
+  description: Fetch a single task.
+  source_operation: openapi/monaco-openapi-original.json#get_task
+- name: create_task
+  description: Create a task.
+  source_operation: openapi/monaco-openapi-original.json#create_task
+- name: update_task
+  description: Update a task.
+  source_operation: openapi/monaco-openapi-original.json#update_task
+- name: list_sequences
+  description: List sequences.
+  source_operation: openapi/monaco-openapi-original.json#list_sequences
+- name: get_sequence
+  description: Get a sequence including its tasks.
+  source_operation: openapi/monaco-openapi-original.json#get_sequence
+- name: list_sequence_templates
+  description: List sequence templates.
+  source_operation: openapi/monaco-openapi-original.json#list_sequence_templates
+- name: get_sequence_template
+  description: Get a sequence template including its steps and transitions.
+  source_operation: openapi/monaco-openapi-original.json#get_sequence_template

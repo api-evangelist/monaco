@@ -1,0 +1,50 @@
+# Monaco Docs
+
+## Docs
+
+- [Agent Skills](https://docs.monaco.com/agent-skills.md)
+- [Delete an Account](https://docs.monaco.com/api-reference/accounts/delete-an-account.md): Deletes an account by its `account_id`. Returns 204 No Content on success. This is irreversible — associated contacts and opportunities are not deleted but may become unlinked.
+- [Get an Account](https://docs.monaco.com/api-reference/accounts/get-an-account.md): Gets a single account by its `account_id`. The detail response includes enriched company information, scoring, and custom fields.
+- [List Accounts](https://docs.monaco.com/api-reference/accounts/list-accounts.md): Returns a paginated list of accounts.
+- [Update an Account](https://docs.monaco.com/api-reference/accounts/update-an-account.md): Updates an existing account by its `account_id`. Any `tags` list provided **replaces** the existing tags on the account.
+- [Upsert an Account](https://docs.monaco.com/api-reference/accounts/upsert-an-account.md): Creates a new account or updates an existing one. `domain` is required and is used as the primary identifier for matching.
+- [Get Authenticated User](https://docs.monaco.com/api-reference/auth/get-authenticated-user.md): Returns the user and organization resolved from the bearer token.
+- [Create a Contact](https://docs.monaco.com/api-reference/contacts/create-a-contact.md): Creates a new contact.
+- [Delete a Contact](https://docs.monaco.com/api-reference/contacts/delete-a-contact.md): Deletes a contact by its `contact_id`. Returns 204 No Content on success. This is irreversible.
+- [Get a Contact](https://docs.monaco.com/api-reference/contacts/get-a-contact.md): Gets a single contact by its `contact_id`. The detail response includes scoring, source attribution, and custom fields.
+- [List Contacts](https://docs.monaco.com/api-reference/contacts/list-contacts.md): Returns a paginated list of contacts.
+- [Update a Contact](https://docs.monaco.com/api-reference/contacts/update-a-contact.md): Updates an existing contact by its `contact_id`. Any `tags` list provided **replaces** the existing tags on the contact.
+- [Upsert a Contact](https://docs.monaco.com/api-reference/contacts/upsert-a-contact.md): Creates a new contact or updates an existing one.
+- [Get a Meeting](https://docs.monaco.com/api-reference/meetings/get-a-meeting.md): Gets a single meeting by its `meeting_id`. The detail response includes the AI-generated summary, a presigned video URL, and the full transcript with speaker attribution.
+- [List Meetings](https://docs.monaco.com/api-reference/meetings/list-meetings.md): Returns a paginated list of meetings.
+- [Create an Opportunity](https://docs.monaco.com/api-reference/opportunities/create-an-opportunity.md): Creates a new opportunity associated with an existing account. Pass an `idempotency_key` to safely retry creation.
+- [Delete an Opportunity](https://docs.monaco.com/api-reference/opportunities/delete-an-opportunity.md): Deletes an opportunity by its `opportunity_id`. Returns 204 No Content on success. This is irreversible.
+- [Get an Opportunity](https://docs.monaco.com/api-reference/opportunities/get-an-opportunity.md): Gets a single opportunity by its `opportunity_id`. The detail response includes the AI-generated summary, identified risks, and custom fields.
+- [List Opportunities](https://docs.monaco.com/api-reference/opportunities/list-opportunities.md): Returns a paginated list of opportunities.
+- [Update an Opportunity](https://docs.monaco.com/api-reference/opportunities/update-an-opportunity.md): Updates an existing opportunity by its `opportunity_id`. Any `tags` list provided **replaces** the existing tags on the opportunity.
+- [Get Field Schemas for an Entity](https://docs.monaco.com/api-reference/schemas/get-field-schemas-for-an-entity.md): Lists fields for `entity`, which must be one of `accounts`, `contacts`, `meetings`, `opportunities`, `sequences`, or `tasks`.
+- [Create a Sequence Template](https://docs.monaco.com/api-reference/sequence-templates/create-a-sequence-template.md): Creates a new sequence template. The template is created as a USER_GENERATED template.
+- [Get a Sequence Template](https://docs.monaco.com/api-reference/sequence-templates/get-a-sequence-template.md): Gets a single sequence template by its `sequence_template_id`. The detail response includes the template's ordered list of steps.
+- [List Sequence Templates](https://docs.monaco.com/api-reference/sequence-templates/list-sequence-templates.md): Returns the list of sequence templates available to the authenticated organization.
+- [Update a Sequence Template](https://docs.monaco.com/api-reference/sequence-templates/update-a-sequence-template.md): Updates an existing sequence template. All fields are optional, but at least one must be provided. `steps`, `transitions`, and `blocks` replace the current value when supplied; each supplied step must include its `id`.
+- [Get a Sequence](https://docs.monaco.com/api-reference/sequences/get-a-sequence.md): Gets a single sequence by its `sequence_id`. The detail response includes the sequence's ordered list of tasks.
+- [List Sequences](https://docs.monaco.com/api-reference/sequences/list-sequences.md): Returns a paginated list of sequences.
+- [Update a Sequence](https://docs.monaco.com/api-reference/sequences/update-a-sequence.md): Applies a state transition to a sequence (see the `action` field for valid values and their meanings). Returns the refreshed sequence representation, including its tasks.
+- [Create a Tag](https://docs.monaco.com/api-reference/tags/create-a-tag.md): Creates a new tag for the `object` given in the request body. Tag names must be unique per object type within the organization.
+- [Delete a Tag](https://docs.monaco.com/api-reference/tags/delete-a-tag.md): Deletes a tag by its `tag_id`. The tag is removed from all entities it was applied to. Returns 204 No Content on success. This is irreversible.
+- [Get a Tag](https://docs.monaco.com/api-reference/tags/get-a-tag.md): Gets a single tag by its `tag_id`.
+- [List Tags](https://docs.monaco.com/api-reference/tags/list-tags.md): Returns every tag defined for the object type given by the required `object` query parameter (one of `contacts`, `accounts`, `opportunities`).
+- [Update a Tag](https://docs.monaco.com/api-reference/tags/update-a-tag.md): Updates a tag's `name` and/or `color` by its `tag_id`. The object type of a tag cannot be changed.
+- [Create a Task](https://docs.monaco.com/api-reference/tasks/create-a-task.md): Creates a new task.
+- [Get a Task](https://docs.monaco.com/api-reference/tasks/get-a-task.md): Gets a single task by its `task_id`.
+- [List Tasks](https://docs.monaco.com/api-reference/tasks/list-tasks.md): Returns a paginated list of tasks.
+- [Update a Task](https://docs.monaco.com/api-reference/tasks/update-a-task.md): Updates an existing task by its `task_id`. Marking a task as `DONE` or `CANCELLED` sets `completed_at`; moving out of those states clears it. Updating `account_id` is only supported for manually created tasks.
+- [List Users](https://docs.monaco.com/api-reference/users/list-users.md): Returns the users in the caller's organization. Pass the optional `query` parameter to filter by substring of name or email.
+- [Authentication](https://docs.monaco.com/auth.md)
+- [Beta Notice](https://docs.monaco.com/beta-notice.md)
+- [MCP Overview](https://docs.monaco.com/mcp/overview.md)
+- [Pagination, Sorting, and Filtering](https://docs.monaco.com/pagination-sorting-and-filtering.md)
+
+## OpenAPI Specs
+
+- [openapi](https://api.monaco.com/openapi.json)

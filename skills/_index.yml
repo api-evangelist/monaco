@@ -1,0 +1,34 @@
+generated: '2026-07-20'
+method: generated
+api: openapi/monaco-openapi-original.json
+skills:
+- file: monaco-account-briefing.md
+  name: Prep an account briefing before a meeting
+  method: generated
+  operations: [get_account, list_opportunities, list_meetings, get_meeting, list_contacts, list_tasks]
+- file: monaco-pipeline-hygiene.md
+  name: Run pipeline hygiene on opportunities
+  method: generated
+  operations: [list_opportunities, get_opportunity, update_opportunity]
+- file: monaco-outbound-audience.md
+  name: Build a tagged outbound audience
+  method: generated
+  operations: [list_contacts, list_tags, create_tag, update_contact]
+- file: monaco-cro.skill
+  name: Monaco CRO advisor (provider-published)
+  method: searched
+  source: https://docs.monaco.com/agent-skills
+  format: skill-bundle (zip)
+  description: >-
+    Monaco's shipped CRO advisor skill for strategic revenue questions —
+    pipeline health, ICP conversion, deal slippage, rep performance. Saved
+    verbatim from the docs agent-skills page.
+provider_published:
+- name: monaco-query.skill
+  source: https://docs.monaco.com/agent-skills
+  hosted_url: >-
+    https://assets.usepylon.com/57b3e567-723c-42e0-9cca-6fd86989f02f%2F1774905902399-monaco-queryv2.skill
+  note: >-
+    Provider-published conversational query skill (handles pagination,
+    filtering, cross-entity joins). Hosted on an expiring signed URL, so it is
+    referenced here rather than saved verbatim.

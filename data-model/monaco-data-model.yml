@@ -1,0 +1,77 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/monaco-openapi-original.json
+docs: https://docs.monaco.com/api-reference
+id_prefixes:
+  contact: con_
+  account: acc_
+  note: >-
+    con_ and acc_ observed verbatim in OpenAPI examples; prefixes for other
+    entities (opportunity, task, tag, meeting, sequence) are not confirmed from
+    published examples and are left unrecorded.
+entities:
+- name: Account
+  primary_identifier: domain
+  operations: [list_accounts, upsert_account, update_account, get_account, delete_account]
+- name: Contact
+  operations: [list_contacts, upsert_contact, create_contact, update_contact, get_contact, delete_contact]
+- name: Opportunity
+  operations: [list_opportunities, create_opportunity, get_opportunity, update_opportunity, delete_opportunity]
+- name: Task
+  operations: [list_tasks, create_task, get_task, update_task]
+- name: Tag
+  operations: [list_tags, create_tag, get_tag, update_tag, delete_tag]
+  scoped_to_object: [contacts, accounts, opportunities]
+- name: Meeting
+  operations: [list_meetings, get_meeting]
+- name: Sequence
+  operations: [list_sequences, get_sequence, update_sequence]
+- name: SequenceTemplate
+  operations: [list_sequence_templates, create_sequence_template, get_sequence_template, update_sequence_template]
+- name: User
+  operations: [list_users, get_me]
+relationships:
+- from: Contact
+  type: belongs_to
+  to: Account
+  via: account_id
+- from: Opportunity
+  type: belongs_to
+  to: Account
+  via: account_id
+- from: Meeting
+  type: belongs_to
+  to: Account
+  via: account_id
+- from: Meeting
+  type: belongs_to
+  to: Opportunity
+  via: opportunity_id
+- from: Task
+  type: belongs_to
+  to: Account
+  via: account_id
+- from: Task
+  type: belongs_to
+  to: Opportunity
+  via: opportunity_id
+- from: Sequence
+  type: belongs_to
+  to: Contact
+  via: contact_id
+- from: Sequence
+  type: belongs_to
+  to: SequenceTemplate
+  via: template_id
+- from: Sequence
+  type: belongs_to
+  to: User
+  via: sender_id
+- from: SequenceTask
+  type: belongs_to
+  to: Sequence
+  via: sequence_id
+- from: SequenceTemplate
+  type: belongs_to
+  to: User
+  via: owner_id

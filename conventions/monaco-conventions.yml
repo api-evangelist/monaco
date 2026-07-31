@@ -1,0 +1,66 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.monaco.com/pagination-sorting-and-filtering
+docs:
+- https://docs.monaco.com/auth
+- https://docs.monaco.com/pagination-sorting-and-filtering
+authentication:
+  style: api-key-bearer
+  header: Authorization
+  scheme: "Bearer mks_<token>"
+  detail: authentication/monaco-authentication.yml
+idempotency:
+  supported: true
+  mechanism: request-body-field
+  field: idempotency_key
+  scope: create operations (e.g. create_opportunity)
+  detail: >-
+    Create endpoints accept an idempotency_key in the request body so a
+    creation can be safely retried without duplicating records. Confirmed in the
+    OpenAPI OpportunityCreateRequest schema and the Create an Opportunity docs.
+  source: https://docs.monaco.com/api-reference/opportunities/create-an-opportunity
+pagination:
+  style: page-number
+  request:
+    location: request body (POST /v1/{entity}/list)
+    params:
+      page: {type: int, default: 1, min: 1, description: Page number (1-indexed)}
+      page_size: {type: int, default: 50, min: 1, max: 500, description: Results per page}
+  response:
+    envelope_field: pagination
+    fields: [page, page_size, total_count, total_pages]
+    iterate: increment page until page >= total_pages
+sorting:
+  param: sort
+  descending_prefix: "-"
+  default: "-created_at"
+  discovery: GET /v1/schemas/{entity} lists sortable fields
+  note: Sorting an unsupported field returns 422.
+filtering:
+  param: filters
+  simple: flat array of {field, condition, value} rules, implicitly ANDed
+  complex: "recursive filter expression {operator: and|or, filters: [...]} nestable to arbitrary depth"
+  conditions: [is, is_not, equals, contains, not_contains, is_empty, is_not_empty, is_before, is_after]
+  enum_values: use the field key value, not the display name
+  dates: ISO 8601 strings (trailing Z / UTC supported)
+  custom_fields: custom_field_<key> usable in sort and filters
+  discovery: GET /v1/schemas/{entity} to discover filterable fields + accepted conditions
+list_pattern:
+  style: POST /v1/{entity}/list with a JSON body carrying filters/sort/page/page_size
+  entities: [accounts, contacts, opportunities, tasks, meetings, sequences]
+error_envelope:
+  shape: '{"error": {"code": "<machine-readable>", "message": "<human-readable>"}}'
+  note: >-
+    Custom envelope (not RFC 9457 problem+json). Auth-layer errors may return a
+    simpler {"detail": "..."} body. See errors/monaco-problem-types.yml.
+  detail: errors/monaco-problem-types.yml
+rate_limiting:
+  limit: 100 requests per minute per organization
+  scope: shared across REST API and MCP tool calls
+  signal_headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After]
+  over_limit_status: 429
+  detail: rate-limits/monaco-rate-limits.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  stability: Beta (see lifecycle/monaco-lifecycle.yml)

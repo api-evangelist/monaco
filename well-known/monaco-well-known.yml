@@ -1,0 +1,26 @@
+generated: '2026-07-20'
+method: searched
+hosts:
+- host: https://www.monaco.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: monaco-security.txt
+- host: https://app.monaco.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: Declared as a Canonical location in the www security.txt (not separately saved).
+- host: https://api.monaco.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /openapi.json
+    status: 200
+    note: OpenAPI 3.1 spec (not under /.well-known/); harvested to openapi/.
