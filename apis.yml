@@ -356,6 +356,8 @@ apis:
   - type: Conformance
     url: conformance/monaco-conformance.yml
 common:
+- type: Overlay
+  url: overlays/monaco-openapi-overlay.yaml
 - type: DeveloperPortal
   url: https://docs.monaco.com
 - type: Documentation
