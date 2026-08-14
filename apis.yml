@@ -6,11 +6,13 @@ description: >-
   It unifies a contacts/accounts database, buying signals, sequences, pipeline
   and opportunity tracking, meeting/call recording with AI summaries, and CRO
   copilot coaching. Monaco exposes a public REST API (api.monaco.com) covering
-  contacts, accounts, opportunities, tasks, tags, meetings, sequences, and
-  sequence templates, plus a hosted, OAuth-secured MCP server (mcp.monaco.com)
-  and shipped Agent Skills so AI agents can query and act on revenue data in
-  natural language. Founded by Sam Blond and backed by Founders Fund; the API
-  and MCP surface are currently in Beta.
+  contacts, accounts, opportunities, tasks, tags, meetings, sequences, sequence
+  templates, audiences, and campaigns, plus a hosted, OAuth-secured MCP server
+  (mcp.monaco.com), a published Agent Skill, and an A2A agent card on its docs
+  host, so AI agents can query and act on revenue data in natural language.
+  Founded by Sam Blond and backed by Founders Fund; the API and MCP surface are
+  currently in Beta, and the published OpenAPI grew from 37 to 51 operations
+  between July and August 2026 with no changelog to announce it.
 accessModel:
   pricing: unknown
   onboarding: self-serve
@@ -33,7 +35,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-20'
+modified: '2026-08-13'
 tags:
 - Company
 - CRM
@@ -46,6 +48,10 @@ tags:
 - Pipeline
 - Go To Market
 - MCP
+- Campaigns
+- Audiences
+- Sales Engagement
+- Agents
 apis:
 - aid: monaco:monaco-accounts-api
   name: Monaco Accounts API
@@ -75,6 +81,34 @@ apis:
     url: data-model/monaco-data-model.yml
   - type: Conformance
     url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-audiences-api
+  name: Monaco Audiences API
+  description: The Audiences API from Monaco — 6 operation(s) for building and maintaining named sets of contacts, seeded from an explicit id list or from a filter query over the contact field schemas.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Audiences
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-audiences-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference/audiences
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
 - aid: monaco:monaco-auth-api
   name: Monaco Auth API
   description: The Auth API from Monaco — 1 operation(s) for auth.
@@ -89,6 +123,34 @@ apis:
     url: https://docs.monaco.com
   - type: APIReference
     url: https://docs.monaco.com/api-reference
+  - type: Authentication
+    url: authentication/monaco-authentication.yml
+  - type: Conventions
+    url: conventions/monaco-conventions.yml
+  - type: Idempotency
+    url: conventions/monaco-conventions.yml
+  - type: ErrorCatalog
+    url: errors/monaco-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/monaco-rate-limits.yml
+  - type: DataModel
+    url: data-model/monaco-data-model.yml
+  - type: Conformance
+    url: conformance/monaco-conformance.yml
+- aid: monaco:monaco-campaigns-api
+  name: Monaco Campaigns API
+  description: The Campaigns API from Monaco — 7 operation(s) for creating campaigns that enroll the contacts of one or more audiences onto a sequence template, and for attaching, detaching, and enrolling into them.
+  humanURL: https://docs.monaco.com
+  baseURL: https://api.monaco.com
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/monaco-campaigns-api-openapi.yml
+  - type: Documentation
+    url: https://docs.monaco.com
+  - type: APIReference
+    url: https://docs.monaco.com/api-reference/campaigns
   - type: Authentication
     url: authentication/monaco-authentication.yml
   - type: Conventions
@@ -404,13 +466,21 @@ common:
   url: lifecycle/monaco-lifecycle.yml
 - type: AgenticAccess
   url: agentic-access/monaco-agentic-access.yml
+- type: AgentCard
+  url: a2a/monaco-a2a.yml
+- type: ToolCrosswalk
+  url: mcp/monaco-tool-crosswalk.yml
+- type: OAuthScopes
+  url: scopes/monaco-scopes.yml
+- type: Plans
+  url: plans/monaco-plans-pricing.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 x-enrichment:
-  date: '2026-07-20'
+  date: '2026-08-13'
   status: enriched
-  artifacts_added: 21
+  artifacts_added: 11
   pass: local-v1
