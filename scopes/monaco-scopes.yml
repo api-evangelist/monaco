@@ -1,0 +1,55 @@
+generated: '2026-08-13'
+method: probed
+source: https://mcp.monaco.com/.well-known/oauth-protected-resource/mcp
+docs: https://docs.monaco.com/mcp/overview
+applies_to: >-
+  The hosted Monaco MCP server (https://mcp.monaco.com/mcp) only. The public REST
+  API at api.monaco.com uses API-key bearer authentication (prefix mks_) and has
+  no OAuth scope surface — see authentication/monaco-authentication.yml.
+protected_resource:
+  resource: https://mcp.monaco.com/mcp
+  resource_name: Monaco Public MCP
+  authorization_servers:
+  - https://monaco-inc.us.auth0.com/
+  bearer_methods_supported: [header]
+  scopes_supported: []
+  spec: RFC 9728 OAuth 2.0 Protected Resource Metadata
+  file: well-known/monaco-oauth-protected-resource.json
+schemes:
+- name: oauth2Mcp
+  source: https://mcp.monaco.com/.well-known/oauth-protected-resource/mcp
+  authorization_server: https://monaco-inc.us.auth0.com/
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://monaco-inc.us.auth0.com/authorize
+    tokenUrl: https://monaco-inc.us.auth0.com/oauth/token
+    pkce: [S256, plain]
+  dynamic_client_registration: https://monaco-inc.us.auth0.com/oidc/register
+  jwks_uri: https://monaco-inc.us.auth0.com/.well-known/jwks.json
+scopes: []
+scopes_note: >-
+  Monaco's MCP resource metadata declares an EMPTY scopes_supported array, so the
+  provider publishes no granular API scopes. Authorization is not scope-based:
+  the docs state every request is authenticated as the user who completed the
+  login and every tool call respects that user's existing Monaco permissions —
+  authority is carried by the user's in-product role, not by an OAuth scope. The
+  scopes advertised by the Auth0 authorization server below are Auth0's stock
+  OIDC identity scopes, not Monaco API permissions, and are recorded separately
+  so they are not mistaken for a Monaco scope catalog.
+authorization_server_scopes:
+  issuer: https://monaco-inc.us.auth0.com/
+  source: https://monaco-inc.us.auth0.com/.well-known/openid-configuration
+  kind: oidc-standard-claims
+  values: [openid, profile, offline_access, name, given_name, family_name, nickname,
+    email, email_verified, picture, created_at, identities, phone, address]
+permission_model:
+  basis: user-permission-inheritance
+  detail: >-
+    Every MCP request runs as the authenticated Monaco user and inherits that
+    user's product permissions. Reads are auto-approved by the AI client; writes
+    and deletes prompt for confirmation by default.
+  source: https://docs.monaco.com/mcp/overview
+x-evidence:
+- {url: 'https://mcp.monaco.com/.well-known/oauth-protected-resource/mcp', status: 200, content_type: application/json}
+- {url: 'https://monaco-inc.us.auth0.com/.well-known/openid-configuration', status: 200}
+- {url: 'https://mcp.monaco.com/mcp', status: 401, note: 'tools/list POST returns WWW-Authenticate Bearer error="invalid_token" with resource_metadata pointer — live schema is auth-gated'}

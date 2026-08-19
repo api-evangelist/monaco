@@ -1,0 +1,100 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Sequences API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sequences",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Sequences",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/sequences/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of sequences."
+        },
+        {
+          "info": {
+            "name": "Get a Sequence",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/sequences/:sequence_id",
+            "params": [
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single sequence by its `sequence_id`. The detail response includes the sequence's ordered list of tasks."
+        },
+        {
+          "info": {
+            "name": "Update a Sequence",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/sequences/:sequence_id",
+            "params": [
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a state transition to a sequence (see the `action` field for valid values and their meanings). Returns the refreshed sequence representation, including its tasks."
+        },
+        {
+          "info": {
+            "name": "Update a Sequence Step",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/sequences/:sequence_id/steps/:step_id",
+            "params": [
+              {
+                "name": "sequence_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "step_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the copy on a single step of a sequence. `step_id` is the `id` of the entry in the sequence's `tasks` list (from `get_sequence`). Supports `message` on email, InMail, LinkedIn message, LinkedIn connection-note, and gifting-email steps, and `subject` on email, InMail, and gifting-email steps. Only steps of an active (non-suggested) sequence that have not yet been completed can be edited. Only the fields you provide are updated, and omitted fields are left unchanged. Returns the refreshed "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

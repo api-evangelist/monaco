@@ -1,0 +1,740 @@
+{
+  "item": [
+    {
+      "id": "7b953645-f68b-434b-a0d3-3d2eceffc34f",
+      "name": "Accounts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8ac5ae45-74e8-406a-8849-8a256866c1e2",
+          "name": "List Accounts",
+          "request": {
+            "name": "List Accounts",
+            "description": {
+              "content": "Returns a paginated list of accounts.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "accounts",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 50,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "29e31096-5799-4aaa-827c-3b19d1a83ee0",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"acc_abc123\",\n      \"name\": \"Acme Corp\",\n      \"status\": \"active\",\n      \"owner\": {\n        \"id\": \"usr_abc123\",\n        \"first_name\": \"Jane\",\n        \"last_name\": \"Smith\"\n      },\n      \"notes\": \"Key enterprise prospect\",\n      \"company\": {\n        \"domain\": \"acme.com\",\n        \"linkedin_url\": \"https://linkedin.com/company/acme\",\n        \"description\": \"Enterprise software company specializing in AI-driven sales tools\",\n        \"employee_count\": 250,\n        \"founded_year\": 2019,\n        \"industries\": [\n          \"Software\",\n          \"Artificial Intelligence\"\n        ],\n        \"total_funding_usd\": 50000000,\n        \"last_funding_date\": \"2024-03-15\"\n      },\n      \"scoring\": {\n        \"tier\": \"A\",\n        \"heat_score\": \"Hot\"\n      },\n      \"tags\": [\n        \"Enterprise\",\n        \"High Priority\"\n      ],\n      \"created_at\": \"2025-06-15T10:30:00Z\",\n      \"updated_at\": \"2025-06-16T10:30:00Z\",\n      \"custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c\": \"high\",\n      \"custom_field_8b2d1f3c-4e5a-4b9f-ac2d-3e4f5a6b7c8d\": \"2026-09-30\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"page_size\": 50,\n    \"total_count\": 142,\n    \"total_pages\": 3\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ff787638-e8f0-4089-8792-f88917590e03",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "67b74e69-b11f-484c-a35c-551308c5ba60",
+          "name": "Upsert an Account",
+          "request": {
+            "name": "Upsert an Account",
+            "description": {
+              "content": "Creates a new account or updates an existing one. `domain` is required and is used as the primary identifier for matching.\n\n**Duplicate resolution** — the request is matched against existing accounts in the org by exact match on `domain`. If a match is found, that account is updated in place with the provided fields and returned; otherwise a new account is created (a company record for the domain must exist in our data sources).\n\n**Enrichment** — on creation, Monaco synchronously enriches the account with company firmographic data (industry, employee count, funding, etc.). This can make create requests take several seconds to complete; clients should use generous timeouts (10s+) and avoid issuing creates on hot paths.\n\nAny `tags` list provided is **appended** to the existing tags on the account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "accounts",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"domain\": \"<string>\",\n  \"linkedin_url\": \"<string>\",\n  \"name\": \"<string>\",\n  \"status\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"owner\": \"<uuid>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4bcf9add-b97c-4f9d-aabc-43611fe7b3d0",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"domain\": \"acme.com\",\n  \"linkedin_url\": \"https://linkedin.com/company/acme\",\n  \"name\": \"Acme Corp\",\n  \"status\": \"NEW\",\n  \"notes\": \"Key enterprise prospect\",\n  \"owner\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ],\n  \"custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c\": \"high\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"acc_abc123\",\n    \"name\": \"Acme Corp\",\n    \"status\": \"NEW\",\n    \"owner\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"notes\": \"Key enterprise prospect\",\n    \"company\": {\n      \"domain\": \"acme.com\",\n      \"linkedin_url\": \"https://linkedin.com/company/acme\",\n      \"description\": \"Enterprise software company specializing in AI-driven sales tools\",\n      \"employee_count\": 250,\n      \"founded_year\": 2019,\n      \"industries\": [\n        \"Software\",\n        \"Artificial Intelligence\"\n      ],\n      \"total_funding_usd\": 50000000,\n      \"last_funding_date\": \"2024-03-15\"\n    },\n    \"scoring\": {\n      \"tier\": \"A\",\n      \"heat_score\": \"Hot\"\n    },\n    \"tags\": [\n      \"Enterprise\"\n    ],\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2025-06-15T10:30:00Z\",\n    \"custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c\": \"high\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "44eef7ef-beee-4818-a830-9c002ea5a505",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"domain\": \"acme.com\",\n  \"linkedin_url\": \"https://linkedin.com/company/acme\",\n  \"name\": \"Acme Corp\",\n  \"status\": \"NEW\",\n  \"notes\": \"Key enterprise prospect\",\n  \"owner\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ],\n  \"custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c\": \"high\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f41e0f5b-8836-4ce0-9126-0e3996bbfd70",
+          "name": "Update an Account",
+          "request": {
+            "name": "Update an Account",
+            "description": {
+              "content": "Updates an existing account by its `account_id`. Any `tags` list provided **replaces** the existing tags on the account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "accounts",
+                ":account_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "account_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"status\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"owner\": \"<uuid>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f1afc86e-881d-427f-9165-4a17274f2659",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ":account_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "account_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"status\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"owner\": \"<uuid>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"acc_abc123\",\n    \"name\": \"Acme Corp\",\n    \"status\": \"PROSPECTING\",\n    \"owner\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"notes\": \"Key enterprise prospect\",\n    \"company\": {\n      \"domain\": \"acme.com\",\n      \"linkedin_url\": \"https://linkedin.com/company/acme\",\n      \"description\": \"Enterprise software company specializing in AI-driven sales tools\",\n      \"employee_count\": 250,\n      \"founded_year\": 2019,\n      \"industries\": [\n        \"Software\",\n        \"Artificial Intelligence\"\n      ],\n      \"total_funding_usd\": 50000000,\n      \"last_funding_date\": \"2024-03-15\"\n    },\n    \"scoring\": {\n      \"tier\": \"A\",\n      \"heat_score\": \"Hot\"\n    },\n    \"tags\": [\n      \"Enterprise\",\n      \"High Priority\"\n    ],\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2026-04-21T12:00:00Z\",\n    \"custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c\": \"high\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "938e2ccc-6f10-4c8b-86ec-d9fe49f51acd",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ":account_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "account_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"status\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"owner\": \"<uuid>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "eda603e6-5b52-4a23-bd4d-9763db69f8b3",
+          "name": "Get an Account",
+          "request": {
+            "name": "Get an Account",
+            "description": {
+              "content": "Gets a single account by its `account_id`. The detail response includes enriched company information, scoring, and custom fields.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "accounts",
+                ":account_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "account_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "353bde91-1b14-4a57-bc7d-df9adea42b73",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ":account_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "account_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"acc_abc123\",\n    \"name\": \"Acme Corp\",\n    \"status\": \"active\",\n    \"owner\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"notes\": \"Key enterprise prospect\",\n    \"company\": {\n      \"domain\": \"acme.com\",\n      \"linkedin_url\": \"https://linkedin.com/company/acme\",\n      \"description\": \"Enterprise software company specializing in AI-driven sales tools\",\n      \"employee_count\": 250,\n      \"founded_year\": 2019,\n      \"industries\": [\n        \"Software\",\n        \"Artificial Intelligence\"\n      ],\n      \"total_funding_usd\": 50000000,\n      \"last_funding_date\": \"2024-03-15\"\n    },\n    \"scoring\": {\n      \"tier\": \"A\",\n      \"heat_score\": \"Hot\"\n    },\n    \"tags\": [\n      \"Enterprise\",\n      \"High Priority\"\n    ],\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2025-06-16T10:30:00Z\",\n    \"custom_field_7a1c9e2b-3f4d-4a8e-9b1c-2d3e4f5a6b7c\": \"high\",\n    \"custom_field_8b2d1f3c-4e5a-4b9f-ac2d-3e4f5a6b7c8d\": \"2026-09-30\",\n    \"custom_field_9c3e2a4d-5f6b-4cad-bd3e-4f5a6b7c8d9e\": 125000\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b18d401d-b69c-440d-b770-7eb17c165ce6",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ":account_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "account_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "82583790-336f-40f2-98db-d639a7d18f20",
+          "name": "Delete an Account",
+          "request": {
+            "name": "Delete an Account",
+            "description": {
+              "content": "Deletes an account by its `account_id`. Returns 204 No Content on success. This is irreversible — associated contacts and opportunities are not deleted but may become unlinked.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "accounts",
+                ":account_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "account_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b85a9daa-fcd4-4959-abad-73be76f26ac5",
+              "name": "Account deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ":account_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "account_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "dc7f6488-f52f-4296-adc4-ef2ad7872154",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "accounts",
+                    ":account_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "account_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "066b3576-3b98-40d1-bcc9-5d370afa2c44",
+    "name": "Monaco Public Accounts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

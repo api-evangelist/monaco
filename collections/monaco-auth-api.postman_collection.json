@@ -1,0 +1,140 @@
+{
+  "item": [
+    {
+      "id": "a64ba585-3c19-49a8-b579-c0175ddb3587",
+      "name": "Auth",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d199eb1c-4fc4-4382-b251-fd5cb9f6cd89",
+          "name": "Get Authenticated User",
+          "request": {
+            "name": "Get Authenticated User",
+            "description": {
+              "content": "Returns the user and organization resolved from the bearer token.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "me"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4c1ad6ab-bf81-4386-971e-65f79d58c4b2",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "me"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"org_id\": \"org_abc123\",\n    \"user_id\": \"usr_abc123\",\n    \"user_email\": \"ada@example.com\",\n    \"user_first_name\": \"Ada\",\n    \"user_last_name\": \"Lovelace\",\n    \"org_name\": \"Example Inc.\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ffcb7dde-7549-4d1f-a002-c75ba78345c6",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "me"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "125bf106-4f14-4bea-abc0-b8f59c4049fc",
+    "name": "Monaco Public Accounts Auth API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

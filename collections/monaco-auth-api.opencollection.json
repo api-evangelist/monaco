@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Auth API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Auth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Authenticated User",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/me"
+          },
+          "docs": "Returns the user and organization resolved from the bearer token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

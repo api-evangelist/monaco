@@ -1,34 +1,51 @@
-generated: '2026-07-20'
+generated: '2026-08-13'
 method: generated
-api: openapi/monaco-openapi-original.json
+api: openapi/_original/monaco-openapi-original.json
 skills:
+- file: monaco-docs-integration.skill.md
+  name: Monaco (provider-published integration skill)
+  method: searched
+  source: https://docs.monaco.com/.well-known/agent-skills/monaco/skill.md
+  format: Agent Skill (frontmatter + markdown)
+  version: '1.0'
+  discovered_via: a2a/monaco-agent-card.json (skills[0].url)
+  description: Monaco’s own operating instructions for building integrations against the REST API and MCP server
+    — entities, auth, the POST /v1/{entity}/list pattern, filtering/sorting/pagination, and rate limits. Saved verbatim.
 - file: monaco-account-briefing.md
   name: Prep an account briefing before a meeting
   method: generated
-  operations: [get_account, list_opportunities, list_meetings, get_meeting, list_contacts, list_tasks]
+  operations:
+  - get_account
+  - list_opportunities
+  - list_meetings
+  - get_meeting
+  - list_contacts
+  - list_tasks
 - file: monaco-pipeline-hygiene.md
   name: Run pipeline hygiene on opportunities
   method: generated
-  operations: [list_opportunities, get_opportunity, update_opportunity]
+  operations:
+  - list_opportunities
+  - get_opportunity
+  - update_opportunity
 - file: monaco-outbound-audience.md
   name: Build a tagged outbound audience
   method: generated
-  operations: [list_contacts, list_tags, create_tag, update_contact]
+  operations:
+  - list_contacts
+  - list_tags
+  - create_tag
+  - update_contact
 - file: monaco-cro.skill
   name: Monaco CRO advisor (provider-published)
   method: searched
   source: https://docs.monaco.com/agent-skills
   format: skill-bundle (zip)
-  description: >-
-    Monaco's shipped CRO advisor skill for strategic revenue questions —
-    pipeline health, ICP conversion, deal slippage, rep performance. Saved
-    verbatim from the docs agent-skills page.
+  description: Monaco's shipped CRO advisor skill for strategic revenue questions — pipeline health, ICP conversion,
+    deal slippage, rep performance. Saved verbatim from the docs agent-skills page.
 provider_published:
 - name: monaco-query.skill
   source: https://docs.monaco.com/agent-skills
-  hosted_url: >-
-    https://assets.usepylon.com/57b3e567-723c-42e0-9cca-6fd86989f02f%2F1774905902399-monaco-queryv2.skill
-  note: >-
-    Provider-published conversational query skill (handles pagination,
-    filtering, cross-entity joins). Hosted on an expiring signed URL, so it is
-    referenced here rather than saved verbatim.
+  hosted_url: https://assets.usepylon.com/57b3e567-723c-42e0-9cca-6fd86989f02f%2F1774905902399-monaco-queryv2.skill
+  note: Provider-published conversational query skill (handles pagination, filtering, cross-entity joins). Hosted
+    on an expiring signed URL, so it is referenced here rather than saved verbatim.

@@ -1,0 +1,88 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Tasks API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/tasks/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of tasks."
+        },
+        {
+          "info": {
+            "name": "Get a Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single task by its `task_id`."
+        },
+        {
+          "info": {
+            "name": "Update a Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing task by its `task_id`. Marking a task as `DONE` or `CANCELLED` sets `completed_at`; moving out of those states clears it. Updating `account_id` is only supported for manually created tasks."
+        },
+        {
+          "info": {
+            "name": "Create a Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/tasks/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new task.\n\nTasks can be associated with an account (via `account_id`) and/or an opportunity (via `opportunity_id`). If no `assignee_id` is provided, the task is assigned to the caller."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

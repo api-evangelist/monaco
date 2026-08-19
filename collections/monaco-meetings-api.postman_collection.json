@@ -1,0 +1,307 @@
+{
+  "item": [
+    {
+      "id": "d1583926-bbec-43f9-85b0-f9b37859d468",
+      "name": "Meetings",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b4a703e5-a070-4685-9eb8-1a25be1b02aa",
+          "name": "List Meetings",
+          "request": {
+            "name": "List Meetings",
+            "description": {
+              "content": "Returns a paginated list of meetings.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "meetings",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 50,\n  \"sort\": \"-created_at\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7daf6ce6-4ae7-42ac-8213-61f572808b00",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "meetings",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"mtg_abc123\",\n      \"account_id\": \"acc_abc123\",\n      \"opportunity_id\": \"opp_abc123\",\n      \"title\": \"Discovery Call\",\n      \"description\": \"Initial discovery call with Acme\",\n      \"start_time\": \"2026-03-01T10:00:00Z\",\n      \"end_time\": \"2026-03-01T10:30:00Z\",\n      \"meeting_platform\": \"Zoom\",\n      \"meeting_url\": \"https://zoom.us/j/123456789\",\n      \"organizer\": {\n        \"email\": \"jane@acme.com\",\n        \"display_name\": \"Jane Smith\"\n      },\n      \"attendees\": [\n        {\n          \"email\": \"john@acme.com\",\n          \"display_name\": \"John Doe\",\n          \"response_status\": \"accepted\"\n        }\n      ],\n      \"next_actions\": [\n        \"Send pricing proposal by Friday\",\n        \"Schedule technical deep-dive\"\n      ],\n      \"created_at\": \"2026-03-01T09:00:00Z\",\n      \"updated_at\": \"2026-03-01T09:30:00Z\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"page_size\": 50,\n    \"total_count\": 12,\n    \"total_pages\": 1\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1875d037-cf4e-4749-9ff6-2c2fdac48b0b",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "meetings",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "48da7fb8-ae4a-477d-8267-062ca3e1b441",
+          "name": "Get a Meeting",
+          "request": {
+            "name": "Get a Meeting",
+            "description": {
+              "content": "Gets a single meeting by its `meeting_id`. The detail response includes the AI-generated summary, a presigned video URL, and the full transcript with speaker attribution.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "meetings",
+                ":meeting_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "meeting_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c5b34362-1f4d-4c45-bb51-2059a9a2ae62",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "meetings",
+                    ":meeting_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "meeting_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"mtg_abc123\",\n    \"account_id\": \"acc_abc123\",\n    \"opportunity_id\": \"opp_abc123\",\n    \"title\": \"Discovery Call\",\n    \"description\": \"Initial discovery call with Acme\",\n    \"start_time\": \"2026-03-01T10:00:00Z\",\n    \"end_time\": \"2026-03-01T10:30:00Z\",\n    \"meeting_platform\": \"Zoom\",\n    \"meeting_url\": \"https://zoom.us/j/123456789\",\n    \"organizer\": {\n      \"email\": \"jane@acme.com\",\n      \"display_name\": \"Jane Smith\"\n    },\n    \"attendees\": [\n      {\n        \"email\": \"john@acme.com\",\n        \"display_name\": \"John Doe\",\n        \"response_status\": \"accepted\"\n      }\n    ],\n    \"next_actions\": [\n      \"Send pricing proposal by Friday\",\n      \"Schedule technical deep-dive\"\n    ],\n    \"meeting_summary\": \"Discovery call with Acme. Strong interest in enterprise tier, budget confirmed for Q3.\",\n    \"video_url\": \"https://monaco-recordings.s3.amazonaws.com/...\",\n    \"transcript\": [\n      {\n        \"speaker\": \"Jane Smith\",\n        \"language\": \"en\",\n        \"words\": [\n          {\n            \"text\": \"Thanks\",\n            \"start_timestamp\": 0.5,\n            \"end_timestamp\": 0.9\n          },\n          {\n            \"text\": \"everyone\",\n            \"start_timestamp\": 1,\n            \"end_timestamp\": 1.5\n          }\n        ]\n      }\n    ],\n    \"created_at\": \"2026-03-01T09:00:00Z\",\n    \"updated_at\": \"2026-03-01T09:30:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e84171e2-3477-49a6-9e52-2a4d8463c41f",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "meetings",
+                    ":meeting_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "meeting_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "f2882a24-dfb3-4622-99ea-912ee4487d0a",
+    "name": "Monaco Public Accounts Meetings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

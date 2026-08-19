@@ -1,0 +1,71 @@
+generated: '2026-08-13'
+method: probed
+source: https://docs.monaco.com/.well-known/agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: docs.monaco.com
+  note: >-
+    Probed on every Monaco host. www.monaco.com and app.monaco.com answer the
+    /.well-known/agent-card.json and /.well-known/agent.json paths with an HTML
+    SPA shell (404 and 200 respectively) and are rejected as false positives;
+    api.monaco.com and mcp.monaco.com return 404 text/plain. The only real
+    AgentCard document Monaco serves is on its documentation host.
+ownership:
+  verified: true
+  rationale: >-
+    Served from docs.monaco.com, Monaco's own documentation host (the same host
+    that serves llms.txt and the API reference). The card's provider.organization
+    is "Monaco Docs", documentationUrl is https://docs.monaco.com/, and its one
+    skill describes Monaco's own REST API (api.monaco.com) and MCP server
+    (mcp.monaco.com/mcp).
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: '0.3'
+  preferred_transport: HTTP+JSON
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  deviations:
+  - supportedInterfaces-instead-of-additionalInterfaces
+  - protocolVersion-not-fully-qualified (0.3 rather than 0.3.x)
+  - no-description-field
+  note: >-
+    Passes all three A2A 1.0.0 hard checks. The card uses the older
+    `supportedInterfaces` key rather than `additionalInterfaces`, and reports
+    protocolVersion as "0.3" rather than a fully qualified patch version.
+card:
+  name: Monaco Docs
+  url: https://docs.monaco.com/
+  version: 1.0.0
+  provider: Monaco Docs
+  documentation_url: https://docs.monaco.com/
+  capabilities:
+    streaming: false
+    pushNotifications: false
+  default_input_modes: [text/plain]
+  default_output_modes: [text/plain]
+  skills: 1
+  skill_ids: [monaco]
+  skill_documents:
+  - id: monaco
+    url: https://docs.monaco.com/.well-known/agent-skills/monaco/skill.md
+    saved: skills/monaco-docs-integration.skill.md
+  file: monaco-agent-card.json
+surface_note: >-
+  This is a documentation-scoped agent card (an agent-facing entry point to the
+  Monaco docs), not an A2A task endpoint on the product API. It links out to a
+  provider-published Agent Skill, which is captured verbatim in skills/.
+x-evidence:
+  fetched: '2026-08-13'
+  url: https://docs.monaco.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  negative_probes:
+  - {url: 'https://www.monaco.com/.well-known/agent-card.json', status: 404, note: HTML SPA shell}
+  - {url: 'https://www.monaco.com/.well-known/agent.json', status: 404, note: HTML SPA shell}
+  - {url: 'https://app.monaco.com/.well-known/agent-card.json', status: 200, note: HTML SPA shell — rejected, not a JSON document}
+  - {url: 'https://api.monaco.com/.well-known/agent-card.json', status: 404}
+  - {url: 'https://mcp.monaco.com/.well-known/agent-card.json', status: 404}

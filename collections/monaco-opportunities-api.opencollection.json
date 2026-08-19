@@ -1,0 +1,106 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Opportunities API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Opportunities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Opportunities",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/opportunities/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of opportunities."
+        },
+        {
+          "info": {
+            "name": "Get an Opportunity",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/opportunities/:opportunity_id",
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single opportunity by its `opportunity_id`. The detail response includes the AI-generated summary, identified risks, and custom fields."
+        },
+        {
+          "info": {
+            "name": "Update an Opportunity",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/opportunities/:opportunity_id",
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing opportunity by its `opportunity_id`. Any `tags` list provided **replaces** the existing tags on the opportunity."
+        },
+        {
+          "info": {
+            "name": "Delete an Opportunity",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.monaco.com/v1/opportunities/:opportunity_id",
+            "params": [
+              {
+                "name": "opportunity_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes an opportunity by its `opportunity_id`. Returns 204 No Content on success. This is irreversible."
+        },
+        {
+          "info": {
+            "name": "Create an Opportunity",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/opportunities/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new opportunity associated with an existing account. Pass an `idempotency_key` to safely retry creation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

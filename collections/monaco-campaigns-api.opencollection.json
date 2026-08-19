@@ -1,0 +1,154 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Campaigns API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Campaigns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Campaigns",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/campaigns/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of campaigns."
+        },
+        {
+          "info": {
+            "name": "Get a Campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/campaigns/:campaign_id",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single campaign by its `campaign_id`, including its attached audiences."
+        },
+        {
+          "info": {
+            "name": "Update a Campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/campaigns/:campaign_id",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a campaign's content fields and/or transitions its lifecycle via `status`. Returns the refreshed campaign.\n\nTo attach or detach audiences, use `add_audiences_to_campaign` / `remove_audiences_from_campaign`."
+        },
+        {
+          "info": {
+            "name": "Create a Campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/campaigns/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a campaign that enrolls the contacts of the given audiences onto a template, routing sends according to `distribution`."
+        },
+        {
+          "info": {
+            "name": "Enroll Contacts in a Campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/campaigns/:campaign_id/enroll",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enrolls contacts into a campaign by creating a new audience named `audience_name`, attaching it to the campaign, and adding the contacts to it. The campaign must be `active` or `paused`.\n\nThis always creates a new audience. Audiences can be shared across campaigns, so a contact added to one is enrolled in every campaign using it."
+        },
+        {
+          "info": {
+            "name": "Add Audiences to a Campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/campaigns/:campaign_id/audiences",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches the given audiences to a campaign, keeping its existing ones. Their contacts are enrolled asynchronously. Audiences already attached are ignored, so retries are safe. Returns the refreshed campaign."
+        },
+        {
+          "info": {
+            "name": "Remove Audiences from a Campaign",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/campaigns/:campaign_id/audiences/remove",
+            "params": [
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Detaches the given audiences from a campaign, keeping the rest.\n\nWARNING: detaching an audience tears down in-flight sequences for its contacts — they stop receiving the campaign's sends.\n\nAudiences not attached are ignored, so retries are safe, but a campaign must keep at least one audience — a request that would remove them all is rejected.\n\nReturns the refreshed campaign."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

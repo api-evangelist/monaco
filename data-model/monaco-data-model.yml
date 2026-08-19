@@ -1,35 +1,117 @@
-generated: '2026-07-20'
+generated: '2026-08-13'
 method: derived
-source: openapi/monaco-openapi-original.json
+source: openapi/_original/monaco-openapi-original.json
 docs: https://docs.monaco.com/api-reference
 id_prefixes:
   contact: con_
   account: acc_
-  note: >-
-    con_ and acc_ observed verbatim in OpenAPI examples; prefixes for other
-    entities (opportunity, task, tag, meeting, sequence) are not confirmed from
-    published examples and are left unrecorded.
+  note: con_ and acc_ observed verbatim in OpenAPI examples; prefixes for other entities (opportunity, task, tag,
+    meeting, sequence) are not confirmed from published examples and are left unrecorded.
 entities:
 - name: Account
   primary_identifier: domain
-  operations: [list_accounts, upsert_account, update_account, get_account, delete_account]
+  operations:
+  - list_accounts
+  - upsert_account
+  - update_account
+  - get_account
+  - delete_account
 - name: Contact
-  operations: [list_contacts, upsert_contact, create_contact, update_contact, get_contact, delete_contact]
+  operations:
+  - list_contacts
+  - upsert_contact
+  - create_contact
+  - update_contact
+  - get_contact
+  - delete_contact
 - name: Opportunity
-  operations: [list_opportunities, create_opportunity, get_opportunity, update_opportunity, delete_opportunity]
+  operations:
+  - list_opportunities
+  - create_opportunity
+  - get_opportunity
+  - update_opportunity
+  - delete_opportunity
 - name: Task
-  operations: [list_tasks, create_task, get_task, update_task]
+  operations:
+  - list_tasks
+  - create_task
+  - get_task
+  - update_task
 - name: Tag
-  operations: [list_tags, create_tag, get_tag, update_tag, delete_tag]
-  scoped_to_object: [contacts, accounts, opportunities]
+  operations:
+  - list_tags
+  - create_tag
+  - get_tag
+  - update_tag
+  - delete_tag
+  scoped_to_object:
+  - contacts
+  - accounts
+  - opportunities
 - name: Meeting
-  operations: [list_meetings, get_meeting]
+  operations:
+  - list_meetings
+  - get_meeting
 - name: Sequence
-  operations: [list_sequences, get_sequence, update_sequence]
+  operations:
+  - list_sequences
+  - get_sequence
+  - update_sequence
+  - update_sequence_step
 - name: SequenceTemplate
-  operations: [list_sequence_templates, create_sequence_template, get_sequence_template, update_sequence_template]
+  operations:
+  - list_sequence_templates
+  - create_sequence_template
+  - get_sequence_template
+  - update_sequence_template
 - name: User
-  operations: [list_users, get_me]
+  operations:
+  - list_users
+  - get_me
+- name: Audience
+  operations:
+  - list_audiences
+  - create_audience
+  - get_audience
+  - list_audience_contacts
+  - add_contacts_to_audience
+  - remove_contacts_from_audience
+  fields:
+  - id
+  - name
+  - type
+  - status
+  - contact_count
+  - created_at
+  - updated_at
+  note: A named set of contacts. Can be seeded from an explicit contact_ids list or from a filters query over the
+    contacts field schemas (optionally narrowed by excluded_ids or source_audience_id).
+- name: Campaign
+  operations:
+  - list_campaigns
+  - create_campaign
+  - get_campaign
+  - update_campaign
+  - enroll_contacts_in_campaign
+  - add_audiences_to_campaign
+  - remove_audiences_from_campaign
+  fields:
+  - id
+  - name
+  - status
+  - prioritized
+  - end_date
+  - template_id
+  - template_name
+  - audiences
+  - enrollment_status
+  - distribution
+  - rules_of_engagement
+  - autopilot_mode
+  - autopilot_settings
+  - created_at
+  - updated_at
+  note: Enrolls the contacts of its attached audiences onto a sequence template, routing sends according to distribution.
 relationships:
 - from: Contact
   type: belongs_to
@@ -75,3 +157,31 @@ relationships:
   type: belongs_to
   to: User
   via: owner_id
+- from: Audience
+  type: has_many
+  to: Contact
+  via: contact_ids
+  note: Membership managed via add_contacts_to_audience / remove_contacts_from_audience; contact_count is the materialized
+    size.
+- from: Audience
+  type: belongs_to
+  to: Audience
+  via: source_audience_id
+  note: An audience can be derived from another audience at creation time.
+- from: Campaign
+  type: has_many
+  to: Audience
+  via: audience_ids
+  note: Attached audiences (CampaignAudienceRef {id,name}); their contacts are enrolled asynchronously.
+- from: Campaign
+  type: belongs_to
+  to: SequenceTemplate
+  via: template_id
+  note: The campaign runs the steps of this sequence template.
+- from: Campaign
+  type: has_many
+  to: Contact
+  via: contact_ids
+  note: Indirect — enroll_contacts_in_campaign creates a new audience named audience_name and attaches it.
+x-note: Refreshed 2026-08-13 after re-harvesting api.monaco.com/openapi.json, which had grown from 37 to 51 operations
+  with two new entities (Audience, Campaign) and update_sequence_step.

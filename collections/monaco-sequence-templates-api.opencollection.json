@@ -1,0 +1,84 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Sequence Templates API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sequence Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Sequence Templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/sequence-templates"
+          },
+          "docs": "Returns the list of sequence templates available to the authenticated organization."
+        },
+        {
+          "info": {
+            "name": "Create a Sequence Template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/sequence-templates",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new sequence template. The template is created as a USER_GENERATED template.\n\nSupply `steps` (ordered by `index`), `transitions`, and `blocks` together; see each field's schema for its shape and allowed values. A step references a block via a `[[block:<id>]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a branch. Example:\n\n{\"steps\": [{\"index\": 1, \"day\": 0, \"hour\": 9, \"type\": \"auto_email\", \"subject\": \"Quick question\", \"message\": \"<p>Hi "
+        },
+        {
+          "info": {
+            "name": "Get a Sequence Template",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/sequence-templates/:sequence_template_id",
+            "params": [
+              {
+                "name": "sequence_template_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single sequence template by its `sequence_template_id`. The detail response includes the template's ordered list of steps."
+        },
+        {
+          "info": {
+            "name": "Update a Sequence Template",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/sequence-templates/:sequence_template_id",
+            "params": [
+              {
+                "name": "sequence_template_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing sequence template. All fields are optional, but at least one must be provided. `steps`, `transitions`, and `blocks` replace the current value when supplied; each supplied step must include its `id`.\n\nSupply `steps` (ordered by `index`), `transitions`, and `blocks` together; see each field's schema for its shape and allowed values. A step references a block via a `[[block:<id>]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,106 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/accounts/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of accounts."
+        },
+        {
+          "info": {
+            "name": "Upsert an Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.monaco.com/v1/accounts/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new account or updates an existing one. `domain` is required and is used as the primary identifier for matching.\n\n**Duplicate resolution** — the request is matched against existing accounts in the org by exact match on `domain`. If a match is found, that account is updated in place with the provided fields and returned; otherwise a new account is created (a company record for the domain must exist in our data sources).\n\n**Enrichment** — on creation, Monaco synchronously enriches the ac"
+        },
+        {
+          "info": {
+            "name": "Get an Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single account by its `account_id`. The detail response includes enriched company information, scoring, and custom fields."
+        },
+        {
+          "info": {
+            "name": "Update an Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing account by its `account_id`. Any `tags` list provided **replaces** the existing tags on the account."
+        },
+        {
+          "info": {
+            "name": "Delete an Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.monaco.com/v1/accounts/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes an account by its `account_id`. Returns 204 No Content on success. This is irreversible — associated contacts and opportunities are not deleted but may become unlinked."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

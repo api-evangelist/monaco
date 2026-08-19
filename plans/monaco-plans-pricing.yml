@@ -1,0 +1,30 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.monaco.com
+docs: []
+plan_count: 0
+plans: []
+model: demo-gated
+finding: >-
+  Monaco publishes no pricing at all. There is no /pricing or /plans page on
+  www.monaco.com (both return 404), no pricing page in the documentation index
+  (https://docs.monaco.com/llms.txt lists all 56 doc pages and none covers
+  pricing, plans, quotas, or billing), and no machine-readable catalog endpoint.
+  The only commercial call to action anywhere on the marketing site is
+  "Request demo", which appears in the header and footer of every page. Access to
+  the API is a function of having a Monaco account, and API keys are minted from
+  the app (Settings > API Keys) rather than purchased.
+quota_note: >-
+  The one published usage limit is a rate limit, not a plan entitlement: 100
+  requests per minute per organization, shared across the REST API and the MCP
+  server, with no tiering by plan. See rate-limits/monaco-rate-limits.yml.
+signup:
+  self_serve_purchase: false
+  entry_point: https://app.monaco.com/login
+  demo_request: https://www.monaco.com (Request demo)
+x-evidence:
+- {url: 'https://www.monaco.com/pricing', status: 404}
+- {url: 'https://www.monaco.com/plans', status: 404}
+- {url: 'https://docs.monaco.com/pricing', status: 404}
+- {url: 'https://docs.monaco.com/llms.txt', status: 200, note: complete docs index; no pricing page listed}
+- {url: 'https://www.monaco.com', status: 200, note: '"Request demo" is the only commercial CTA'}

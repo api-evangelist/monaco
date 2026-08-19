@@ -2,28 +2,46 @@ overlay: 1.0.0
 info:
   title: API Evangelist enhancements for Monaco Public API
   version: 1.0.0
-extends: openapi/monaco-openapi-original.json
+extends: openapi/_original/monaco-openapi-original.json
 actions:
 - target: $.info
   update:
-    x-apievangelist-enrichment: '2026-07-20'
+    x-apievangelist-enrichment: '2026-08-13'
     x-api-stability: beta
-    x-authentication: "API-key bearer (Authorization: Bearer mks_...); MCP via OAuth 2.0"
+    x-authentication: 'API-key bearer (Authorization: Bearer mks_...); MCP via OAuth 2.0'
     x-rate-limit: 100 requests/minute per organization (shared REST + MCP)
     x-mcp-server: https://mcp.monaco.com/mcp
     x-llms-txt: https://docs.monaco.com/llms.txt
+    x-agent-card: https://docs.monaco.com/.well-known/agent-card.json
+    x-agent-skill: https://docs.monaco.com/.well-known/agent-skills/monaco/skill.md
+    x-oauth-protected-resource: https://mcp.monaco.com/.well-known/oauth-protected-resource/mcp
 - target: $.components.securitySchemes
-  description: >-
-    The published spec declares no securitySchemes; document the real API-key
-    bearer scheme captured from https://docs.monaco.com/auth (our overlay only —
-    the original spec is never mutated).
+  description: The published spec declares no securitySchemes; document the real API-key bearer scheme captured
+    from https://docs.monaco.com/auth (our overlay only — the original spec is never mutated).
   update:
     apiKeyBearer:
       type: http
       scheme: bearer
-      description: 'API key issued in Settings > API Keys, prefixed mks_.'
+      description: API key issued in Settings > API Keys, prefixed mks_.
 - target: $.info
   update:
     x-error-envelope: '{"error": {"code": "<string>", "message": "<string>"}}'
     x-pagination: page/page_size in the POST /v1/{entity}/list body; response carries a pagination object
     x-idempotency: idempotency_key request-body field on create operations
+- target: $.tags
+  description: The published spec declares no top-level tags block even though every operation is tagged; name the
+    14 resource groups so tooling can render them.
+  update:
+  - name: Contacts
+  - name: Accounts
+  - name: Opportunities
+  - name: Tasks
+  - name: Tags
+  - name: Meetings
+  - name: Sequences
+  - name: Sequence Templates
+  - name: Audiences
+  - name: Campaigns
+  - name: Schemas
+  - name: Auth
+  - name: Users

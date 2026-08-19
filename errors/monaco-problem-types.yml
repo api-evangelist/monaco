@@ -1,6 +1,6 @@
-generated: '2026-07-20'
+generated: '2026-08-13'
 method: derived
-source: openapi/monaco-openapi-original.json
+source: openapi/_original/monaco-openapi-original.json
 docs: https://docs.monaco.com/auth
 format: custom-envelope
 envelope:
@@ -8,10 +8,8 @@ envelope:
   fields:
     code: Machine-readable error code (e.g. not_found)
     message: Human-readable error message
-  note: >-
-    Application errors use the PublicErrorResponse/ErrorDetail envelope above.
-    Authentication-layer failures may instead return a simpler {"detail": "..."}
-    body (e.g. {"detail": "No key found"} on 401). Not RFC 9457.
+  note: 'Application errors use the PublicErrorResponse/ErrorDetail envelope above. Authentication-layer failures
+    may instead return a simpler {"detail": "..."} body (e.g. {"detail": "No key found"} on 401). Not RFC 9457.'
 problems:
 - status: 401
   code: unauthorized
@@ -43,8 +41,80 @@ problems:
   title: Rate limit exceeded
   remediation: Read Retry-After and X-RateLimit-* headers; back off with exponential retry.
   source: docs (100 req/min per org)
-- status: "4XX"
+- status: 4XX
   code: client_error
   title: Client error
   remediation: Inspect error.code and error.message in the response body.
   source: openapi (shared 4XX default response on all operations)
+- status: 400
+  title: Campaign is not enrollable or the audience name is taken
+  source: openapi (explicit response)
+  operations:
+  - enroll_contacts_in_campaign
+- status: 400
+  title: Invalid audiences
+  source: openapi (explicit response)
+  operations:
+  - add_audiences_to_campaign
+- status: 400
+  title: Invalid campaign request
+  source: openapi (explicit response)
+  operations:
+  - create_campaign
+- status: 400
+  title: Invalid campaign update
+  source: openapi (explicit response)
+  operations:
+  - update_campaign
+- status: 400
+  title: Request would leave the campaign with no audiences
+  source: openapi (explicit response)
+  operations:
+  - remove_audiences_from_campaign
+- status: 404
+  title: Campaign not found
+  source: openapi (explicit response)
+  operations:
+  - add_audiences_to_campaign
+  - enroll_contacts_in_campaign
+  - remove_audiences_from_campaign
+  - update_campaign
+- status: 404
+  title: Not Found
+  source: openapi (explicit response)
+  operations:
+  - get_sequence_template
+- status: 404
+  title: Sequence not found
+  source: openapi (explicit response)
+  operations:
+  - update_sequence
+- status: 404
+  title: Step not found
+  source: openapi (explicit response)
+  operations:
+  - update_sequence_step
+- status: 404
+  title: Template not found
+  source: openapi (explicit response)
+  operations:
+  - create_campaign
+- status: 409
+  title: Campaign is being processed and can't be updated right now
+  source: openapi (explicit response)
+  operations:
+  - add_audiences_to_campaign
+  - remove_audiences_from_campaign
+  - update_campaign
+- status: 409
+  title: Invalid state transition
+  source: openapi (explicit response)
+  operations:
+  - update_sequence
+- status: 422
+  title: Invalid copy for this step
+  source: openapi (explicit response)
+  operations:
+  - update_sequence_step
+x-note: Refreshed 2026-08-13 against the re-harvested 51-operation spec. Generic 4XX/5XX ranges use the PublicErrorResponse
+  envelope; the entries below with `operations` are explicitly declared per-operation responses.

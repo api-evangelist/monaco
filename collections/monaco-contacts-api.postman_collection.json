@@ -1,0 +1,880 @@
+{
+  "item": [
+    {
+      "id": "0eb59587-a175-4a10-8f4f-fe90ee47ea61",
+      "name": "Contacts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6cd76ab5-042c-4d2d-8281-47a9b8e34e24",
+          "name": "List Contacts",
+          "request": {
+            "name": "List Contacts",
+            "description": {
+              "content": "Returns a paginated list of contacts.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 50,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "919c4914-c0fe-4573-8e0d-124880a8ba0d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"con_abc123\",\n      \"account_id\": \"acc_def456\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\",\n      \"email\": \"jane@acme.com\",\n      \"title\": \"VP of Engineering\",\n      \"phone_number\": \"+1-555-123-4567\",\n      \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n      \"location\": \"San Francisco, CA\",\n      \"source\": \"api\",\n      \"do_not_contact\": false,\n      \"notes\": \"Met at SaaStr 2025\",\n      \"scoring\": {\n        \"heat_score\": \"Hot\"\n      },\n      \"tags\": [\n        \"Decision Maker\"\n      ],\n      \"created_at\": \"2025-06-15T10:30:00Z\",\n      \"updated_at\": \"2025-06-16T10:30:00Z\",\n      \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"buyer\",\n      \"custom_field_2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e\": \"2026-04-18\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"page_size\": 50,\n    \"total_count\": 87,\n    \"total_pages\": 2\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7f6c7f02-b35b-49be-afa5-b6546eb4b208",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "00958b2c-4212-48ca-a027-f1e24c251540",
+          "name": "Upsert a Contact",
+          "request": {
+            "name": "Upsert a Contact",
+            "description": {
+              "content": "Creates a new contact or updates an existing one.\n\n**Identifiers** — either `email` or `linkedin_url` **must** be provided. If only `linkedin_url` is supplied, you must also provide `account_id` or `domain` so the contact can be associated with an account.\n\n**Duplicate resolution** — the request is matched against existing contacts in the org in this order: (1) exact match on `email` (case-insensitive), then (2) exact match on `linkedin_url`. If a match is found, that contact is updated in place with the provided fields and returned; otherwise a new contact is created. Unlike `POST /contacts`, no 409 is raised on a duplicate identifier — the existing record is updated instead.\n\n**Account resolution priority** — when creating a new contact, Monaco resolves the contact's account in this order:\n1. `account_id` (if provided)\n2. `domain` (if provided)\n3. the domain parsed from `email`\n\n**Enrichment** — when this call creates a new contact (no existing match), Monaco synchronously enriches the contact and, if needed, resolves or creates the associated account. This can make those requests take several seconds to complete; clients should use generous timeouts (10s+) and avoid issuing upserts on hot paths.\n\nAny `tags` list provided is **appended** to the existing tags on the contact.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<string>\",\n  \"linkedin_url\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"title\": \"<string>\",\n  \"phone_number\": \"<string>\",\n  \"location\": \"<string>\",\n  \"account_id\": \"<uuid>\",\n  \"domain\": \"<string>\",\n  \"do_not_contact\": \"<boolean>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "164aae9f-816f-44f8-adef-aba90ad535b0",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"jane@acme.com\",\n  \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\",\n  \"title\": \"VP of Engineering\",\n  \"phone_number\": \"+1-555-123-4567\",\n  \"location\": \"San Francisco, CA\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"domain\": \"acme.com\",\n  \"do_not_contact\": false,\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ],\n  \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"con_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"email\": \"jane@acme.com\",\n    \"title\": \"VP of Engineering\",\n    \"phone_number\": \"+1-555-123-4567\",\n    \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n    \"location\": \"San Francisco, CA\",\n    \"source\": \"api\",\n    \"do_not_contact\": false,\n    \"notes\": \"Met at SaaStr 2025\",\n    \"scoring\": {\n      \"heat_score\": \"Hot\"\n    },\n    \"tags\": [\n      \"Decision Maker\"\n    ],\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2026-04-21T12:00:00Z\",\n    \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77d27f87-c44a-4d77-9b3a-f2b3a2ef3b49",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"jane@acme.com\",\n  \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\",\n  \"title\": \"VP of Engineering\",\n  \"phone_number\": \"+1-555-123-4567\",\n  \"location\": \"San Francisco, CA\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"domain\": \"acme.com\",\n  \"do_not_contact\": false,\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ],\n  \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d38170c7-2e39-4329-8e70-23d0a3fd5d21",
+          "name": "Create a Contact",
+          "request": {
+            "name": "Create a Contact",
+            "description": {
+              "content": "Creates a new contact.\n\n**Identifiers** — either `email` or `linkedin_url` **must** be provided. If only `linkedin_url` is supplied, you must also provide `account_id` or `domain` so the contact can be associated with an account.\n\n**Account resolution priority** — Monaco resolves the contact's account in this order:\n1. `account_id` (if provided)\n2. `domain` (if provided)\n3. the domain parsed from `email`\n\n**Enrichment** — on creation, Monaco synchronously enriches the contact (name, title, company association, etc.) and, if needed, resolves or creates the associated account. This can make create requests take several seconds to complete; clients should use generous timeouts (10s+) and avoid issuing creates on hot paths.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"<string>\",\n  \"linkedin_url\": \"<string>\",\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"title\": \"<string>\",\n  \"phone_number\": \"<string>\",\n  \"location\": \"<string>\",\n  \"account_id\": \"<uuid>\",\n  \"domain\": \"<string>\",\n  \"do_not_contact\": \"<boolean>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "aa545f5d-72c4-4462-8c68-1f4039c6cdfc",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"jane@acme.com\",\n  \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\",\n  \"title\": \"VP of Engineering\",\n  \"phone_number\": \"+1-555-123-4567\",\n  \"location\": \"San Francisco, CA\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"domain\": \"acme.com\",\n  \"do_not_contact\": false,\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ],\n  \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"con_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"email\": \"jane@acme.com\",\n    \"title\": \"VP of Engineering\",\n    \"phone_number\": \"+1-555-123-4567\",\n    \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n    \"location\": \"San Francisco, CA\",\n    \"source\": \"api\",\n    \"do_not_contact\": false,\n    \"notes\": \"Met at SaaStr 2025\",\n    \"scoring\": {\n      \"heat_score\": \"Hot\"\n    },\n    \"tags\": [],\n    \"created_at\": \"2026-04-21T12:00:00Z\",\n    \"updated_at\": \"2026-04-21T12:00:00Z\",\n    \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "47d3e0ac-5463-409a-ba2f-45b07372478f",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"jane@acme.com\",\n  \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\",\n  \"title\": \"VP of Engineering\",\n  \"phone_number\": \"+1-555-123-4567\",\n  \"location\": \"San Francisco, CA\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"domain\": \"acme.com\",\n  \"do_not_contact\": false,\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440001\"\n  ],\n  \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "33e54ad0-b85c-4174-9d5b-8ae42d5f3820",
+          "name": "Update a Contact",
+          "request": {
+            "name": "Update a Contact",
+            "description": {
+              "content": "Updates an existing contact by its `contact_id`. Any `tags` list provided **replaces** the existing tags on the contact.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "contact_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"title\": \"<string>\",\n  \"phone_number\": \"<string>\",\n  \"linkedin_url\": \"<string>\",\n  \"location\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"do_not_contact\": \"<boolean>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"key_0\": true,\n  \"key_1\": 1308\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c62e8323-f886-4c4c-abd9-00244790f72e",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "contact_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"title\": \"<string>\",\n  \"phone_number\": \"<string>\",\n  \"linkedin_url\": \"<string>\",\n  \"location\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"do_not_contact\": \"<boolean>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"con_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"email\": \"jane@acme.com\",\n    \"title\": \"VP of Engineering\",\n    \"phone_number\": \"+1-555-123-4567\",\n    \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n    \"location\": \"San Francisco, CA\",\n    \"source\": \"api\",\n    \"notes\": \"Met at SaaStr 2025\",\n    \"do_not_contact\": false,\n    \"scoring\": {\n      \"heat_score\": \"Hot\"\n    },\n    \"tags\": [\n      \"Decision Maker\"\n    ],\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2026-04-21T12:00:00Z\",\n    \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0242107d-f5c6-4e1d-9b64-5f018aec294b",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "contact_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"<string>\",\n  \"last_name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"title\": \"<string>\",\n  \"phone_number\": \"<string>\",\n  \"linkedin_url\": \"<string>\",\n  \"location\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"do_not_contact\": \"<boolean>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5a72a018-df12-4c0a-8208-15cbfa133fca",
+          "name": "Get a Contact",
+          "request": {
+            "name": "Get a Contact",
+            "description": {
+              "content": "Gets a single contact by its `contact_id`. The detail response includes scoring, source attribution, and custom fields.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "contact_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ccc98d72-09b1-4c74-8dbc-a941cab56caf",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "contact_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"con_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"email\": \"jane@acme.com\",\n    \"title\": \"VP of Engineering\",\n    \"phone_number\": \"+1-555-123-4567\",\n    \"linkedin_url\": \"https://linkedin.com/in/janesmith\",\n    \"location\": \"San Francisco, CA\",\n    \"source\": \"linkedin\",\n    \"do_not_contact\": false,\n    \"notes\": \"Met at SaaStr 2025\",\n    \"scoring\": {\n      \"heat_score\": \"Hot\"\n    },\n    \"tags\": [\n      \"Interested\",\n      \"Decision Maker\"\n    ],\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2025-06-16T10:30:00Z\",\n    \"custom_field_1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d\": \"economic_buyer\",\n    \"custom_field_2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e\": \"2026-04-18\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fb7a5e53-9bf3-41c8-958a-f31a320fe692",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "contact_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e76f6253-9828-437b-81d4-bec7584fb099",
+          "name": "Delete a Contact",
+          "request": {
+            "name": "Delete a Contact",
+            "description": {
+              "content": "Deletes a contact by its `contact_id`. Returns 204 No Content on success. This is irreversible.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "contacts",
+                ":contact_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "contact_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "27d1754b-988e-4325-aca6-4405c3e82b93",
+              "name": "Contact deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "contact_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "cd263c81-2436-4753-a9d2-01b59340401c",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "contacts",
+                    ":contact_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "contact_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "f5917b14-3c01-404b-8f2c-d65d288ec28f",
+    "name": "Monaco Public Accounts Contacts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

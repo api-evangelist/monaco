@@ -1,0 +1,740 @@
+{
+  "item": [
+    {
+      "id": "55bade06-cfd0-45c2-8de4-7065db918a30",
+      "name": "Opportunities",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ba75b6f9-3a36-4255-b206-b0d392af6f3a",
+          "name": "List Opportunities",
+          "request": {
+            "name": "List Opportunities",
+            "description": {
+              "content": "Returns a paginated list of opportunities.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "opportunities",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 50,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "25a0b467-acae-4eb9-845d-2d5a420abdf7",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"opp_abc123\",\n      \"account_id\": \"acc_def456\",\n      \"name\": \"Acme Corp - Enterprise License\",\n      \"owner\": {\n        \"id\": \"usr_abc123\",\n        \"first_name\": \"Jane\",\n        \"last_name\": \"Smith\"\n      },\n      \"stage\": \"negotiation\",\n      \"estimated_value\": {\n        \"currency_code\": \"USD\",\n        \"amount\": 5000000\n      },\n      \"estimated_close_date\": \"2025-09-30\",\n      \"actual_close_date\": \"2025-10-15\",\n      \"summary\": \"Enterprise deal with strong champion. Procurement review in progress.\",\n      \"risks\": [\n        \"Budget constraints\",\n        \"Competing vendor evaluation\"\n      ],\n      \"notes\": \"Follow up after Q3 board meeting\",\n      \"tags\": [\n        \"High Priority\"\n      ],\n      \"last_activity_at\": \"2025-08-20T14:30:00Z\",\n      \"updated_at\": \"2025-08-21T14:30:00Z\",\n      \"created_at\": \"2025-06-01T09:00:00Z\",\n      \"custom_field_550e8400-e29b-41d4-a716-446655440001\": \"outbound\",\n      \"custom_field_6ba7b810-9dad-11d1-80b4-00c04fd430c8\": \"commit\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"page_size\": 50,\n    \"total_count\": 34,\n    \"total_pages\": 1\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e75ff2bd-57a5-41ff-b4ac-61d0e2b21540",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\",\n  \"include_custom_fields\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d6d2c556-51c6-4155-9d44-b2aa285cbde3",
+          "name": "Get an Opportunity",
+          "request": {
+            "name": "Get an Opportunity",
+            "description": {
+              "content": "Gets a single opportunity by its `opportunity_id`. The detail response includes the AI-generated summary, identified risks, and custom fields.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "opportunities",
+                ":opportunity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "opportunity_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a8be77ca-a8d2-4a23-933d-6751635b2601",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ":opportunity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "opportunity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"opp_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"name\": \"Acme Corp - Enterprise License\",\n    \"owner\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"stage\": \"negotiation\",\n    \"estimated_value\": {\n      \"currency_code\": \"USD\",\n      \"amount\": 5000000\n    },\n    \"estimated_close_date\": \"2025-09-30\",\n    \"actual_close_date\": \"2025-10-15\",\n    \"summary\": \"Enterprise deal with strong champion. Procurement review in progress.\",\n    \"risks\": [\n      \"Budget constraints\",\n      \"Competing vendor evaluation\"\n    ],\n    \"notes\": \"Follow up after Q3 board meeting\",\n    \"tags\": [\n      \"High Priority\"\n    ],\n    \"last_activity_at\": \"2025-08-20T14:30:00Z\",\n    \"updated_at\": \"2025-08-21T14:30:00Z\",\n    \"created_at\": \"2025-06-01T09:00:00Z\",\n    \"custom_field_550e8400-e29b-41d4-a716-446655440001\": \"outbound\",\n    \"custom_field_6ba7b810-9dad-11d1-80b4-00c04fd430c8\": \"commit\",\n    \"custom_field_f47ac10b-58cc-4372-a567-0e02b2c3d479\": \"Initech\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "31231471-f1c1-41d0-ae9d-cfbd39da4079",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ":opportunity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "opportunity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "21216f31-dd93-4c49-9159-f4c3355923b7",
+          "name": "Update an Opportunity",
+          "request": {
+            "name": "Update an Opportunity",
+            "description": {
+              "content": "Updates an existing opportunity by its `opportunity_id`. Any `tags` list provided **replaces** the existing tags on the opportunity.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "opportunities",
+                ":opportunity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "opportunity_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"owner_user_id\": \"<uuid>\",\n  \"stage\": \"<string>\",\n  \"estimated_value\": {\n    \"currency_code\": \"<string>\",\n    \"amount\": \"<integer>\"\n  },\n  \"estimated_close_date\": \"<string>\",\n  \"actual_close_date\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"key_0\": \"string\",\n  \"key_1\": 1706.0755659203119\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8ba5da0e-5d1b-4b60-b74e-9fef6ba86d74",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ":opportunity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "opportunity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"owner_user_id\": \"<uuid>\",\n  \"stage\": \"<string>\",\n  \"estimated_value\": {\n    \"currency_code\": \"string\",\n    \"amount\": 6100\n  },\n  \"estimated_close_date\": \"<string>\",\n  \"actual_close_date\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"opp_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"name\": \"Acme Corp - Enterprise License\",\n    \"owner\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"stage\": \"closed_won\",\n    \"estimated_value\": {\n      \"currency_code\": \"USD\",\n      \"amount\": 5000000\n    },\n    \"estimated_close_date\": \"2025-09-30\",\n    \"actual_close_date\": \"2025-10-15\",\n    \"summary\": \"Enterprise deal with strong champion. Procurement review in progress.\",\n    \"risks\": [\n      \"Budget constraints\",\n      \"Competing vendor evaluation\"\n    ],\n    \"notes\": \"Follow up after Q3 board meeting\",\n    \"tags\": [\n      \"High Priority\"\n    ],\n    \"last_activity_at\": \"2025-08-20T14:30:00Z\",\n    \"custom_field_550e8400-e29b-41d4-a716-446655440001\": \"outbound\",\n    \"updated_at\": \"2026-04-21T12:00:00Z\",\n    \"created_at\": \"2025-06-01T09:00:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "01a4f1ed-630b-4c1f-a9cd-98decb4f6d09",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ":opportunity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "opportunity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"owner_user_id\": \"<uuid>\",\n  \"stage\": \"<string>\",\n  \"estimated_value\": {\n    \"currency_code\": \"string\",\n    \"amount\": 6100\n  },\n  \"estimated_close_date\": \"<string>\",\n  \"actual_close_date\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9d588025-79b5-4671-9c8b-17501c1322af",
+          "name": "Delete an Opportunity",
+          "request": {
+            "name": "Delete an Opportunity",
+            "description": {
+              "content": "Deletes an opportunity by its `opportunity_id`. Returns 204 No Content on success. This is irreversible.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "opportunities",
+                ":opportunity_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "opportunity_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "70f752a4-fbea-4426-820c-6f2878fdfa54",
+              "name": "Opportunity deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ":opportunity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "opportunity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b79e7c8c-f97d-4b67-ae1a-22dd1da9f9c0",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ":opportunity_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "opportunity_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bf87dbfb-5db0-4d2d-a991-14d58a447b15",
+          "name": "Create an Opportunity",
+          "request": {
+            "name": "Create an Opportunity",
+            "description": {
+              "content": "Creates a new opportunity associated with an existing account. Pass an `idempotency_key` to safely retry creation.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "opportunities",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"account_id\": \"<uuid>\",\n  \"owner_user_id\": \"<uuid>\",\n  \"stage\": \"<string>\",\n  \"estimated_value\": {\n    \"currency_code\": \"<string>\",\n    \"amount\": \"<integer>\"\n  },\n  \"estimated_close_date\": \"<string>\",\n  \"notes\": \"<string>\",\n  \"tags\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"idempotency_key\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e261001d-0d81-4822-9ed4-7234e8e79dda",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Acme Corp - Enterprise License\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"owner_user_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n  \"stage\": \"negotiation\",\n  \"estimated_value\": {\n    \"currency_code\": \"USD\",\n    \"amount\": 5000000\n  },\n  \"estimated_close_date\": \"2025-09-30\",\n  \"notes\": \"Follow up after Q3 board meeting\",\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440002\"\n  ],\n  \"idempotency_key\": \"550e8400-e29b-41d4-a716-446655440003\",\n  \"custom_field_550e8400-e29b-41d4-a716-446655440001\": \"outbound\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"opp_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"name\": \"Acme Corp - Enterprise License\",\n    \"owner\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"stage\": \"negotiation\",\n    \"estimated_value\": {\n      \"currency_code\": \"USD\",\n      \"amount\": 5000000\n    },\n    \"estimated_close_date\": \"2025-09-30\",\n    \"risks\": [],\n    \"notes\": \"Follow up after Q3 board meeting\",\n    \"tags\": [],\n    \"updated_at\": \"2026-04-21T12:00:00Z\",\n    \"created_at\": \"2026-04-21T12:00:00Z\",\n    \"custom_field_550e8400-e29b-41d4-a716-446655440001\": \"outbound\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3bd20a99-c908-4cd3-90b2-fff73e4d731a",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "opportunities",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Acme Corp - Enterprise License\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"owner_user_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n  \"stage\": \"negotiation\",\n  \"estimated_value\": {\n    \"currency_code\": \"USD\",\n    \"amount\": 5000000\n  },\n  \"estimated_close_date\": \"2025-09-30\",\n  \"notes\": \"Follow up after Q3 board meeting\",\n  \"tags\": [\n    \"550e8400-e29b-41d4-a716-446655440002\"\n  ],\n  \"idempotency_key\": \"550e8400-e29b-41d4-a716-446655440003\",\n  \"custom_field_550e8400-e29b-41d4-a716-446655440001\": \"outbound\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8da24a90-dab7-4dcc-b631-6af1a3390616",
+    "name": "Monaco Public Accounts Opportunities API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

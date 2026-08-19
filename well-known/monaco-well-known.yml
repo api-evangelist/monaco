@@ -1,16 +1,56 @@
-generated: '2026-07-20'
+generated: '2026-08-13'
 method: searched
+source: live probes of every Monaco host
 hosts:
 - host: https://www.monaco.com
   documents:
   - path: /.well-known/security.txt
     status: 200
     file: monaco-security.txt
+  - path: /.well-known/openid-configuration
+    status: 404
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/api-catalog
+    status: 404
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/agent-card.json
+    status: 404
+    note: HTML SPA shell — not a document.
+  - path: /.well-known/agent.json
+    status: 404
+    note: HTML SPA shell — not a document.
 - host: https://app.monaco.com
   documents:
   - path: /.well-known/security.txt
     status: 200
     note: Declared as a Canonical location in the www security.txt (not separately saved).
+  - path: /.well-known/agent-card.json
+    status: 200
+    note: >-
+      Rejected. The app is a single-page app whose catch-all answers 200 with an
+      HTML shell for every /.well-known/* path; the body is not JSON and carries
+      no AgentCard shape. Recorded as a miss, not a hit.
+- host: https://docs.monaco.com
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/monaco-agent-card.json
+    content_type: application/json
+    note: >-
+      Real A2A agent card (name "Monaco Docs", protocolVersion 0.3, one skill).
+      Saved verbatim under a2a/ and graded in a2a/monaco-a2a.yml.
+  - path: /.well-known/agent-skills/monaco/skill.md
+    status: 200
+    file: ../skills/monaco-docs-integration.skill.md
+    content_type: text/markdown
+    note: Provider-published Agent Skill referenced by the agent card; saved verbatim.
+  - path: /llms.txt
+    status: 200
+    file: ../llms/monaco-llms.txt
+    note: Not a /.well-known/ path; saved verbatim to llms/.
 - host: https://api.monaco.com
   documents:
   - path: /.well-known/security.txt
@@ -19,8 +59,37 @@ hosts:
     status: 404
   - path: /.well-known/oauth-authorization-server
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
   - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
     status: 404
   - path: /openapi.json
     status: 200
-    note: OpenAPI 3.1 spec (not under /.well-known/); harvested to openapi/.
+    note: OpenAPI 3.1 spec (not under /.well-known/); harvested to openapi/_original/.
+- host: https://mcp.monaco.com
+  documents:
+  - path: /.well-known/oauth-protected-resource/mcp
+    status: 200
+    file: monaco-oauth-protected-resource.json
+    content_type: application/json
+    note: >-
+      RFC 9728 OAuth 2.0 Protected Resource Metadata for the MCP server. Names
+      Auth0 (https://monaco-inc.us.auth0.com/) as the authorization server and
+      declares bearer_methods_supported [header] with an empty scopes_supported.
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: Metadata is served per-resource at /.well-known/oauth-protected-resource/mcp.
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    note: The MCP server delegates to Auth0; see scopes/monaco-scopes.yml.
+  - path: /.well-known/agent-card.json
+    status: 404
+summary:
+  real_documents: 4
+  files:
+  - monaco-security.txt
+  - monaco-oauth-protected-resource.json
+  - ../a2a/monaco-agent-card.json
+  - ../llms/monaco-llms.txt

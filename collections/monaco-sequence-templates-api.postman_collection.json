@@ -1,0 +1,621 @@
+{
+  "item": [
+    {
+      "id": "35d07ec1-623e-446d-9125-4fb1fa1b5b1e",
+      "name": "Sequence Templates",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ccf8e79a-6815-420d-b7f0-146ac75a25bf",
+          "name": "List Sequence Templates",
+          "request": {
+            "name": "List Sequence Templates",
+            "description": {
+              "content": "Returns the list of sequence templates available to the authenticated organization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequence-templates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "61f2acdc-ced1-4eb0-abc6-596424d93d12",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"seqt_abc123\",\n      \"name\": \"Enterprise Onboarding\",\n      \"description\": \"Multi-touch onboarding sequence for enterprise accounts\",\n      \"status\": \"active\",\n      \"owner_id\": \"usr_abc123\",\n      \"is_default\": false,\n      \"created_at\": \"2026-01-15T10:30:00Z\",\n      \"updated_at\": \"2026-05-10T14:22:00Z\"\n    }\n  ],\n  \"meta\": {\n    \"timestamp\": \"2026-05-11T17:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cf4e917e-f09b-4aeb-bcc8-36aca2f6df6c",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "15c6395f-76cd-4a48-aa27-3d31c10be085",
+          "name": "Create a Sequence Template",
+          "request": {
+            "name": "Create a Sequence Template",
+            "description": {
+              "content": "Creates a new sequence template. The template is created as a USER_GENERATED template.\n\nSupply `steps` (ordered by `index`), `transitions`, and `blocks` together; see each field's schema for its shape and allowed values. A step references a block via a `[[block:<id>]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a branch. Example:\n\n{\"steps\": [{\"index\": 1, \"day\": 0, \"hour\": 9, \"type\": \"auto_email\", \"subject\": \"Quick question\", \"message\": \"<p>Hi {{recipient.first_name}} [[block:intro]]</p>\"}, {\"index\": 2, \"day\": 2, \"hour\": 9, \"type\": \"auto_linkedin_connection\", \"message\": \"Let's connect\"}], \"transitions\": [{\"from_step_index\": 1, \"to_step_index\": 2, \"transition_type\": \"PREVIOUS_STEP_COMPLETES\"}], \"blocks\": {\"intro\": {\"name\": \"Intro\", \"block_type\": \"MANUAL\", \"content\": \"...\"}}}\n\nTemplate variables must be namespaced. Supported tokens are `{{recipient.first_name}}`, `{{recipient.last_name}}`, `{{recipient.company}}`, `{{recipient.email}}`, `{{sender.first_name}}`, `{{sender.last_name}}`, and `{{sender.company}}`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequence-templates"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"steps\": [\n    {\n      \"type\": \"<string>\",\n      \"index\": \"<integer>\",\n      \"title\": \"<string>\",\n      \"day\": \"<integer>\",\n      \"hour\": \"<integer>\",\n      \"subject\": \"<string>\",\n      \"message\": \"<string>\",\n      \"gift_id\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"index\": \"<integer>\",\n      \"title\": \"<string>\",\n      \"day\": \"<integer>\",\n      \"hour\": \"<integer>\",\n      \"subject\": \"<string>\",\n      \"message\": \"<string>\",\n      \"gift_id\": \"<string>\"\n    }\n  ],\n  \"description\": \"<string>\",\n  \"transitions\": [\n    {\n      \"from_step_index\": \"<integer>\",\n      \"to_step_index\": \"<integer>\",\n      \"transition_type\": \"<string>\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": \"<integer>\",\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": \"<integer>\",\n      \"require_all\": true\n    },\n    {\n      \"from_step_index\": \"<integer>\",\n      \"to_step_index\": \"<integer>\",\n      \"transition_type\": \"<string>\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": \"<integer>\",\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": \"<integer>\",\n      \"require_all\": true\n    }\n  ],\n  \"blocks\": {\n    \"key_0\": {\n      \"name\": \"<string>\",\n      \"block_type\": \"<string>\",\n      \"content\": \"<string>\",\n      \"fallback_content\": \"<string>\"\n    },\n    \"key_1\": {\n      \"name\": \"<string>\",\n      \"block_type\": \"<string>\",\n      \"content\": \"<string>\",\n      \"fallback_content\": \"<string>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a7009856-27ca-493d-bc33-07bf1549ea1d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Enterprise Onboarding\",\n  \"steps\": [\n    {\n      \"type\": \"auto_email\",\n      \"index\": 8638,\n      \"title\": \"string\",\n      \"day\": 5345,\n      \"hour\": 4388,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    },\n    {\n      \"type\": \"auto_email\",\n      \"index\": 9001,\n      \"title\": \"string\",\n      \"day\": 2369,\n      \"hour\": 6897,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    }\n  ],\n  \"description\": \"<string>\",\n  \"transitions\": [\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 2058,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 417,\n      \"require_all\": true\n    },\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 4191,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 9438,\n      \"require_all\": true\n    }\n  ],\n  \"blocks\": {\n    \"key_0\": {\n      \"name\": \"string\",\n      \"block_type\": \"MANUAL\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"seqt_abc123\",\n    \"name\": \"Enterprise Onboarding\",\n    \"status\": \"ACTIVE\",\n    \"description\": \"string\",\n    \"owner_id\": \"string\",\n    \"is_default\": false,\n    \"archived_at\": \"2016-06-23T04:03:13.357Z\",\n    \"created_at\": \"1951-06-20T18:34:55.844Z\",\n    \"updated_at\": \"2000-12-22T08:31:23.777Z\",\n    \"steps\": [\n      {\n        \"id\": \"stp_abc123\",\n        \"type\": \"auto_email\",\n        \"index\": 1960,\n        \"title\": \"string\",\n        \"day\": 79,\n        \"hour\": 4900,\n        \"subject\": \"string\",\n        \"message\": \"string\",\n        \"gift_id\": \"string\"\n      },\n      {\n        \"id\": \"stp_abc123\",\n        \"type\": \"auto_email\",\n        \"index\": 2124,\n        \"title\": \"string\",\n        \"day\": 7213,\n        \"hour\": 6337,\n        \"subject\": \"string\",\n        \"message\": \"string\",\n        \"gift_id\": \"string\"\n      }\n    ],\n    \"transitions\": [\n      {\n        \"from_step_index\": 1,\n        \"to_step_index\": 2,\n        \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n        \"pre_check_time_unit\": \"business_days\",\n        \"pre_check_delay\": 1248,\n        \"post_check_time_unit\": \"business_days\",\n        \"post_check_delay\": 2852,\n        \"require_all\": true\n      },\n      {\n        \"from_step_index\": 1,\n        \"to_step_index\": 2,\n        \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n        \"pre_check_time_unit\": \"business_days\",\n        \"pre_check_delay\": 4026,\n        \"post_check_time_unit\": \"business_days\",\n        \"post_check_delay\": 629,\n        \"require_all\": true\n      }\n    ],\n    \"blocks\": {\n      \"key_0\": {\n        \"key_0\": 6627,\n        \"key_1\": false\n      },\n      \"key_1\": {\n        \"key_0\": 1060,\n        \"key_1\": 7758.117154186851,\n        \"key_2\": false\n      },\n      \"key_2\": {\n        \"key_0\": \"string\",\n        \"key_1\": false,\n        \"key_2\": false\n      }\n    }\n  },\n  \"meta\": {\n    \"timestamp\": \"1976-04-28T11:16:23.854Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "21ffd377-1f54-4dde-96d0-9d36efb7a2d6",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Enterprise Onboarding\",\n  \"steps\": [\n    {\n      \"type\": \"auto_email\",\n      \"index\": 8638,\n      \"title\": \"string\",\n      \"day\": 5345,\n      \"hour\": 4388,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    },\n    {\n      \"type\": \"auto_email\",\n      \"index\": 9001,\n      \"title\": \"string\",\n      \"day\": 2369,\n      \"hour\": 6897,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    }\n  ],\n  \"description\": \"<string>\",\n  \"transitions\": [\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 2058,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 417,\n      \"require_all\": true\n    },\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 4191,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 9438,\n      \"require_all\": true\n    }\n  ],\n  \"blocks\": {\n    \"key_0\": {\n      \"name\": \"string\",\n      \"block_type\": \"MANUAL\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "acfc2d85-e91b-4b45-9c94-d86424331f7e",
+          "name": "Get a Sequence Template",
+          "request": {
+            "name": "Get a Sequence Template",
+            "description": {
+              "content": "Gets a single sequence template by its `sequence_template_id`. The detail response includes the template's ordered list of steps.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequence-templates",
+                ":sequence_template_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "sequence_template_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5e5bcd43-c4c4-4792-88f5-ee8dfb90094f",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates",
+                    ":sequence_template_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_template_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"seqt_abc123\",\n    \"name\": \"Enterprise Onboarding\",\n    \"description\": \"Multi-touch onboarding sequence for enterprise accounts\",\n    \"status\": \"active\",\n    \"owner_id\": \"usr_abc123\",\n    \"is_default\": false,\n    \"created_at\": \"2026-01-15T10:30:00Z\",\n    \"updated_at\": \"2026-05-10T14:22:00Z\",\n    \"steps\": [\n      {\n        \"id\": \"stp_abc123\",\n        \"index\": 1,\n        \"title\": \"Intro email\",\n        \"day\": 0,\n        \"hour\": 9,\n        \"type\": \"auto_email\",\n        \"subject\": \"Quick question\",\n        \"message\": \"<p>Hi {{recipient.first_name}} [[block:abc-123]]</p>\"\n      },\n      {\n        \"id\": \"stp_def456\",\n        \"index\": 2,\n        \"title\": \"LinkedIn follow up\",\n        \"day\": 2,\n        \"hour\": 10,\n        \"type\": \"auto_linkedin_message\",\n        \"message\": \"<p>Following up</p>\"\n      }\n    ],\n    \"blocks\": {\n      \"abc-123\": {\n        \"id\": \"abc-123\",\n        \"name\": \"Intro hook\",\n        \"block_type\": \"MANUAL\",\n        \"content\": \"Saw you launched X recently —\",\n        \"created_at\": \"2026-01-15T10:30:00Z\",\n        \"updated_at\": \"2026-05-10T14:22:00Z\"\n      }\n    }\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-11T17:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f7fb8b05-2ae6-4985-9538-d2232355f5e5",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates",
+                    ":sequence_template_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_template_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "df208be3-412d-4b8d-83c2-28183aa16db1",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates",
+                    ":sequence_template_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_template_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7d2f9fac-630f-4440-be3b-6c4b304302a0",
+          "name": "Update a Sequence Template",
+          "request": {
+            "name": "Update a Sequence Template",
+            "description": {
+              "content": "Updates an existing sequence template. All fields are optional, but at least one must be provided. `steps`, `transitions`, and `blocks` replace the current value when supplied; each supplied step must include its `id`.\n\nSupply `steps` (ordered by `index`), `transitions`, and `blocks` together; see each field's schema for its shape and allowed values. A step references a block via a `[[block:<id>]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a branch. Example:\n\n{\"steps\": [{\"index\": 1, \"day\": 0, \"hour\": 9, \"type\": \"auto_email\", \"subject\": \"Quick question\", \"message\": \"<p>Hi {{recipient.first_name}} [[block:intro]]</p>\"}, {\"index\": 2, \"day\": 2, \"hour\": 9, \"type\": \"auto_linkedin_connection\", \"message\": \"Let's connect\"}], \"transitions\": [{\"from_step_index\": 1, \"to_step_index\": 2, \"transition_type\": \"PREVIOUS_STEP_COMPLETES\"}], \"blocks\": {\"intro\": {\"name\": \"Intro\", \"block_type\": \"MANUAL\", \"content\": \"...\"}}}\n\nTemplate variables must be namespaced. Supported tokens are `{{recipient.first_name}}`, `{{recipient.last_name}}`, `{{recipient.company}}`, `{{recipient.email}}`, `{{sender.first_name}}`, `{{sender.last_name}}`, and `{{sender.company}}`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequence-templates",
+                ":sequence_template_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "sequence_template_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"steps\": [\n    {\n      \"type\": \"<string>\",\n      \"index\": \"<integer>\",\n      \"title\": \"<string>\",\n      \"day\": \"<integer>\",\n      \"hour\": \"<integer>\",\n      \"subject\": \"<string>\",\n      \"message\": \"<string>\",\n      \"gift_id\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"index\": \"<integer>\",\n      \"title\": \"<string>\",\n      \"day\": \"<integer>\",\n      \"hour\": \"<integer>\",\n      \"subject\": \"<string>\",\n      \"message\": \"<string>\",\n      \"gift_id\": \"<string>\"\n    }\n  ],\n  \"transitions\": [\n    {\n      \"from_step_index\": \"<integer>\",\n      \"to_step_index\": \"<integer>\",\n      \"transition_type\": \"<string>\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": \"<integer>\",\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": \"<integer>\",\n      \"require_all\": true\n    },\n    {\n      \"from_step_index\": \"<integer>\",\n      \"to_step_index\": \"<integer>\",\n      \"transition_type\": \"<string>\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": \"<integer>\",\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": \"<integer>\",\n      \"require_all\": true\n    }\n  ],\n  \"blocks\": {\n    \"key_0\": {\n      \"name\": \"<string>\",\n      \"block_type\": \"<string>\",\n      \"content\": \"<string>\",\n      \"fallback_content\": \"<string>\"\n    },\n    \"key_1\": {\n      \"name\": \"<string>\",\n      \"block_type\": \"<string>\",\n      \"content\": \"<string>\",\n      \"fallback_content\": \"<string>\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "92499e90-e76f-4a9f-9c57-b37cc425f8c8",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates",
+                    ":sequence_template_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_template_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"INACTIVE\",\n  \"steps\": [\n    {\n      \"type\": \"auto_email\",\n      \"index\": 7155,\n      \"title\": \"string\",\n      \"day\": 4908,\n      \"hour\": 9740,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    },\n    {\n      \"type\": \"auto_email\",\n      \"index\": 5608,\n      \"title\": \"string\",\n      \"day\": 68,\n      \"hour\": 4250,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    }\n  ],\n  \"transitions\": [\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 7234,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 2685,\n      \"require_all\": true\n    },\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 4268,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 9847,\n      \"require_all\": true\n    }\n  ],\n  \"blocks\": {\n    \"key_0\": {\n      \"name\": \"string\",\n      \"block_type\": \"AI_GENERATED\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    },\n    \"key_1\": {\n      \"name\": \"string\",\n      \"block_type\": \"AI_GENERATED\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    },\n    \"key_2\": {\n      \"name\": \"string\",\n      \"block_type\": \"AI_GENERATED\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"seqt_abc123\",\n    \"name\": \"Enterprise Onboarding\",\n    \"status\": \"ACTIVE\",\n    \"description\": \"string\",\n    \"owner_id\": \"string\",\n    \"is_default\": false,\n    \"archived_at\": \"2016-06-23T04:03:13.357Z\",\n    \"created_at\": \"1951-06-20T18:34:55.844Z\",\n    \"updated_at\": \"2000-12-22T08:31:23.777Z\",\n    \"steps\": [\n      {\n        \"id\": \"stp_abc123\",\n        \"type\": \"auto_email\",\n        \"index\": 1960,\n        \"title\": \"string\",\n        \"day\": 79,\n        \"hour\": 4900,\n        \"subject\": \"string\",\n        \"message\": \"string\",\n        \"gift_id\": \"string\"\n      },\n      {\n        \"id\": \"stp_abc123\",\n        \"type\": \"auto_email\",\n        \"index\": 2124,\n        \"title\": \"string\",\n        \"day\": 7213,\n        \"hour\": 6337,\n        \"subject\": \"string\",\n        \"message\": \"string\",\n        \"gift_id\": \"string\"\n      }\n    ],\n    \"transitions\": [\n      {\n        \"from_step_index\": 1,\n        \"to_step_index\": 2,\n        \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n        \"pre_check_time_unit\": \"business_days\",\n        \"pre_check_delay\": 1248,\n        \"post_check_time_unit\": \"business_days\",\n        \"post_check_delay\": 2852,\n        \"require_all\": true\n      },\n      {\n        \"from_step_index\": 1,\n        \"to_step_index\": 2,\n        \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n        \"pre_check_time_unit\": \"business_days\",\n        \"pre_check_delay\": 4026,\n        \"post_check_time_unit\": \"business_days\",\n        \"post_check_delay\": 629,\n        \"require_all\": true\n      }\n    ],\n    \"blocks\": {\n      \"key_0\": {\n        \"key_0\": 6627,\n        \"key_1\": false\n      },\n      \"key_1\": {\n        \"key_0\": 1060,\n        \"key_1\": 7758.117154186851,\n        \"key_2\": false\n      },\n      \"key_2\": {\n        \"key_0\": \"string\",\n        \"key_1\": false,\n        \"key_2\": false\n      }\n    }\n  },\n  \"meta\": {\n    \"timestamp\": \"1976-04-28T11:16:23.854Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "66cbcb3f-dd1c-4bef-8f1c-80f5a95e1d26",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequence-templates",
+                    ":sequence_template_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_template_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"INACTIVE\",\n  \"steps\": [\n    {\n      \"type\": \"auto_email\",\n      \"index\": 7155,\n      \"title\": \"string\",\n      \"day\": 4908,\n      \"hour\": 9740,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    },\n    {\n      \"type\": \"auto_email\",\n      \"index\": 5608,\n      \"title\": \"string\",\n      \"day\": 68,\n      \"hour\": 4250,\n      \"subject\": \"string\",\n      \"message\": \"string\",\n      \"gift_id\": \"string\"\n    }\n  ],\n  \"transitions\": [\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 7234,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 2685,\n      \"require_all\": true\n    },\n    {\n      \"from_step_index\": 1,\n      \"to_step_index\": 2,\n      \"transition_type\": \"PREVIOUS_STEP_COMPLETES\",\n      \"pre_check_time_unit\": \"business_days\",\n      \"pre_check_delay\": 4268,\n      \"post_check_time_unit\": \"business_days\",\n      \"post_check_delay\": 9847,\n      \"require_all\": true\n    }\n  ],\n  \"blocks\": {\n    \"key_0\": {\n      \"name\": \"string\",\n      \"block_type\": \"AI_GENERATED\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    },\n    \"key_1\": {\n      \"name\": \"string\",\n      \"block_type\": \"AI_GENERATED\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    },\n    \"key_2\": {\n      \"name\": \"string\",\n      \"block_type\": \"AI_GENERATED\",\n      \"content\": \"string\",\n      \"fallback_content\": \"string\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "95228c93-2412-4193-bcb0-f1e556991fb2",
+    "name": "Monaco Public Accounts Sequence Templates API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

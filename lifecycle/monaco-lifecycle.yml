@@ -1,4 +1,4 @@
-generated: '2026-07-20'
+generated: '2026-08-13'
 method: searched
 source: https://docs.monaco.com/beta-notice
 versioning:
@@ -7,11 +7,9 @@ versioning:
   docs: https://docs.monaco.com/api-reference
 stability:
   stage: beta
-  notice: >-
-    Monaco's API and MCP server are currently in Beta. There may be changes to
-    API methods, responses, and parameters — as well as to MCP tools and their
-    schemas — while feedback is incorporated. Monaco aims to extend functionality
-    with as few disruptive changes as possible.
+  notice: Monaco's API and MCP server are currently in Beta. There may be changes to API methods, responses, and
+    parameters — as well as to MCP tools and their schemas — while feedback is incorporated. Monaco aims to extend
+    functionality with as few disruptive changes as possible.
   source: https://docs.monaco.com/beta-notice
 status_page: https://status.monaco.com
 deprecation:
@@ -19,3 +17,13 @@ deprecation:
   sunset_header: false
   note: No formal deprecation policy or RFC 8594 Sunset/Deprecation header support published as of this pass.
 deprecated_operations: []
+changelog:
+  published: false
+  note: No dated changelog or release-notes page exists. https://docs.monaco.com/changelog returns 404 and the complete
+    docs index (llms.txt) lists no changelog page. Product news appears only as long-form posts on https://www.monaco.com/blog.
+observed_change:
+  window: 2026-07-20 to 2026-08-13
+  detail: 'The published OpenAPI grew from 37 to 51 operations with no announcement: two new resources (Audiences,
+    Campaigns) and update_sequence_step were added. Nothing was removed. This is consistent with the Beta notice,
+    and is the reason a changelog matters here.'
+  evidence: openapi/_original/monaco-openapi-original.json re-harvested from https://api.monaco.com/openapi.json

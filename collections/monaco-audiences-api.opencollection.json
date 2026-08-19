@@ -1,0 +1,138 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Audiences API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audiences",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Audiences",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/audiences/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of audiences."
+        },
+        {
+          "info": {
+            "name": "Get an Audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/audiences/:audience_id",
+            "params": [
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single audience by its `audience_id`."
+        },
+        {
+          "info": {
+            "name": "List Audience Contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/audiences/:audience_id/contacts",
+            "params": [
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of the contacts in an audience."
+        },
+        {
+          "info": {
+            "name": "Add Contacts to Audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/audiences/:audience_id/contacts",
+            "params": [
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds one or more contacts to an audience by their IDs.\n\nAudiences are reusable and may be attached to multiple campaigns, so adding a contact here enrolls them in every campaign that uses this audience."
+        },
+        {
+          "info": {
+            "name": "Create an Audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/audiences",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new audience, optionally seeded with contacts — either an explicit `contact_ids` list or a `filters` query over the contacts field schemas (optionally narrowed by `excluded_ids` or `source_audience_id`).\n\nAudiences can be shared across campaigns."
+        },
+        {
+          "info": {
+            "name": "Remove Contacts from Audience",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/audiences/:audience_id/contacts/remove",
+            "params": [
+              {
+                "name": "audience_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Removes the given `contact_ids` from an audience. Idempotent — IDs not in the audience are ignored. Any per-contact failures are returned in `failures`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

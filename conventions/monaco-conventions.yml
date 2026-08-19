@@ -1,4 +1,4 @@
-generated: '2026-07-20'
+generated: '2026-08-13'
 method: searched
 source: https://docs.monaco.com/pagination-sorting-and-filtering
 docs:
@@ -7,60 +7,120 @@ docs:
 authentication:
   style: api-key-bearer
   header: Authorization
-  scheme: "Bearer mks_<token>"
+  scheme: Bearer mks_<token>
   detail: authentication/monaco-authentication.yml
 idempotency:
   supported: true
   mechanism: request-body-field
   field: idempotency_key
   scope: create operations (e.g. create_opportunity)
-  detail: >-
-    Create endpoints accept an idempotency_key in the request body so a
-    creation can be safely retried without duplicating records. Confirmed in the
-    OpenAPI OpportunityCreateRequest schema and the Create an Opportunity docs.
+  detail: Create endpoints accept an idempotency_key in the request body so a creation can be safely retried without
+    duplicating records. Confirmed in the OpenAPI OpportunityCreateRequest schema and the Create an Opportunity
+    docs.
   source: https://docs.monaco.com/api-reference/opportunities/create-an-opportunity
+  additional_safe_retry_operations:
+  - operation: remove_contacts_from_audience
+    reason: Documented as idempotent — contact IDs not in the audience are ignored; per-contact failures are returned
+      in `failures`.
+  - operation: add_audiences_to_campaign
+    reason: Documented as retry-safe — audiences already attached are ignored.
+  source_extra: https://docs.monaco.com/api-reference/audiences/remove-contacts-from-audience
 pagination:
   style: page-number
   request:
     location: request body (POST /v1/{entity}/list)
     params:
-      page: {type: int, default: 1, min: 1, description: Page number (1-indexed)}
-      page_size: {type: int, default: 50, min: 1, max: 500, description: Results per page}
+      page:
+        type: int
+        default: 1
+        min: 1
+        description: Page number (1-indexed)
+      page_size:
+        type: int
+        default: 50
+        min: 1
+        max: 500
+        description: Results per page
   response:
     envelope_field: pagination
-    fields: [page, page_size, total_count, total_pages]
+    fields:
+    - page
+    - page_size
+    - total_count
+    - total_pages
     iterate: increment page until page >= total_pages
 sorting:
   param: sort
-  descending_prefix: "-"
-  default: "-created_at"
+  descending_prefix: '-'
+  default: -created_at
   discovery: GET /v1/schemas/{entity} lists sortable fields
   note: Sorting an unsupported field returns 422.
 filtering:
   param: filters
   simple: flat array of {field, condition, value} rules, implicitly ANDed
-  complex: "recursive filter expression {operator: and|or, filters: [...]} nestable to arbitrary depth"
-  conditions: [is, is_not, equals, contains, not_contains, is_empty, is_not_empty, is_before, is_after]
+  complex: 'recursive filter expression {operator: and|or, filters: [...]} nestable to arbitrary depth'
+  conditions:
+  - is
+  - is_not
+  - equals
+  - contains
+  - not_contains
+  - is_empty
+  - is_not_empty
+  - is_before
+  - is_after
   enum_values: use the field key value, not the display name
   dates: ISO 8601 strings (trailing Z / UTC supported)
   custom_fields: custom_field_<key> usable in sort and filters
   discovery: GET /v1/schemas/{entity} to discover filterable fields + accepted conditions
 list_pattern:
   style: POST /v1/{entity}/list with a JSON body carrying filters/sort/page/page_size
-  entities: [accounts, contacts, opportunities, tasks, meetings, sequences]
+  entities:
+  - accounts
+  - contacts
+  - opportunities
+  - tasks
+  - meetings
+  - sequences
+  - audiences
+  - campaigns
 error_envelope:
   shape: '{"error": {"code": "<machine-readable>", "message": "<human-readable>"}}'
-  note: >-
-    Custom envelope (not RFC 9457 problem+json). Auth-layer errors may return a
-    simpler {"detail": "..."} body. See errors/monaco-problem-types.yml.
+  note: 'Custom envelope (not RFC 9457 problem+json). Auth-layer errors may return a simpler {"detail": "..."} body.
+    See errors/monaco-problem-types.yml.'
   detail: errors/monaco-problem-types.yml
 rate_limiting:
   limit: 100 requests per minute per organization
   scope: shared across REST API and MCP tool calls
-  signal_headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After]
+  signal_headers:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  - Retry-After
   over_limit_status: 429
   detail: rate-limits/monaco-rate-limits.yml
 versioning:
   scheme: uri-path
   current: v1
   stability: Beta (see lifecycle/monaco-lifecycle.yml)
+partial_failure:
+  pattern: bulk-with-failures-array
+  detail: 'Bulk membership operations return a per-item failure list rather than failing the whole request: add/remove
+    contacts on an audience return `failures` grouped by reason; enroll_contacts_in_campaign returns success_count,
+    failure_count and failure_reasons.'
+  operations:
+  - add_contacts_to_audience
+  - remove_contacts_from_audience
+  - enroll_contacts_in_campaign
+async_processing:
+  detail: Attaching audiences to a campaign enrolls their contacts asynchronously; the campaign carries an `enrollment_status`
+    field to poll.
+  operations:
+  - add_audiences_to_campaign
+  - create_campaign
+agent_surfaces:
+  mcp: mcp/monaco-mcp.yml
+  tool_crosswalk: mcp/monaco-tool-crosswalk.yml
+  agent_card: a2a/monaco-a2a.yml
+  agent_skill: skills/monaco-docs-integration.skill.md
+  llms_txt: llms/monaco-llms.txt

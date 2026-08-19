@@ -1,0 +1,167 @@
+{
+  "item": [
+    {
+      "id": "55e1a725-4069-48eb-b998-c7b993f00baf",
+      "name": "Schemas",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7985793c-09b8-4858-9de8-ee3749b296fd",
+          "name": "Get Field Schemas for an Entity",
+          "request": {
+            "name": "Get Field Schemas for an Entity",
+            "description": {
+              "content": "Lists fields for `entity`, which must be one of `accounts`, `contacts`, `meetings`, `opportunities`, `sequences`, or `tasks`.\n\nUse each entry's `key` in `filters[].field` and `sort` on the corresponding list endpoint. The `allowed_operators` array lists the valid values for `filters[].condition` on that field.\n\nCustom fields use `custom_field_{uuid}` keys. Enum and select fields expose their accepted values under `enum_field_settings.allowed_values`, and callers must pass the `key` rather than the display value.\n\nFor `date` and `datetime` fields the `allowed_values` are semantic periods used with the `is` operator. The `equals`, `greater_than`, and `less_than` operators take raw `YYYY-MM-DD` values instead.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "schemas",
+                ":entity"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "entity",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ec8384a0-ae4b-48f1-8bdd-64aaf8e69293",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "schemas",
+                    ":entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"name\": \"Name\",\n      \"key\": \"name\",\n      \"type\": \"string\",\n      \"filterable\": true,\n      \"sortable\": true,\n      \"allowed_operators\": [\n        \"contains\",\n        \"not_contains\",\n        \"is\",\n        \"is_not\",\n        \"is_empty\",\n        \"is_not_empty\"\n      ]\n    },\n    {\n      \"name\": \"Status\",\n      \"key\": \"status\",\n      \"type\": \"enum\",\n      \"filterable\": true,\n      \"sortable\": true,\n      \"allowed_operators\": [\n        \"is\",\n        \"is_not\",\n        \"is_empty\",\n        \"is_not_empty\"\n      ],\n      \"enum_field_settings\": {\n        \"allowed_values\": [\n          {\n            \"key\": \"NEW\",\n            \"display_value\": \"New\"\n          },\n          {\n            \"key\": \"PROSPECTING\",\n            \"display_value\": \"Prospecting\"\n          },\n          {\n            \"key\": \"ENGAGED\",\n            \"display_value\": \"Engaged\"\n          },\n          {\n            \"key\": \"CUSTOMER\",\n            \"display_value\": \"Customer\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"Owner\",\n      \"key\": \"owner\",\n      \"type\": \"uuid\",\n      \"filterable\": true,\n      \"sortable\": false,\n      \"allowed_operators\": [\n        \"is\",\n        \"is_not\",\n        \"is_empty\",\n        \"is_not_empty\"\n      ],\n      \"enum_field_settings\": {\n        \"allowed_values\": [\n          {\n            \"key\": \"usr_abc123\",\n            \"display_value\": \"Jane Smith\"\n          },\n          {\n            \"key\": \"usr_def456\",\n            \"display_value\": \"John Doe\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"Employee Count\",\n      \"key\": \"employee_count\",\n      \"type\": \"number\",\n      \"parent\": \"company\",\n      \"filterable\": true,\n      \"sortable\": true,\n      \"allowed_operators\": [\n        \"equals\",\n        \"greater_than\",\n        \"less_than\",\n        \"is_empty\",\n        \"is_not_empty\"\n      ]\n    },\n    {\n      \"name\": \"Last Funding Date\",\n      \"key\": \"last_funding_date\",\n      \"type\": \"date\",\n      \"parent\": \"company\",\n      \"filterable\": true,\n      \"sortable\": true,\n      \"allowed_operators\": [\n        \"is\",\n        \"equals\",\n        \"greater_than\",\n        \"less_than\",\n        \"is_empty\",\n        \"is_not_empty\"\n      ],\n      \"enum_field_settings\": {\n        \"allowed_values\": [\n          {\n            \"key\": \"previous_week\",\n            \"display_value\": \"Previous week\"\n          },\n          {\n            \"key\": \"previous_month\",\n            \"display_value\": \"Previous month\"\n          },\n          {\n            \"key\": \"previous_quarter\",\n            \"display_value\": \"Previous quarter\"\n          }\n        ]\n      }\n    },\n    {\n      \"name\": \"Customer Fit\",\n      \"key\": \"custom_field_550e8400-e29b-41d4-a716-446655440001\",\n      \"type\": \"enum\",\n      \"filterable\": true,\n      \"sortable\": true,\n      \"allowed_operators\": [\n        \"is\",\n        \"is_not\",\n        \"is_empty\",\n        \"is_not_empty\"\n      ],\n      \"custom_field_settings\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"is_ai_auto_filled\": false\n      },\n      \"enum_field_settings\": {\n        \"allowed_values\": [\n          {\n            \"key\": \"high\",\n            \"display_value\": \"High\"\n          },\n          {\n            \"key\": \"medium\",\n            \"display_value\": \"Medium\"\n          }\n        ]\n      }\n    }\n  ],\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f77cc50b-120c-497c-89b9-553431175eb6",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "schemas",
+                    ":entity"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "entity",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "adbfe826-6d95-4ef6-b203-714d00e905d3",
+    "name": "Monaco Public Accounts Schemas API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,892 @@
+{
+  "item": [
+    {
+      "id": "5e7a2074-6e6b-4bdf-9b9d-0184f016850d",
+      "name": "Sequences",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "faf5e828-1ae9-4283-b982-cf94486cc75b",
+          "name": "List Sequences",
+          "request": {
+            "name": "List Sequences",
+            "description": {
+              "content": "Returns a paginated list of sequences.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequences",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 50,\n  \"sort\": \"-created_at\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "13b04cb9-c6c4-49a3-b367-757095d846a7",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"seq_abc123\",\n      \"contact_id\": \"con_def456\",\n      \"name\": \"Enterprise Onboarding\",\n      \"description\": \"Multi-touch onboarding sequence for enterprise accounts\",\n      \"status\": \"started\",\n      \"template_id\": \"seqt_789ghi\",\n      \"created_at\": \"2026-01-15T10:30:00Z\",\n      \"updated_at\": \"2026-05-10T14:22:00Z\",\n      \"last_interaction\": \"Email today\",\n      \"enqueued_at\": \"2026-01-16T09:00:00Z\",\n      \"started_at\": \"2026-01-16T09:05:00Z\",\n      \"responded_at\": \"2026-01-20T11:30:00Z\",\n      \"meeting_booked_at\": \"2026-01-22T15:00:00Z\",\n      \"sender_id\": \"usr_jkl012\",\n      \"sender_name\": \"Alex Rivera\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"page_size\": 50,\n    \"total_count\": 142,\n    \"total_pages\": 3\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-11T17:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "79f3f19f-a75a-4d9a-92a0-ca05c48e3a30",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4c9859cf-f0f5-4749-8bf6-79ff5e6a00ee",
+          "name": "Get a Sequence",
+          "request": {
+            "name": "Get a Sequence",
+            "description": {
+              "content": "Gets a single sequence by its `sequence_id`. The detail response includes the sequence's ordered list of tasks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequences",
+                ":sequence_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "sequence_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "33f60856-11dc-457c-8f4b-f232b245b588",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"seq_abc123\",\n    \"contact_id\": \"con_def456\",\n    \"name\": \"Enterprise Onboarding\",\n    \"description\": \"Multi-touch onboarding sequence for enterprise accounts\",\n    \"status\": \"started\",\n    \"template_id\": \"seqt_789ghi\",\n    \"created_at\": \"2026-01-15T10:30:00Z\",\n    \"updated_at\": \"2026-05-10T14:22:00Z\",\n    \"tasks\": [\n      {\n        \"id\": \"tsk_abc123\",\n        \"sequence_id\": \"seq_abc123\",\n        \"order\": 1,\n        \"name\": \"Send linkedin connection request\",\n        \"type\": \"auto_linkedin_connection\",\n        \"status\": \"completed\",\n        \"scheduled_at\": \"2025-10-14T23:36:09+00:00\",\n        \"completed_at\": \"2025-10-13T22:40:17.862589+00:00\",\n        \"task_body\": \"<p>Some message</p>\",\n        \"outcome\": \"accepted\"\n      }\n    ]\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-11T17:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ee6e85aa-3767-4ccc-ae18-4ac557a90eba",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6d9d1658-70fc-4009-ad42-ee2ee29919d5",
+          "name": "Update a Sequence",
+          "request": {
+            "name": "Update a Sequence",
+            "description": {
+              "content": "Applies a state transition to a sequence (see the `action` field for valid values and their meanings). Returns the refreshed sequence representation, including its tasks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequences",
+                ":sequence_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "sequence_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "d4ea36a4-35b4-4913-8cfe-6de1809fd565",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"action\": \"enqueue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"seq_abc123\",\n    \"contact_id\": \"con_def456\",\n    \"name\": \"Enterprise Onboarding\",\n    \"description\": \"Multi-touch onboarding sequence for enterprise accounts\",\n    \"status\": \"started\",\n    \"template_id\": \"seqt_789ghi\",\n    \"created_at\": \"2026-05-18T10:30:00Z\",\n    \"updated_at\": \"2026-05-18T10:35:00Z\",\n    \"tasks\": []\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-18T10:35:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cf9ea587-1268-4941-a4b4-f71b6ab2dbb2",
+              "name": "Sequence not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"action\": \"enqueue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4a1a0813-7430-478f-a1ed-9d5fe335f20e",
+              "name": "Invalid state transition",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"action\": \"enqueue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6fd36574-672f-4696-b589-88bce3086969",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"action\": \"enqueue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a046464c-3175-44f5-8c78-1bbcd6ab12b5",
+          "name": "Update a Sequence Step",
+          "request": {
+            "name": "Update a Sequence Step",
+            "description": {
+              "content": "Updates the copy on a single step of a sequence. `step_id` is the `id` of the entry in the sequence's `tasks` list (from `get_sequence`). Supports `message` on email, InMail, LinkedIn message, LinkedIn connection-note, and gifting-email steps, and `subject` on email, InMail, and gifting-email steps. Only steps of an active (non-suggested) sequence that have not yet been completed can be edited. Only the fields you provide are updated, and omitted fields are left unchanged. Returns the refreshed step. Template variables must be namespaced. Supported tokens are `{{recipient.first_name}}`, `{{recipient.last_name}}`, `{{recipient.company}}`, `{{recipient.email}}`, `{{sender.first_name}}`, `{{sender.last_name}}`, and `{{sender.company}}`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sequences",
+                ":sequence_id",
+                "steps",
+                ":step_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "sequence_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "step_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"<string>\",\n  \"subject\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bfcf80eb-9b50-49de-8237-3689a8bf52f9",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id",
+                    "steps",
+                    ":step_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "step_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"<string>\",\n  \"subject\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"tsk_abc123\",\n    \"sequence_id\": \"seq_def456\",\n    \"order\": 1,\n    \"type\": \"auto_linkedin_connection\",\n    \"status\": \"pending\",\n    \"scheduled_at\": \"2026-05-15T09:00:00Z\",\n    \"name\": \"string\",\n    \"completed_at\": \"1995-03-10T20:21:11.303Z\",\n    \"task_body\": \"string\",\n    \"subject\": \"string\",\n    \"outcome\": \"email_not_found\"\n  },\n  \"meta\": {\n    \"timestamp\": \"1989-03-07T07:53:31.436Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bdc5d04b-2af8-4337-bdba-fde85cf72e24",
+              "name": "Step not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id",
+                    "steps",
+                    ":step_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "step_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"<string>\",\n  \"subject\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "199f6a85-b601-4716-90d8-6a3c636f3afc",
+              "name": "Invalid copy for this step",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id",
+                    "steps",
+                    ":step_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "step_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"<string>\",\n  \"subject\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3c0ef69d-e69b-4d08-bf55-0d73659e196b",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sequences",
+                    ":sequence_id",
+                    "steps",
+                    ":step_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "sequence_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "step_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"<string>\",\n  \"subject\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "921fae96-a012-4140-ae04-ec9ea5958dec",
+    "name": "Monaco Public Accounts Sequences API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

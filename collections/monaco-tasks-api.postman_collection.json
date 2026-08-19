@@ -1,0 +1,611 @@
+{
+  "item": [
+    {
+      "id": "ad770d9a-6277-445a-aa71-a471ae2b0e63",
+      "name": "Tasks",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f7e0ee59-d0e9-4c41-9476-846e00891ca8",
+          "name": "List Tasks",
+          "request": {
+            "name": "List Tasks",
+            "description": {
+              "content": "Returns a paginated list of tasks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "tasks",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 50,\n  \"sort\": \"-created_at\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "034643ec-cbfd-4b60-9bea-53d0e6003d04",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"tsk_abc123\",\n      \"account_id\": \"acc_def456\",\n      \"opportunity_id\": \"opp_ghi789\",\n      \"title\": \"Send follow-up proposal\",\n      \"description\": \"Send the updated pricing proposal to the procurement team\",\n      \"task_type\": \"General Action Item\",\n      \"assignee\": {\n        \"id\": \"usr_abc123\",\n        \"first_name\": \"Jane\",\n        \"last_name\": \"Smith\"\n      },\n      \"status\": \"To Do\",\n      \"due_at\": \"2025-07-01T17:00:00Z\",\n      \"created_at\": \"2025-06-15T10:30:00Z\",\n      \"updated_at\": \"2025-06-16T10:30:00Z\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"page_size\": 50,\n    \"total_count\": 58,\n    \"total_pages\": 2\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0d141eaf-17da-4620-a7a0-9b81e78b339a",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"string\",\n      \"condition\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 25,\n  \"sort\": \"-created_at\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d570904d-2bd8-4608-bf9d-0b665f4796d5",
+          "name": "Get a Task",
+          "request": {
+            "name": "Get a Task",
+            "description": {
+              "content": "Gets a single task by its `task_id`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "07432d0e-cc37-4932-9998-9b6c26ecda79",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"tsk_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"opportunity_id\": \"opp_ghi789\",\n    \"title\": \"Send follow-up proposal\",\n    \"description\": \"Send the updated pricing proposal to the procurement team\",\n    \"task_type\": \"General Action Item\",\n    \"assignee\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"status\": \"Done\",\n    \"due_at\": \"2025-07-01T17:00:00Z\",\n    \"completed_at\": \"2025-06-28T11:00:00Z\",\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2025-06-28T11:00:00Z\",\n    \"message_draft\": {\n      \"recipients\": [\n        {\n          \"name\": \"Jane Smith\",\n          \"email\": \"jane@acme.com\"\n        }\n      ],\n      \"cc\": [\n        {\n          \"name\": \"John Doe\",\n          \"email\": \"john@acme.com\"\n        }\n      ],\n      \"subject\": \"Pricing follow-up\",\n      \"body\": \"Hi Jane, following up on the proposal we discussed...\"\n    }\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "58825f83-6fc1-46e0-8a68-c72a77628d67",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9544f2a0-3416-4bd8-8d0f-aa5720862a11",
+          "name": "Update a Task",
+          "request": {
+            "name": "Update a Task",
+            "description": {
+              "content": "Updates an existing task by its `task_id`. Marking a task as `DONE` or `CANCELLED` sets `completed_at`; moving out of those states clears it. Updating `account_id` is only supported for manually created tasks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"account_id\": \"<uuid>\",\n  \"assignee_id\": \"<uuid>\",\n  \"due_at\": \"<dateTime>\",\n  \"message_draft\": {\n    \"recipients\": [\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      }\n    ],\n    \"subject\": \"<string>\",\n    \"body\": \"<string>\",\n    \"cc\": [\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      }\n    ],\n    \"sent_at\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "942dd5bd-f331-4f90-be9c-7bc19cd6e2df",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"account_id\": \"<uuid>\",\n  \"assignee_id\": \"<uuid>\",\n  \"due_at\": \"<dateTime>\",\n  \"message_draft\": {\n    \"recipients\": [\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      },\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      }\n    ],\n    \"subject\": \"Pricing follow-up\",\n    \"body\": \"Hi Jane, following up on the proposal we discussed...\",\n    \"cc\": [\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      },\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      }\n    ],\n    \"sent_at\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"tsk_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"title\": \"Send follow-up proposal\",\n    \"description\": \"Send the updated pricing proposal to the procurement team\",\n    \"task_type\": \"General Action Item\",\n    \"assignee\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"status\": \"Done\",\n    \"due_at\": \"2025-07-01T17:00:00Z\",\n    \"completed_at\": \"2025-06-28T11:00:00Z\",\n    \"created_at\": \"2025-06-15T10:30:00Z\",\n    \"updated_at\": \"2025-06-28T11:00:00Z\",\n    \"message_draft\": {\n      \"recipients\": [\n        {\n          \"name\": \"Jane Smith\",\n          \"email\": \"jane@acme.com\"\n        }\n      ],\n      \"cc\": [\n        {\n          \"name\": \"John Doe\",\n          \"email\": \"john@acme.com\"\n        }\n      ],\n      \"subject\": \"Pricing follow-up\",\n      \"body\": \"Hi Jane, following up on the proposal we discussed...\"\n    }\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4adab133-7782-4457-a73a-76a6d3a826b1",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"status\": \"<string>\",\n  \"account_id\": \"<uuid>\",\n  \"assignee_id\": \"<uuid>\",\n  \"due_at\": \"<dateTime>\",\n  \"message_draft\": {\n    \"recipients\": [\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      },\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      }\n    ],\n    \"subject\": \"Pricing follow-up\",\n    \"body\": \"Hi Jane, following up on the proposal we discussed...\",\n    \"cc\": [\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      },\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      }\n    ],\n    \"sent_at\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ed316eac-44c7-4a77-947d-7a4297f022b1",
+          "name": "Create a Task",
+          "request": {
+            "name": "Create a Task",
+            "description": {
+              "content": "Creates a new task.\n\nTasks can be associated with an account (via `account_id`) and/or an opportunity (via `opportunity_id`). If no `assignee_id` is provided, the task is assigned to the caller.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "tasks",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"<string>\",\n  \"description\": \"<string>\",\n  \"account_id\": \"<uuid>\",\n  \"opportunity_id\": \"<uuid>\",\n  \"task_type\": \"<string>\",\n  \"assignee_id\": \"<uuid>\",\n  \"due_at\": \"<dateTime>\",\n  \"message_draft\": {\n    \"recipients\": [\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      }\n    ],\n    \"subject\": \"<string>\",\n    \"body\": \"<string>\",\n    \"cc\": [\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      },\n      {\n        \"name\": \"<string>\",\n        \"email\": \"<string>\"\n      }\n    ],\n    \"sent_at\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "51b8d4a2-7105-4229-8832-8a6d9d556bb0",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Send follow-up proposal\",\n  \"description\": \"Send the updated pricing proposal to the procurement team\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"opportunity_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n  \"task_type\": \"EMAIL\",\n  \"assignee_id\": \"550e8400-e29b-41d4-a716-446655440002\",\n  \"due_at\": \"2025-07-01T17:00:00Z\",\n  \"message_draft\": {\n    \"recipients\": [\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      }\n    ],\n    \"cc\": [\n      {\n        \"name\": \"John Doe\",\n        \"email\": \"john@acme.com\"\n      }\n    ],\n    \"subject\": \"Pricing follow-up\",\n    \"body\": \"Hi Jane, following up on the proposal we discussed...\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"tsk_abc123\",\n    \"account_id\": \"acc_def456\",\n    \"title\": \"Send follow-up proposal\",\n    \"description\": \"Send the updated pricing proposal to the procurement team\",\n    \"task_type\": \"General Action Item\",\n    \"assignee\": {\n      \"id\": \"usr_abc123\",\n      \"first_name\": \"Jane\",\n      \"last_name\": \"Smith\"\n    },\n    \"status\": \"To Do\",\n    \"due_at\": \"2025-07-01T17:00:00Z\",\n    \"created_at\": \"2026-04-21T12:00:00Z\",\n    \"updated_at\": \"2026-04-21T12:00:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-04-21T12:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8c27c3c9-dc28-49de-b175-18fb3e68d989",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "tasks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Send follow-up proposal\",\n  \"description\": \"Send the updated pricing proposal to the procurement team\",\n  \"account_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"opportunity_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n  \"task_type\": \"EMAIL\",\n  \"assignee_id\": \"550e8400-e29b-41d4-a716-446655440002\",\n  \"due_at\": \"2025-07-01T17:00:00Z\",\n  \"message_draft\": {\n    \"recipients\": [\n      {\n        \"name\": \"Jane Smith\",\n        \"email\": \"jane@acme.com\"\n      }\n    ],\n    \"cc\": [\n      {\n        \"name\": \"John Doe\",\n        \"email\": \"john@acme.com\"\n      }\n    ],\n    \"subject\": \"Pricing follow-up\",\n    \"body\": \"Hi Jane, following up on the proposal we discussed...\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ab1783b1-1086-4b86-9835-56b17db0d241",
+    "name": "Monaco Public Accounts Tasks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

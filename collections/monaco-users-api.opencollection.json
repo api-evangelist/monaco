@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Users API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/users/",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Case-insensitive substring filter on name or email."
+              }
+            ]
+          },
+          "docs": "Returns the users in the caller's organization. Pass the optional `query` parameter to filter by substring of name or email."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

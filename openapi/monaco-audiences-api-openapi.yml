@@ -1,0 +1,830 @@
+openapi: 3.1.0
+info:
+  title: Monaco Public Audiences API
+  description: Public API for Monaco
+  version: 1.0.0
+servers:
+- url: https://api.monaco.com
+tags:
+- name: Audiences
+paths:
+  /v1/audiences/list:
+    post:
+      tags:
+      - Audiences
+      summary: List Audiences
+      description: Returns a paginated list of audiences.
+      operationId: list_audiences
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudienceListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicListResponse_AudienceResponse_'
+              example:
+                data:
+                - id: aud_abc123
+                  name: Q2 Enterprise Prospects
+                  type: static
+                  status: active
+                  contact_count: 42
+                  created_at: '2026-01-15T10:30:00Z'
+                  updated_at: '2026-05-10T14:22:00Z'
+                pagination:
+                  page: 1
+                  page_size: 1
+                  total_count: 1
+                  total_pages: 1
+                meta:
+                  timestamp: '2026-05-11T17:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/audiences/{audience_id}:
+    get:
+      tags:
+      - Audiences
+      summary: Get an Audience
+      description: Gets a single audience by its `audience_id`.
+      operationId: get_audience
+      parameters:
+      - name: audience_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Audience Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_AudienceResponse_'
+              example:
+                data:
+                  id: aud_abc123
+                  name: Q2 Enterprise Prospects
+                  type: static
+                  status: active
+                  contact_count: 42
+                  created_at: '2026-01-15T10:30:00Z'
+                  updated_at: '2026-05-10T14:22:00Z'
+                meta:
+                  timestamp: '2026-05-11T17:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/audiences/{audience_id}/contacts:
+    get:
+      tags:
+      - Audiences
+      summary: List Audience Contacts
+      description: Returns a paginated list of the contacts in an audience.
+      operationId: list_audience_contacts
+      parameters:
+      - name: audience_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Audience Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 10000
+          minimum: 1
+          default: 15
+          title: Page Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicListResponse_ContactResponse_'
+              example:
+                data:
+                - id: con_abc123
+                  account_id: acc_def456
+                  first_name: Jane
+                  last_name: Smith
+                  email: jane@acme.com
+                  title: VP of Engineering
+                  phone_number: +1-415-555-0132
+                  linkedin_url: https://linkedin.com/in/janesmith
+                  location: San Francisco, CA
+                  source: api
+                  do_not_contact: false
+                  notes: Met at SaaStr 2025
+                  scoring:
+                    heat_score: Hot
+                  tags:
+                  - Decision Maker
+                  created_at: '2025-06-15T10:30:00Z'
+                  updated_at: '2025-06-16T10:30:00Z'
+                pagination:
+                  page: 1
+                  page_size: 15
+                  total_count: 42
+                  total_pages: 3
+                meta:
+                  timestamp: '2026-05-11T17:00:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+    post:
+      tags:
+      - Audiences
+      summary: Add Contacts to Audience
+      description: 'Adds one or more contacts to an audience by their IDs.
+
+
+        Audiences are reusable and may be attached to multiple campaigns, so adding a contact here enrolls them in every campaign that uses this audience.'
+      operationId: add_contacts_to_audience
+      parameters:
+      - name: audience_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Audience Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudienceContactsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_AudienceContactsResponse_'
+              example:
+                data:
+                  audience_id: aud_abc123
+                  failures: []
+                meta:
+                  timestamp: '2026-05-11T10:30:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/audiences:
+    post:
+      tags:
+      - Audiences
+      summary: Create an Audience
+      description: 'Creates a new audience, optionally seeded with contacts — either an explicit `contact_ids` list or a `filters` query over the contacts field schemas (optionally narrowed by `excluded_ids` or `source_audience_id`).
+
+
+        Audiences can be shared across campaigns.'
+      operationId: create_audience
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAudienceRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_AudienceResponse_'
+              example:
+                data:
+                  id: aud_abc123
+                  name: Q2 Enterprise Prospects
+                  type: static
+                  status: active
+                  contact_count: 2
+                  created_at: '2026-05-11T10:30:00Z'
+                  updated_at: '2026-05-11T10:30:00Z'
+                meta:
+                  timestamp: '2026-05-11T10:30:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/audiences/{audience_id}/contacts/remove:
+    post:
+      tags:
+      - Audiences
+      summary: Remove Contacts from Audience
+      description: Removes the given `contact_ids` from an audience. Idempotent — IDs not in the audience are ignored. Any per-contact failures are returned in `failures`.
+      operationId: remove_contacts_from_audience
+      parameters:
+      - name: audience_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Audience Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AudienceContactsRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_AudienceContactsResponse_'
+              example:
+                data:
+                  audience_id: aud_abc123
+                  failures: []
+                meta:
+                  timestamp: '2026-05-11T10:30:00Z'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+components:
+  schemas:
+    AudienceContactFailureGroup:
+      properties:
+        reason:
+          type: string
+          title: Reason
+          description: Reason code for the failure
+          examples:
+          - not_in_audience
+        contact_ids:
+          items:
+            type: string
+          type: array
+          title: Contact Ids
+          description: Contact IDs that failed for this reason
+      type: object
+      required:
+      - reason
+      - contact_ids
+      title: AudienceContactFailureGroup
+    AudienceContactsRequest:
+      properties:
+        contact_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 10000
+          minItems: 1
+          title: Contact Ids
+          description: IDs of the contacts to add or remove
+      type: object
+      required:
+      - contact_ids
+      title: AudienceContactsRequest
+    AudienceContactsResponse:
+      properties:
+        audience_id:
+          type: string
+          title: Audience Id
+          description: ID of the audience that was modified
+        failures:
+          items:
+            $ref: '#/components/schemas/AudienceContactFailureGroup'
+          type: array
+          title: Failures
+          description: Contacts that exist but could not be added or removed, grouped by reason
+      type: object
+      required:
+      - audience_id
+      title: AudienceContactsResponse
+    AudienceListRequest:
+      properties:
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 500
+          examples:
+          - 500
+      type: object
+      title: AudienceListRequest
+      description: 'Pagination for the audience list. The default page size covers every
+
+        current org, so body-less calls keep returning all audiences in one page;
+
+        filters and sort follow separately.'
+    AudienceResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the audience
+          examples:
+          - aud_abc123
+        name:
+          type: string
+          title: Name
+          description: Name of the audience
+          examples:
+          - Q2 Enterprise Prospects
+        type:
+          type: string
+          title: Type
+          description: Audience type
+          examples:
+          - static
+        status:
+          type: string
+          title: Status
+          description: Audience status
+          examples:
+          - active
+        contact_count:
+          type: integer
+          title: Contact Count
+          description: Number of contacts currently in the audience
+          examples:
+          - 42
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the audience was created
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the audience was last updated
+      type: object
+      required:
+      - id
+      - name
+      - type
+      - status
+      - contact_count
+      - created_at
+      - updated_at
+      title: AudienceResponse
+    ContactResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the contact
+          examples:
+          - con_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_def456
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact
+          examples:
+          - jane@acme.com
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-415-555-0132
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL
+          examples:
+          - https://linkedin.com/in/janesmith
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: Source from which the contact was added
+          examples:
+          - linkedin
+        do_not_contact:
+          type: boolean
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+          default: false
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the contact
+          examples:
+          - Met at SaaStr 2025
+        scoring:
+          anyOf:
+          - $ref: '#/components/schemas/api__public_api__schemas__contacts__ScoringInfo'
+          - type: 'null'
+          description: Contact scoring information
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: List of tag names associated with the contact
+          examples:
+          - - Interested
+            - Decision Maker
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the contact was created
+          examples:
+          - '2025-06-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the contact was last updated
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Activity At
+          description: Date and time of the contact's most recent activity (inbound or outbound)
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Activity Type
+          description: Type of the contact's most recent activity
+          examples:
+          - outbound_email
+        last_outbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Outbound At
+          description: Date and time of the most recent outbound interaction with the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_outbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Outbound Type
+          description: Type of the most recent outbound interaction with the contact
+          examples:
+          - email
+        last_inbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Inbound At
+          description: Date and time of the most recent inbound interaction from the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_inbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Inbound Type
+          description: Type of the most recent inbound interaction from the contact
+          examples:
+          - email
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      title: ContactResponse
+      description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
+    CreateAudienceRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Name of the audience to create
+          examples:
+          - Q2 Enterprise Prospects
+        contact_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+            maxItems: 10000
+          - type: 'null'
+          title: Contact Ids
+          description: Optional list of contact IDs to add to the audience on creation. Provide either `contact_ids` or `filters`, not both.
+        filters:
+          anyOf:
+          - oneOf:
+            - items:
+                $ref: '#/components/schemas/FilterRule'
+              type: array
+            - $ref: '#/components/schemas/FilterExpression'
+          - type: 'null'
+          title: Filters
+          description: 'Selects the contacts to seed the audience with by query instead of listing every id. Either a flat list of rules (ANDed) or an expression with ''operator'' and ''filters''. Each rule has ''field'', ''condition'', and ''value''; valid keys, operators, and values come from the contacts field schemas. A flat rule on ''account_id'' selects the account''s contacts. Provide `filters` or `contact_ids`, not both. At most 500 matching contacts (before exclusions). WARNING: an empty list matches every contact.'
+          examples:
+          - - condition: is
+              field: account_id
+              value: 550e8400-e29b-41d4-a716-446655440000
+        excluded_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+            maxItems: 10000
+          - type: 'null'
+          title: Excluded Ids
+          description: Contact IDs to exclude from the filtered set. Only used with `filters`.
+        source_audience_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Source Audience Id
+          description: When set with `filters`, restricts the selected contacts to current members of this audience.
+      type: object
+      required:
+      - name
+      title: CreateAudienceRequest
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    PublicItemResponse_AudienceContactsResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AudienceContactsResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[AudienceContactsResponse]
+    PublicItemResponse_AudienceResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AudienceResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[AudienceResponse]
+    PublicListResponse_AudienceResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/AudienceResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[AudienceResponse]
+    PublicListResponse_ContactResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ContactResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[ContactResponse]
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    api__public_api__schemas__contacts__ScoringInfo:
+      properties:
+        heat_score:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Heat Score
+          description: Heat score tier
+          examples:
+          - Hot
+      type: object
+      title: ScoringInfo

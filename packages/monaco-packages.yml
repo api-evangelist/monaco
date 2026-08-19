@@ -1,0 +1,68 @@
+generated: '2026-08-13'
+method: searched
+source: registry sweep + https://docs.monaco.com (llms.txt full docs index)
+packages: []
+package_count: 0
+official_count: 0
+finding: >-
+  Monaco publishes NO first-party client library in any public package registry.
+  The complete documentation index (https://docs.monaco.com/llms.txt, 56 pages)
+  contains no SDK, client-library, or install page — the only integration
+  surfaces Monaco documents are raw HTTP against api.monaco.com with a bearer
+  API key, and the hosted MCP server. Consumers write their own HTTP client.
+registries_checked:
+- registry: npm
+  queries: [monaco, monaco-sdk, monaco-api, '@monaco/sdk', '@monaco-gtm/sdk', '@monacogtm/sdk', 'search: monaco crm sales']
+  result: none
+  note: >-
+    The `monaco` and `monaco-*` npm namespace is occupied by Microsoft's Monaco
+    Editor and its ecosystem (monaco-editor, @monaco-editor/react, monaco-yaml,
+    …) — unrelated to this company. No package resolves to monaco.com.
+- registry: pypi
+  queries: [monaco, monaco-sdk, monaco-api, monacogtm]
+  result: none
+  note: >-
+    pypi.org/project/monaco/ exists but is "an industry-grade Monte Carlo
+    library" by scottshambaugh (repository github.com/scottshambaugh/monaco) —
+    a different project, explicitly NOT recorded as Monaco's.
+- registry: rubygems
+  queries: [monaco]
+  result: none
+  note: Name resolves to an unrelated gem; not first-party.
+- registry: crates.io
+  queries: [monaco]
+  result: none
+  note: Name resolves to an unrelated crate; not first-party.
+- registry: maven-central
+  queries: [monaco]
+  result: none
+- registry: nuget
+  queries: [monaco]
+  result: none
+- registry: pkg.go.dev
+  queries: [monaco]
+  result: none
+adjacent_distributions:
+- kind: agent-skill
+  name: Monaco Skill
+  url: https://docs.monaco.com/.well-known/agent-skills/monaco/skill.md
+  file: skills/monaco-docs-integration.skill.md
+  version: '1.0'
+  published: null
+  note: >-
+    Provider-published Agent Skill (markdown, not a package-registry artifact).
+    Version 1.0 is declared in the skill frontmatter; no publish date is exposed,
+    so `published` is recorded as null rather than guessed.
+- kind: remote-mcp
+  name: Monaco Public MCP
+  url: https://mcp.monaco.com/mcp
+  version: null
+  published: null
+  note: >-
+    Hosted remote endpoint, not an installable package — there is no npx/stdio
+    package and therefore no registry metadata endpoint to read a version from.
+    See mcp/monaco-mcp.yml.
+pointer_note: >-
+  No `Packages` or `SDKs` pointer is emitted in apis.yml. Both would assert that
+  Monaco ships client libraries, which the sweep shows it does not. This file
+  records a verified absence.

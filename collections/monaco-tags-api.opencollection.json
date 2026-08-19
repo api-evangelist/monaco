@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Tags API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/tags/",
+            "params": [
+              {
+                "name": "object",
+                "value": "",
+                "type": "query",
+                "description": "Object type to list tags for"
+              }
+            ]
+          },
+          "docs": "Returns every tag defined for the object type given by the required `object` query parameter (one of `contacts`, `accounts`, `opportunities`)."
+        },
+        {
+          "info": {
+            "name": "Create a Tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/tags/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new tag for the `object` given in the request body. Tag names must be unique per object type within the organization."
+        },
+        {
+          "info": {
+            "name": "Get a Tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/tags/:tag_id",
+            "params": [
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single tag by its `tag_id`."
+        },
+        {
+          "info": {
+            "name": "Update a Tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/tags/:tag_id",
+            "params": [
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a tag's `name` and/or `color` by its `tag_id`. The object type of a tag cannot be changed."
+        },
+        {
+          "info": {
+            "name": "Delete a Tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.monaco.com/v1/tags/:tag_id",
+            "params": [
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes a tag by its `tag_id`. The tag is removed from all entities it was applied to. Returns 204 No Content on success. This is irreversible."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

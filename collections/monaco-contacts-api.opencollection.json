@@ -1,0 +1,121 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Contacts API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/contacts/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of contacts."
+        },
+        {
+          "info": {
+            "name": "Create a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/contacts/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new contact.\n\n**Identifiers** — either `email` or `linkedin_url` **must** be provided. If only `linkedin_url` is supplied, you must also provide `account_id` or `domain` so the contact can be associated with an account.\n\n**Account resolution priority** — Monaco resolves the contact's account in this order:\n1. `account_id` (if provided)\n2. `domain` (if provided)\n3. the domain parsed from `email`\n\n**Enrichment** — on creation, Monaco synchronously enriches the contact (name, title, compa"
+        },
+        {
+          "info": {
+            "name": "Upsert a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.monaco.com/v1/contacts/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new contact or updates an existing one.\n\n**Identifiers** — either `email` or `linkedin_url` **must** be provided. If only `linkedin_url` is supplied, you must also provide `account_id` or `domain` so the contact can be associated with an account.\n\n**Duplicate resolution** — the request is matched against existing contacts in the org in this order: (1) exact match on `email` (case-insensitive), then (2) exact match on `linkedin_url`. If a match is found, that contact is updated in place"
+        },
+        {
+          "info": {
+            "name": "Get a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single contact by its `contact_id`. The detail response includes scoring, source attribution, and custom fields."
+        },
+        {
+          "info": {
+            "name": "Update a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.monaco.com/v1/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing contact by its `contact_id`. Any `tags` list provided **replaces** the existing tags on the contact."
+        },
+        {
+          "info": {
+            "name": "Delete a Contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.monaco.com/v1/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes a contact by its `contact_id`. Returns 204 No Content on success. This is irreversible."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,51 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Monaco Public Accounts Meetings API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Meetings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Meetings",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.monaco.com/v1/meetings/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a paginated list of meetings."
+        },
+        {
+          "info": {
+            "name": "Get a Meeting",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.monaco.com/v1/meetings/:meeting_id",
+            "params": [
+              {
+                "name": "meeting_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Gets a single meeting by its `meeting_id`. The detail response includes the AI-generated summary, a presigned video URL, and the full transcript with speaker attribution."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,1799 @@
+{
+  "item": [
+    {
+      "id": "44078d80-c79d-4640-aa2c-0a0ec75e05b1",
+      "name": "Campaigns",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "14293190-7898-4344-b1f1-11740da368fe",
+          "name": "List Campaigns",
+          "request": {
+            "name": "List Campaigns",
+            "description": {
+              "content": "Returns a paginated list of campaigns.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": [\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    },\n    {\n      \"field\": \"<string>\",\n      \"condition\": \"<string>\",\n      \"value\": {}\n    }\n  ],\n  \"page\": 1,\n  \"page_size\": 50,\n  \"sort\": \"-created_at\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "877e8b1f-f925-4583-8e24-45ed3b093fd3",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"page\": 1,\n  \"page_size\": 50\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"cmp_abc123\",\n      \"name\": \"Q3 Enterprise Outbound\",\n      \"status\": \"active\",\n      \"prioritized\": false,\n      \"end_date\": \"2026-12-31\",\n      \"template_id\": \"seqt_789ghi\",\n      \"template_name\": \"Enterprise Onboarding\",\n      \"audiences\": [\n        {\n          \"id\": \"aud_abc123\",\n          \"name\": \"Enterprise West\"\n        }\n      ],\n      \"created_at\": \"2026-01-15T10:30:00Z\",\n      \"updated_at\": \"2026-05-10T14:22:00Z\"\n    }\n  ],\n  \"pagination\": {\n    \"page\": 1,\n    \"page_size\": 50,\n    \"total_count\": 7,\n    \"total_pages\": 1\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-11T17:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "82c08b6c-f521-4b51-8cf3-7236cc9a2732",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"page\": 1,\n  \"page_size\": 50\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2e0c4682-21bc-40d7-8e0e-20195b01d941",
+          "name": "Get a Campaign",
+          "request": {
+            "name": "Get a Campaign",
+            "description": {
+              "content": "Gets a single campaign by its `campaign_id`, including its attached audiences.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                ":campaign_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "campaign_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3e9c267a-dbd5-47ad-896d-b918e4ad8a2b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"cmp_abc123\",\n    \"name\": \"Q3 Enterprise Outbound\",\n    \"status\": \"active\",\n    \"prioritized\": false,\n    \"end_date\": \"2026-12-31\",\n    \"template_id\": \"seqt_789ghi\",\n    \"template_name\": \"Enterprise Onboarding\",\n    \"audiences\": [\n      {\n        \"id\": \"aud_abc123\",\n        \"name\": \"Enterprise West\"\n      }\n    ],\n    \"created_at\": \"2026-01-15T10:30:00Z\",\n    \"updated_at\": \"2026-05-10T14:22:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-11T17:00:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "535ca34d-22f8-4e75-9556-bbc9bc6926bf",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a1c145bb-c4e8-43fc-9492-7e32223a4c6d",
+          "name": "Update a Campaign",
+          "request": {
+            "name": "Update a Campaign",
+            "description": {
+              "content": "Updates a campaign's content fields and/or transitions its lifecycle via `status`. Returns the refreshed campaign.\n\nTo attach or detach audiences, use `add_audiences_to_campaign` / `remove_audiences_from_campaign`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                ":campaign_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "campaign_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"end_date\": \"<date>\",\n  \"audience_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"distribution\": {\n    \"mode\": \"<string>\",\n    \"sender_ids\": [\n      \"<uuid>\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"<uuid>\",\n        \"percentage\": \"<integer>\"\n      },\n      {\n        \"sender_id\": \"<uuid>\",\n        \"percentage\": \"<integer>\"\n      }\n    ]\n  },\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"contact_cooldown\": {\n      \"enabled\": \"<boolean>\",\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": \"<boolean>\",\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": \"<boolean>\",\n      \"max_contacts\": 5\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": \"<boolean>\",\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": \"<boolean>\",\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"<uuid>\",\n        \"daily_rate_target\": \"<integer>\"\n      },\n      {\n        \"sender_id\": \"<uuid>\",\n        \"daily_rate_target\": \"<integer>\"\n      }\n    ]\n  },\n  \"status\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c37a008f-a8b3-48a6-8ff5-a700042ad69b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"end_date\": \"<date>\",\n  \"audience_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  },\n  \"status\": \"completed\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"cmp_abc123\",\n    \"name\": \"Q3 Enterprise Outbound (revised)\",\n    \"status\": \"paused\",\n    \"prioritized\": true,\n    \"end_date\": \"2027-01-31\",\n    \"template_id\": \"seqt_789ghi\",\n    \"template_name\": \"Enterprise Onboarding\",\n    \"audiences\": [\n      {\n        \"id\": \"aud_abc123\",\n        \"name\": \"Enterprise West\"\n      }\n    ],\n    \"created_at\": \"2026-01-15T10:30:00Z\",\n    \"updated_at\": \"2026-05-10T14:22:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-10T14:22:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aa89077f-aeeb-4173-aaaf-35dbb1e48be1",
+              "name": "Invalid campaign update",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"end_date\": \"<date>\",\n  \"audience_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  },\n  \"status\": \"completed\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c47d76c8-3827-4900-9c36-a5519be1de53",
+              "name": "Campaign not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"end_date\": \"<date>\",\n  \"audience_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  },\n  \"status\": \"completed\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b992ebe3-a90f-4159-965d-9f4f5f506909",
+              "name": "Campaign is being processed and can't be updated right now",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"end_date\": \"<date>\",\n  \"audience_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  },\n  \"status\": \"completed\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fdfe0311-c819-4dc6-bca4-85265fb56663",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"end_date\": \"<date>\",\n  \"audience_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  },\n  \"status\": \"completed\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6c742eb0-c5cb-4d5c-9634-ed84a59ce1e1",
+          "name": "Create a Campaign",
+          "request": {
+            "name": "Create a Campaign",
+            "description": {
+              "content": "Creates a campaign that enrolls the contacts of the given audiences onto a template, routing sends according to `distribution`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"template_id\": \"<uuid>\",\n  \"audience_ids\": [\n    \"<uuid>\"\n  ],\n  \"distribution\": {\n    \"mode\": \"<string>\",\n    \"sender_ids\": [\n      \"<uuid>\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"<uuid>\",\n        \"percentage\": \"<integer>\"\n      },\n      {\n        \"sender_id\": \"<uuid>\",\n        \"percentage\": \"<integer>\"\n      }\n    ]\n  },\n  \"end_date\": \"<date>\",\n  \"prioritized\": false,\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"contact_cooldown\": {\n      \"enabled\": \"<boolean>\",\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": \"<boolean>\",\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": \"<boolean>\",\n      \"max_contacts\": 5\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": \"<boolean>\"\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": \"<boolean>\",\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": \"<boolean>\",\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"<uuid>\",\n        \"daily_rate_target\": \"<integer>\"\n      },\n      {\n        \"sender_id\": \"<uuid>\",\n        \"daily_rate_target\": \"<integer>\"\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "50ea5d48-f011-40ae-971d-0a514de87f76",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q3 Enterprise Outbound\",\n  \"template_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"end_date\": \"<date>\",\n  \"prioritized\": false,\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"cmp_abc123\",\n    \"name\": \"Q3 Enterprise Outbound\",\n    \"status\": \"active\",\n    \"prioritized\": true,\n    \"end_date\": \"2026-12-31\",\n    \"template_id\": \"seqt_789ghi\",\n    \"template_name\": \"Enterprise Onboarding\",\n    \"audiences\": [\n      {\n        \"id\": \"aud_abc123\",\n        \"name\": \"Enterprise West\"\n      }\n    ],\n    \"created_at\": \"2026-01-15T10:30:00Z\",\n    \"updated_at\": \"2026-01-15T10:30:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-01-15T10:30:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5e4a9abd-d75f-45cf-b81a-4ce688a528ee",
+              "name": "Invalid campaign request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q3 Enterprise Outbound\",\n  \"template_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"end_date\": \"<date>\",\n  \"prioritized\": false,\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ed9671b0-2050-4100-81cc-4586240d64e3",
+              "name": "Template not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q3 Enterprise Outbound\",\n  \"template_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"end_date\": \"<date>\",\n  \"prioritized\": false,\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cdd4f379-7f0a-4993-bdbe-99ea5925fc4a",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q3 Enterprise Outbound\",\n  \"template_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ],\n  \"distribution\": {\n    \"mode\": \"percentage\",\n    \"sender_ids\": [\n      \"550e8400-e29b-41d4-a716-446655440001\"\n    ],\n    \"percentages\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"percentage\": 50\n      }\n    ]\n  },\n  \"end_date\": \"<date>\",\n  \"prioritized\": false,\n  \"rules_of_engagement\": {\n    \"do_not_contact\": {\n      \"enabled\": true\n    },\n    \"allow_sequence_stop_on_meeting_booked\": {\n      \"enabled\": true\n    },\n    \"contact_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"account_cooldown\": {\n      \"enabled\": true,\n      \"days\": 90\n    },\n    \"max_contacts_in_sequence\": {\n      \"enabled\": true,\n      \"max_contacts\": 3\n    },\n    \"allow_non_account_owner_campaigns\": {\n      \"enabled\": true\n    },\n    \"allow_stop_and_dismiss_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    },\n    \"exclude_sequences_on_account_status\": {\n      \"enabled\": true,\n      \"statuses\": [\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      ]\n    }\n  },\n  \"autopilot_settings\": {\n    \"sender_rates\": [\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      },\n      {\n        \"sender_id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"daily_rate_target\": 25\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "eb66dbcc-9d6c-4e02-9350-6e52a4c1f689",
+          "name": "Enroll Contacts in a Campaign",
+          "request": {
+            "name": "Enroll Contacts in a Campaign",
+            "description": {
+              "content": "Enrolls contacts into a campaign by creating a new audience named `audience_name`, attaching it to the campaign, and adding the contacts to it. The campaign must be `active` or `paused`.\n\nThis always creates a new audience. Audiences can be shared across campaigns, so a contact added to one is enrolled in every campaign using it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                ":campaign_id",
+                "enroll"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "campaign_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"audience_name\": \"<string>\",\n  \"contact_ids\": [\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1932bfc2-29ee-4521-863d-78ff0a64ed4a",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "enroll"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_name\": \"Q3 Enterprise Outbound — July batch\",\n  \"contact_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440020\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"success_count\": 3,\n    \"failure_count\": 1,\n    \"failure_reasons\": [\n      {\n        \"code\": \"contact_not_found\",\n        \"description\": \"contact not found\",\n        \"count\": 1\n      }\n    ]\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-07-09T10:30:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "64bb9612-1259-4b0c-802e-55aa7f673a1d",
+              "name": "Campaign is not enrollable or the audience name is taken",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "enroll"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_name\": \"Q3 Enterprise Outbound — July batch\",\n  \"contact_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440020\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9ea4540d-092f-408d-8f4f-df65aa79de4a",
+              "name": "Campaign not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "enroll"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_name\": \"Q3 Enterprise Outbound — July batch\",\n  \"contact_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440020\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "acb98c7e-4537-438b-b41b-a575c85ce9d7",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "enroll"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_name\": \"Q3 Enterprise Outbound — July batch\",\n  \"contact_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440020\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2ea70290-b272-4f56-8946-68d5c5ca6c6b",
+          "name": "Add Audiences to a Campaign",
+          "request": {
+            "name": "Add Audiences to a Campaign",
+            "description": {
+              "content": "Attaches the given audiences to a campaign, keeping its existing ones. Their contacts are enrolled asynchronously. Audiences already attached are ignored, so retries are safe. Returns the refreshed campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                ":campaign_id",
+                "audiences"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "campaign_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"audience_ids\": [\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "28643b39-6f48-4a05-bd13-6a0502d6bb29",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"cmp_abc123\",\n    \"name\": \"Q3 Enterprise Outbound\",\n    \"status\": \"active\",\n    \"prioritized\": false,\n    \"end_date\": \"2026-12-31\",\n    \"template_id\": \"seqt_789ghi\",\n    \"template_name\": \"Enterprise Onboarding\",\n    \"audiences\": [\n      {\n        \"id\": \"aud_abc123\",\n        \"name\": \"Enterprise West\"\n      },\n      {\n        \"id\": \"aud_def456\",\n        \"name\": \"Enterprise East\"\n      }\n    ],\n    \"created_at\": \"2026-01-15T10:30:00Z\",\n    \"updated_at\": \"2026-05-10T14:22:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-10T14:22:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e56d9c74-caac-4095-9bc3-fcc7b627b2ba",
+              "name": "Invalid audiences",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4aaec71a-c8dd-4bed-b615-4396e569af32",
+              "name": "Campaign not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6d36855-4cf0-43c1-aa1c-18579bd8ac67",
+              "name": "Campaign is being processed and can't be updated right now",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7c587c04-7dca-420d-b3cb-64dda953206b",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9df010e1-0f94-4e37-93e1-4581452779bd",
+          "name": "Remove Audiences from a Campaign",
+          "request": {
+            "name": "Remove Audiences from a Campaign",
+            "description": {
+              "content": "Detaches the given audiences from a campaign, keeping the rest.\n\nWARNING: detaching an audience tears down in-flight sequences for its contacts — they stop receiving the campaign's sends.\n\nAudiences not attached are ignored, so retries are safe, but a campaign must keep at least one audience — a request that would remove them all is rejected.\n\nReturns the refreshed campaign.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "campaigns",
+                ":campaign_id",
+                "audiences",
+                "remove"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "campaign_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"audience_ids\": [\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dfaef14a-eff7-4627-9b7c-718bbc55a6a5",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"cmp_abc123\",\n    \"name\": \"Q3 Enterprise Outbound\",\n    \"status\": \"active\",\n    \"prioritized\": false,\n    \"end_date\": \"2026-12-31\",\n    \"template_id\": \"seqt_789ghi\",\n    \"template_name\": \"Enterprise Onboarding\",\n    \"audiences\": [\n      {\n        \"id\": \"aud_abc123\",\n        \"name\": \"Enterprise West\"\n      },\n      {\n        \"id\": \"aud_def456\",\n        \"name\": \"Enterprise East\"\n      }\n    ],\n    \"created_at\": \"2026-01-15T10:30:00Z\",\n    \"updated_at\": \"2026-05-10T14:22:00Z\"\n  },\n  \"meta\": {\n    \"timestamp\": \"2026-05-10T14:22:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b923adc8-5030-49a9-bbfb-891a66438cdb",
+              "name": "Request would leave the campaign with no audiences",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "05305b34-34e0-46d2-966f-761a9c179e34",
+              "name": "Campaign not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "00c0c248-d221-4fdb-b5ae-a0a1469b6e80",
+              "name": "Campaign is being processed and can't be updated right now",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "657de612-f797-4cff-8bc3-a7d68ef37243",
+              "name": "Client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "campaigns",
+                    ":campaign_id",
+                    "audiences",
+                    "remove"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "campaign_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"audience_ids\": [\n    \"550e8400-e29b-41d4-a716-446655440010\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"Resource not found\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.monaco.com",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c9140fc1-410f-42f2-b834-c929f93b7a5d",
+    "name": "Monaco Public Campaigns API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public API for Monaco",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/monaco-mcp.yml, https://docs.monaco.com/mcp/overview, openapi/_original/monaco-openapi-original.json
+description: >-
+  Binds each published Monaco MCP tool to its backing OpenAPI operation, so a
+  tool inherits that operation's real parameters and requestBody as its input
+  contract instead of a guessed one. Monaco's MCP tool names are identical to
+  its REST operationIds, so every binding is 1:1 and high confidence.
+surfaces:
+  openapi:
+    file: openapi/_original/monaco-openapi-original.json
+    url: https://api.monaco.com/openapi.json
+    operations: 51
+    gated: false
+  mcp:
+    url: https://mcp.monaco.com/mcp
+    transport: http
+    gated: true
+    note: >-
+      An anonymous tools/list POST returns HTTP 401 with
+      WWW-Authenticate Bearer error="invalid_token" and a resource_metadata
+      pointer, so the live inputSchema set could not be introspected. Tool names
+      and descriptions below come from the published tool table at
+      https://docs.monaco.com/mcp/overview; input contracts are inherited from
+      the bound OpenAPI operation.
+  graphql:
+    present: false
+crosswalk:
+- {tool: list_accounts, category: accounts, rest: [list_accounts], binding: rest, confidence: high}
+- {tool: get_account, category: accounts, rest: [get_account], binding: rest, confidence: high}
+- {tool: upsert_account, category: accounts, rest: [upsert_account], binding: rest, confidence: high}
+- {tool: delete_account, category: accounts, rest: [delete_account], binding: rest, confidence: high}
+- {tool: list_contacts, category: contacts, rest: [list_contacts], binding: rest, confidence: high}
+- {tool: get_contact, category: contacts, rest: [get_contact], binding: rest, confidence: high}
+- {tool: create_contact, category: contacts, rest: [create_contact], binding: rest, confidence: high}
+- {tool: update_contact, category: contacts, rest: [update_contact], binding: rest, confidence: high}
+- {tool: delete_contact, category: contacts, rest: [delete_contact], binding: rest, confidence: high}
+- {tool: list_opportunities, category: opportunities, rest: [list_opportunities], binding: rest, confidence: high}
+- {tool: get_opportunity, category: opportunities, rest: [get_opportunity], binding: rest, confidence: high}
+- {tool: create_opportunity, category: opportunities, rest: [create_opportunity], binding: rest, confidence: high,
+   note: 'Backing operation accepts an idempotency_key body field — see conventions/monaco-conventions.yml.'}
+- {tool: update_opportunity, category: opportunities, rest: [update_opportunity], binding: rest, confidence: high}
+- {tool: delete_opportunity, category: opportunities, rest: [delete_opportunity], binding: rest, confidence: high}
+- {tool: list_meetings, category: meetings, rest: [list_meetings], binding: rest, confidence: high}
+- {tool: get_meeting, category: meetings, rest: [get_meeting], binding: rest, confidence: high,
+   note: Returns the AI summary, a presigned video URL, and the full transcript.}
+- {tool: list_tasks, category: tasks, rest: [list_tasks], binding: rest, confidence: high}
+- {tool: get_task, category: tasks, rest: [get_task], binding: rest, confidence: high}
+- {tool: create_task, category: tasks, rest: [create_task], binding: rest, confidence: high}
+- {tool: update_task, category: tasks, rest: [update_task], binding: rest, confidence: high}
+- {tool: list_sequences, category: sequences, rest: [list_sequences], binding: rest, confidence: high}
+- {tool: get_sequence, category: sequences, rest: [get_sequence], binding: rest, confidence: high}
+- {tool: list_sequence_templates, category: sequence-templates, rest: [list_sequence_templates], binding: rest, confidence: high}
+- {tool: get_sequence_template, category: sequence-templates, rest: [get_sequence_template], binding: rest, confidence: high}
+mcp_only: []
+mcp_only_note: >-
+  No MCP-only capability was found. Every documented tool maps to a public REST
+  operation of the same name — the MCP server is a strict projection of a subset
+  of the REST surface, not an independent one.
+rest_only:
+- capability: audiences
+  note: >-
+    The whole audiences surface is REST-only. No audience tool appears in the
+    published MCP tool table, even though the MCP overview's own sample prompt
+    describes building and enrolling an audience.
+  operations: [list_audiences, get_audience, create_audience, list_audience_contacts,
+    add_contacts_to_audience, remove_contacts_from_audience]
+- capability: campaigns
+  note: The whole campaigns surface is REST-only.
+  operations: [list_campaigns, get_campaign, create_campaign, update_campaign,
+    enroll_contacts_in_campaign, add_audiences_to_campaign, remove_audiences_from_campaign]
+- capability: tags
+  note: >-
+    REST-only. Notable divergence: the MCP overview's "building a new outbound
+    audience" sample prompt asks the agent to create and apply a contact tag, but
+    no tag tool is listed in the supported-tools table.
+  operations: [list_tags, create_tag, get_tag, update_tag, delete_tag]
+- capability: sequence authoring + state
+  note: Sequence mutation and template authoring are REST-only; MCP exposes reads only.
+  operations: [update_sequence, update_sequence_step, create_sequence_template, update_sequence_template]
+- capability: accounts + contacts writes not exposed
+  operations: [update_account, upsert_contact]
+- capability: identity and schema discovery
+  operations: [get_me, list_users, get_field_schemas_for_entity]
+coverage:
+  tools_named: 24
+  tools_bound: 24
+  tools_unbound: 0
+  mcp_only: 0
+  rest_operations_total: 51
+  rest_operations_with_tool: 24
+  rest_only: 27
+  tool_coverage_of_rest: 0.47

@@ -1,19 +1,297 @@
-generated: '2026-07-20'
+generated: '2026-08-13'
 method: generated
-source: openapi/monaco-openapi-original.json
+source: openapi/monaco-accounts-api-openapi.yml, openapi/monaco-audiences-api-openapi.yml, openapi/monaco-auth-api-openapi.yml,
+  openapi/monaco-campaigns-api-openapi.yml, openapi/monaco-contacts-api-openapi.yml, openapi/monaco-meetings-api-openapi.yml,
+  openapi/monaco-opportunities-api-openapi.yml, openapi/monaco-schemas-api-openapi.yml, openapi/monaco-sequence-templates-api-openapi.yml,
+  openapi/monaco-sequences-api-openapi.yml, openapi/monaco-tags-api-openapi.yml, openapi/monaco-tasks-api-openapi.yml,
+  openapi/monaco-users-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
-  operations: 37
+  operations: 51
   by_action_class:
-    acting: 24
-    connected: 13
+    acting: 35
+    connected: 16
   by_consequence:
-    write: 24
-    read: 13
+    write: 35
+    read: 16
   human_in_the_loop_required: 0
 operations:
+- path: /v1/accounts/list
+  method: post
+  operationId: list_accounts
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/accounts/
+  method: put
+  operationId: upsert_account
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/accounts/{account_id}
+  method: patch
+  operationId: update_account
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/accounts/{account_id}
+  method: get
+  operationId: get_account
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/accounts/{account_id}
+  method: delete
+  operationId: delete_account
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audiences/list
+  method: post
+  operationId: list_audiences
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audiences/{audience_id}
+  method: get
+  operationId: get_audience
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/audiences/{audience_id}/contacts
+  method: get
+  operationId: list_audience_contacts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/audiences/{audience_id}/contacts
+  method: post
+  operationId: add_contacts_to_audience
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audiences
+  method: post
+  operationId: create_audience
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/audiences/{audience_id}/contacts/remove
+  method: post
+  operationId: remove_contacts_from_audience
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/me
+  method: get
+  operationId: get_me
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/campaigns/list
+  method: post
+  operationId: list_campaigns
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/campaigns/{campaign_id}
+  method: get
+  operationId: get_campaign
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/campaigns/{campaign_id}
+  method: patch
+  operationId: update_campaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/campaigns/
+  method: post
+  operationId: create_campaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/campaigns/{campaign_id}/enroll
+  method: post
+  operationId: enroll_contacts_in_campaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/campaigns/{campaign_id}/audiences
+  method: post
+  operationId: add_audiences_to_campaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/campaigns/{campaign_id}/audiences/remove
+  method: post
+  operationId: remove_audiences_from_campaign
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /v1/contacts/list
   method: post
   operationId: list_contacts
@@ -104,9 +382,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/accounts/list
+- path: /v1/meetings/list
   method: post
-  operationId: list_accounts
+  operationId: list_meetings
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -120,41 +398,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/accounts/
-  method: put
-  operationId: upsert_account
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/accounts/{account_id}
-  method: patch
-  operationId: update_account
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/accounts/{account_id}
+- path: /v1/meetings/{meeting_id}
   method: get
-  operationId: get_account
+  operationId: get_meeting
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -162,22 +408,6 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/accounts/{account_id}
-  method: delete
-  operationId: delete_account
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /v1/opportunities/list
   method: post
   operationId: list_opportunities
@@ -252,25 +482,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/tasks/list
-  method: post
-  operationId: list_tasks
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/tasks/{task_id}
+- path: /v1/schemas/{entity}
   method: get
-  operationId: get_task
+  operationId: get_field_schemas_for_entity
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -278,9 +492,19 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/tasks/{task_id}
-  method: patch
-  operationId: update_task
+- path: /v1/sequence-templates
+  method: get
+  operationId: list_sequence_templates
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/sequence-templates
+  method: post
+  operationId: create_sequence_template
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -294,9 +518,77 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/tasks/
+- path: /v1/sequence-templates/{sequence_template_id}
+  method: get
+  operationId: get_sequence_template
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/sequence-templates/{sequence_template_id}
+  method: patch
+  operationId: update_sequence_template
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/sequences/list
   method: post
-  operationId: create_task
+  operationId: list_sequences
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/sequences/{sequence_id}
+  method: get
+  operationId: get_sequence
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/sequences/{sequence_id}
+  method: patch
+  operationId: update_sequence
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/sequences/{sequence_id}/steps/{step_id}
+  method: patch
+  operationId: update_sequence_step
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -378,9 +670,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/meetings/list
+- path: /v1/tasks/list
   method: post
-  operationId: list_meetings
+  operationId: list_tasks
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -394,9 +686,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/meetings/{meeting_id}
+- path: /v1/tasks/{task_id}
   method: get
-  operationId: get_meeting
+  operationId: get_task
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -404,35 +696,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /v1/sequences/list
-  method: post
-  operationId: list_sequences
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/sequences/{sequence_id}
-  method: get
-  operationId: get_sequence
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/sequences/{sequence_id}
+- path: /v1/tasks/{task_id}
   method: patch
-  operationId: update_sequence
+  operationId: update_task
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -446,19 +712,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/sequence-templates
-  method: get
-  operationId: list_sequence_templates
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/sequence-templates
+- path: /v1/tasks/
   method: post
-  operationId: create_sequence_template
+  operationId: create_task
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -472,52 +728,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /v1/sequence-templates/{sequence_template_id}
-  method: get
-  operationId: get_sequence_template
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/sequence-templates/{sequence_template_id}
-  method: patch
-  operationId: update_sequence_template
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /v1/schemas/{entity}
-  method: get
-  operationId: get_field_schemas_for_entity
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /v1/me
-  method: get
-  operationId: get_me
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /v1/users/
   method: get
   operationId: list_users

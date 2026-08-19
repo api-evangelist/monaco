@@ -166,6 +166,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicErrorResponse'
+  /v1/sequences/{sequence_id}/steps/{step_id}:
+    patch:
+      tags:
+      - Sequences
+      summary: Update a Sequence Step
+      description: Updates the copy on a single step of a sequence. `step_id` is the `id` of the entry in the sequence's `tasks` list (from `get_sequence`). Supports `message` on email, InMail, LinkedIn message, LinkedIn connection-note, and gifting-email steps, and `subject` on email, InMail, and gifting-email steps. Only steps of an active (non-suggested) sequence that have not yet been completed can be edited. Only the fields you provide are updated, and omitted fields are left unchanged. Returns the refreshed step. Template variables must be namespaced. Supported tokens are `{{recipient.first_name}}`, `{{recipient.last_name}}`, `{{recipient.company}}`, `{{recipient.email}}`, `{{sender.first_name}}`, `{{sender.last_name}}`, and `{{sender.company}}`.
+      operationId: update_sequence_step
+      parameters:
+      - name: sequence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Sequence Id
+      - name: step_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Step Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSequenceStepRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicItemResponse_SequenceTaskResponse_'
+        4XX:
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+        '404':
+          description: Step not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
+        '422':
+          description: Invalid copy for this step
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
     PublicListResponse_SequenceResponse_:
@@ -819,3 +872,32 @@ components:
         nested FilterExpression objects (branch nodes), allowing for arbitrarily
 
         nested filter structures.'
+    PublicItemResponse_SequenceTaskResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/SequenceTaskResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[SequenceTaskResponse]
+    UpdateSequenceStepRequest:
+      properties:
+        message:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Message
+          description: New message body for the step. Supported on email, InMail, LinkedIn message, LinkedIn connection-note, and gifting-email steps. Provide final per-contact copy as plain text — unresolved placeholders like `{{first_name}}` and HTML are rejected.
+        subject:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Subject
+          description: New subject line for the step. Only supported on subject-bearing channels (email, InMail, gifting email).
+      type: object
+      title: UpdateSequenceStepRequest
+      description: Copy edits for a single sequence step (a per-contact campaign task).
