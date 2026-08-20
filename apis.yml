@@ -43,6 +43,22 @@ tags:
 - Revenue Operations
 - Artificial Intelligence
 - Contacts
+- Account
+- Opportunities
+- Pipeline
+- Go-To-Market
+- MCP
+- Campaigns
+- Audiences
+- Sales Engagement
+- Agents
+tags_raw:
+- Company
+- CRM
+- Sales
+- Revenue Operations
+- Artificial Intelligence
+- Contacts
 - Accounts
 - Opportunities
 - Pipeline
@@ -59,6 +75,8 @@ apis:
   humanURL: https://docs.monaco.com
   baseURL: https://api.monaco.com
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -115,6 +133,8 @@ apis:
   humanURL: https://docs.monaco.com
   baseURL: https://api.monaco.com
   tags:
+  - Authentication
+  tags_raw:
   - Auth
   properties:
   - type: OpenAPI
@@ -367,6 +387,8 @@ apis:
   humanURL: https://docs.monaco.com
   baseURL: https://api.monaco.com
   tags:
+  - Task
+  tags_raw:
   - Tasks
   properties:
   - type: OpenAPI
@@ -395,6 +417,8 @@ apis:
   humanURL: https://docs.monaco.com
   baseURL: https://api.monaco.com
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
