@@ -13,6 +13,18 @@ description: >-
   Founded by Sam Blond and backed by Founders Fund; the API and MCP surface are
   currently in Beta, and the published OpenAPI grew from 37 to 51 operations
   between July and August 2026 with no changelog to announce it.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
