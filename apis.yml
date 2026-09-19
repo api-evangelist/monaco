@@ -57,7 +57,7 @@ tags:
 - Contacts
 - Account
 - Opportunities
-- Pipeline
+- Pipelines
 - Go-To-Market
 - MCP
 - Campaigns
@@ -287,6 +287,8 @@ apis:
   humanURL: https://docs.monaco.com
   baseURL: https://api.monaco.com
   tags:
+  - Schema
+  tags_raw:
   - Schemas
   properties:
   - type: OpenAPI
