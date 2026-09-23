@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Monaco Public Accounts Schemas API
+  title: Monaco Public Schemas API
   description: Public API for Monaco
   version: 1.0.0
 servers:
@@ -13,16 +13,13 @@ paths:
       tags:
       - Schemas
       summary: Get Field Schemas for an Entity
-      description: 'Lists fields for `entity`, which must be one of `accounts`, `contacts`, `meetings`, `opportunities`, `sequences`, or `tasks`.
+      description: 'Lists the filterable and sortable fields for `entity`, one of `accounts`, `contacts`, `meetings`, `opportunities`, `sequences`, or `tasks`.
 
 
-        Use each entry''s `key` in `filters[].field` and `sort` on the corresponding list endpoint. The `allowed_operators` array lists the valid values for `filters[].condition` on that field.
+        Each entry carries the field''s `key`, the `allowed_operators` it supports, and an `updatable` flag — `updatable: false` marks a read-only field (system-derived or create-only). Custom fields use `custom_field_{uuid}` keys and are always updatable, though AI auto-filled ones may later be overwritten by AI. Enum and select fields list their accepted values under `enum_field_settings.allowed_values`.
 
 
-        Custom fields use `custom_field_{uuid}` keys. Enum and select fields expose their accepted values under `enum_field_settings.allowed_values`, and callers must pass the `key` rather than the display value.
-
-
-        For `date` and `datetime` fields the `allowed_values` are semantic periods used with the `is` operator. The `equals`, `greater_than`, and `less_than` operators take raw `YYYY-MM-DD` values instead.'
+        On `date` fields, `allowed_values` are semantic periods for the `is` and `is_not` operators, while `equals`, `greater_than`, and `less_than` take raw `YYYY-MM-DD`. `datetime` fields have no `is` operator — compare them against an ISO 8601 timestamp.'
       operationId: get_field_schemas_for_entity
       parameters:
       - name: entity
@@ -45,18 +42,20 @@ paths:
                   type: string
                   filterable: true
                   sortable: true
+                  updatable: true
                   allowed_operators:
                   - contains
                   - not_contains
-                  - is
-                  - is_not
                   - is_empty
                   - is_not_empty
+                  - equals
+                  - not_equals
                 - name: Status
                   key: status
                   type: enum
                   filterable: true
                   sortable: true
+                  updatable: true
                   allowed_operators:
                   - is
                   - is_not
@@ -77,6 +76,7 @@ paths:
                   type: uuid
                   filterable: true
                   sortable: false
+                  updatable: true
                   allowed_operators:
                   - is
                   - is_not
@@ -94,10 +94,14 @@ paths:
                   parent: company
                   filterable: true
                   sortable: true
+                  updatable: false
                   allowed_operators:
                   - equals
+                  - not_equals
                   - greater_than
                   - less_than
+                  - greater_than_or_equals
+                  - less_than_or_equals
                   - is_empty
                   - is_not_empty
                 - name: Last Funding Date
@@ -106,11 +110,16 @@ paths:
                   parent: company
                   filterable: true
                   sortable: true
+                  updatable: false
                   allowed_operators:
                   - is
+                  - is_not
                   - equals
+                  - not_equals
                   - greater_than
                   - less_than
+                  - greater_than_or_equals
+                  - less_than_or_equals
                   - is_empty
                   - is_not_empty
                   enum_field_settings:
@@ -126,6 +135,7 @@ paths:
                   type: enum
                   filterable: true
                   sortable: true
+                  updatable: true
                   allowed_operators:
                   - is
                   - is_not
@@ -150,6 +160,51 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    EnumValueOption:
+      properties:
+        key:
+          type: string
+          title: Key
+          description: The value to use in filter rules
+          examples:
+          - usr_abc123
+        display_value:
+          type: string
+          title: Display Value
+          description: Human-readable label for the value
+          examples:
+          - Jane Smith
+      type: object
+      required:
+      - key
+      - display_value
+      title: EnumValueOption
+      description: A single allowed value for an enum field.
+    EnumFieldSettings:
+      properties:
+        allowed_values:
+          items:
+            $ref: '#/components/schemas/EnumValueOption'
+          type: array
+          title: Allowed Values
+          description: The list of valid values that can be used in filters
+          examples:
+          - - display_value: Active
+              key: active
+      type: object
+      required:
+      - allowed_values
+      title: EnumFieldSettings
+      description: Settings present only for enum/select fields.
     FieldSchemaResponse:
       properties:
         name:
@@ -202,6 +257,13 @@ components:
           description: Whether this field can be used for sorting on list endpoints
           examples:
           - true
+        updatable:
+          type: boolean
+          title: Updatable
+          description: 'Whether this field can be written via the entity''s update endpoint. Fields with `updatable: false` are read-only (system-derived or create-only). Custom fields are always updatable, but values on AI auto-filled custom fields may later be overwritten by AI.'
+          default: false
+          examples:
+          - true
         allowed_operators:
           items:
             type: string
@@ -232,6 +294,14 @@ components:
       - sortable
       - allowed_operators
       title: FieldSchemaResponse
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
     CustomFieldSettings:
       properties:
         id:
@@ -252,72 +322,6 @@ components:
       - is_ai_auto_filled
       title: CustomFieldSettings
       description: Settings present only for custom fields.
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    EnumFieldSettings:
-      properties:
-        allowed_values:
-          items:
-            $ref: '#/components/schemas/EnumValueOption'
-          type: array
-          title: Allowed Values
-          description: The list of valid values that can be used in filters
-          examples:
-          - - display_value: Active
-              key: active
-      type: object
-      required:
-      - allowed_values
-      title: EnumFieldSettings
-      description: Settings present only for enum/select fields.
-    PublicItemResponse_list_FieldSchemaResponse__:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/FieldSchemaResponse'
-          type: array
-          title: Data
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[list[FieldSchemaResponse]]
-    EnumValueOption:
-      properties:
-        key:
-          type: string
-          title: Key
-          description: The value to use in filter rules
-          examples:
-          - usr_abc123
-        display_value:
-          type: string
-          title: Display Value
-          description: Human-readable label for the value
-          examples:
-          - Jane Smith
-      type: object
-      required:
-      - key
-      - display_value
-      title: EnumValueOption
-      description: A single allowed value for an enum field.
     ErrorDetail:
       properties:
         code:
@@ -337,3 +341,16 @@ components:
       - code
       - message
       title: ErrorDetail
+    PublicItemResponse_list_FieldSchemaResponse__:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/FieldSchemaResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[list[FieldSchemaResponse]]

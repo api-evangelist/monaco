@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Monaco Public Accounts Tags API
+  title: Monaco Public Tags API
   description: Public API for Monaco
   version: 1.0.0
 servers:
@@ -13,7 +13,7 @@ paths:
       tags:
       - Tags
       summary: List Tags
-      description: Returns every tag defined for the object type given by the required `object` query parameter (one of `contacts`, `accounts`, `opportunities`).
+      description: Returns every tag defined for the object type given by the `object` query parameter.
       operationId: list_tags
       parameters:
       - name: object
@@ -47,7 +47,7 @@ paths:
       tags:
       - Tags
       summary: Create a Tag
-      description: Creates a new tag for the `object` given in the request body. Tag names must be unique per object type within the organization.
+      description: Creates a new tag for the `object` given in the request body.
       operationId: create_tag
       requestBody:
         required: true
@@ -161,7 +161,7 @@ paths:
       tags:
       - Tags
       summary: Delete a Tag
-      description: Deletes a tag by its `tag_id`. The tag is removed from all entities it was applied to. Returns 204 No Content on success. This is irreversible.
+      description: Deletes a tag by its `tag_id`. The tag is removed from all entities it was applied to.
       operationId: delete_tag
       parameters:
       - name: tag_id
@@ -182,96 +182,6 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicItemResponse_TagResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/TagResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[TagResponse]
-    TagUpdateRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-            pattern: ^[a-zA-Z0-9\s]+$
-          - type: 'null'
-          title: Name
-          description: Display name of the tag. Letters, numbers, and spaces only.
-          examples:
-          - Enterprise
-        color:
-          anyOf:
-          - $ref: '#/components/schemas/DisplayColorEnum'
-          - type: 'null'
-          description: Display color of the tag.
-          examples:
-          - blue
-      type: object
-      title: TagUpdateRequest
-      description: Request body for updating a tag via PATCH.
-    TagObject:
-      type: string
-      enum:
-      - contacts
-      - accounts
-      - opportunities
-      title: TagObject
-      description: Object type a tag applies to, as exposed in the public API.
-    TagCreateRequest:
-      properties:
-        object:
-          $ref: '#/components/schemas/TagObject'
-          description: Object type the tag applies to. One of contacts, accounts, opportunities.
-          examples:
-          - accounts
-        name:
-          type: string
-          maxLength: 100
-          minLength: 1
-          pattern: ^[a-zA-Z0-9\s]+$
-          title: Name
-          description: Display name of the tag. Letters, numbers, and spaces only.
-          examples:
-          - Enterprise
-        color:
-          anyOf:
-          - $ref: '#/components/schemas/DisplayColorEnum'
-          - type: 'null'
-          description: Display color of the tag.
-          examples:
-          - blue
-      type: object
-      required:
-      - object
-      - name
-      title: TagCreateRequest
-      description: Request body for creating a tag via POST.
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    DisplayColorEnum:
-      type: string
-      enum:
-      - green
-      - blue
-      - red
-      - yellow
-      - purple
-      - berry
-      - peach
-      - gray
-      title: DisplayColorEnum
     ResponseMeta:
       properties:
         timestamp:
@@ -294,25 +204,57 @@ components:
       required:
       - data
       title: PublicItemResponse[list[TagResponse]]
-    ErrorDetail:
+    DisplayColorEnum:
+      type: string
+      enum:
+      - green
+      - blue
+      - red
+      - yellow
+      - purple
+      - berry
+      - peach
+      - gray
+      title: DisplayColorEnum
+    TagCreateRequest:
       properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
+        object:
+          $ref: '#/components/schemas/TagObject'
+          description: Object type the tag applies to. One of contacts, accounts, opportunities.
           examples:
-          - not_found
-        message:
+          - accounts
+        name:
           type: string
-          title: Message
-          description: Human-readable error message
+          maxLength: 100
+          minLength: 1
+          pattern: ^[a-zA-Z0-9\s]+$
+          title: Name
+          description: Display name of the tag. Letters, numbers, and spaces only. Must be unique per object type within the organization.
           examples:
-          - Resource not found
+          - Enterprise
+        color:
+          anyOf:
+          - $ref: '#/components/schemas/DisplayColorEnum'
+          - type: 'null'
+          description: Display color of the tag.
+          examples:
+          - blue
       type: object
       required:
-      - code
-      - message
-      title: ErrorDetail
+      - object
+      - name
+      title: TagCreateRequest
+      description: Request body for creating a tag via POST.
+    PublicItemResponse_TagResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/TagResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[TagResponse]
     TagResponse:
       properties:
         id:
@@ -339,3 +281,61 @@ components:
       - id
       - name
       title: TagResponse
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    TagObject:
+      type: string
+      enum:
+      - contacts
+      - accounts
+      - opportunities
+      title: TagObject
+      description: Object type a tag applies to, as exposed in the public API.
+    TagUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+            pattern: ^[a-zA-Z0-9\s]+$
+          - type: 'null'
+          title: Name
+          description: Display name of the tag. Letters, numbers, and spaces only. Must be unique per object type within the organization.
+          examples:
+          - Enterprise
+        color:
+          anyOf:
+          - $ref: '#/components/schemas/DisplayColorEnum'
+          - type: 'null'
+          description: Display color of the tag.
+          examples:
+          - blue
+      type: object
+      title: TagUpdateRequest
+      description: Request body for updating a tag via PATCH.
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail

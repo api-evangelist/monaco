@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Monaco Public Accounts Tasks API
+  title: Monaco Public Tasks API
   description: Public API for Monaco
   version: 1.0.0
 servers:
@@ -20,6 +20,26 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PublicListRequest'
+            examples:
+              search_by_title:
+                summary: Partial title match
+                value:
+                  filters:
+                  - field: title
+                    condition: contains
+                    value: Follow up
+              due_before:
+                summary: Due before a date
+                value:
+                  filters:
+                  - field: due_at
+                    condition: less_than
+                    value: '2026-08-01'
+              unfiltered:
+                summary: First page, no filters
+                value:
+                  page: 1
+                  page_size: 50
       responses:
         '200':
           description: Successful Response
@@ -116,7 +136,7 @@ paths:
       tags:
       - Tasks
       summary: Update a Task
-      description: Updates an existing task by its `task_id`. Marking a task as `DONE` or `CANCELLED` sets `completed_at`; moving out of those states clears it. Updating `account_id` is only supported for manually created tasks.
+      description: Updates an existing task by its `task_id`.
       operationId: update_task
       parameters:
       - name: task_id
@@ -240,6 +260,131 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    TaskCreateRequest:
+      properties:
+        title:
+          type: string
+          minLength: 1
+          title: Title
+          description: Title of the task
+          examples:
+          - Send follow-up proposal
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Detailed description of the task
+          examples:
+          - Send the updated pricing proposal to the procurement team
+        account_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Account Id
+          description: ID of the account to associate the task with
+        opportunity_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Opportunity Id
+          description: ID of the opportunity to associate the task with
+        task_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Type
+          description: Type of task. One of GENERAL_ACTION_ITEM, EMAIL.
+          default: GENERAL_ACTION_ITEM
+          examples:
+          - GENERAL_ACTION_ITEM
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+          description: User ID to assign the task to. Defaults to the caller if not provided.
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Due At
+          description: Due date and time for the task
+          examples:
+          - '2025-07-01T17:00:00Z'
+        message_draft:
+          anyOf:
+          - $ref: '#/components/schemas/MessageDraft'
+          - type: 'null'
+          description: Optional draft message contents. Only valid when `task_type` is `EMAIL`.
+      type: object
+      required:
+      - title
+      title: TaskCreateRequest
+      description: Request body for creating a task via POST.
+    PublicListRequest:
+      properties:
+        filters:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+          - filters:
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+            - filters:
+              - condition: less_than
+                field: created_at
+                value: '2026-07-01'
+            operator: and
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+      additionalProperties: false
+      type: object
+      title: PublicListRequest
     MessageDraft:
       properties:
         recipients:
@@ -281,6 +426,33 @@ components:
       - body
       title: MessageDraft
       description: Draft message contents stored on a task with `task_type=EMAIL`.
+    EmailRecipient:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Display name of the recipient
+          examples:
+          - Jane Smith
+        email:
+          type: string
+          title: Email
+          description: Email address of the recipient
+          examples:
+          - jane@acme.com
+      type: object
+      required:
+      - name
+      - email
+      title: EmailRecipient
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
     FilterRule:
       properties:
         field:
@@ -294,35 +466,12 @@ components:
           - {}
           - type: 'null'
           title: Value
+      additionalProperties: false
       type: object
       required:
       - field
       - condition
       title: FilterRule
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
     TaskResponse:
       properties:
         id:
@@ -460,144 +609,16 @@ components:
       - total_count
       - total_pages
       title: PaginationInfo
-    PublicListResponse_TaskResponse_:
+    PublicItemResponse_TaskResponse_:
       properties:
         data:
-          items:
-            $ref: '#/components/schemas/TaskResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
+          $ref: '#/components/schemas/TaskResponse'
         meta:
           $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
       - data
-      - pagination
-      title: PublicListResponse[TaskResponse]
-    TaskCreateRequest:
-      properties:
-        title:
-          type: string
-          title: Title
-          description: Title of the task
-          examples:
-          - Send follow-up proposal
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Detailed description of the task
-          examples:
-          - Send the updated pricing proposal to the procurement team
-        account_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Account Id
-          description: ID of the account to associate the task with
-        opportunity_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Opportunity Id
-          description: ID of the opportunity to associate the task with
-        task_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Task Type
-          description: Type of task. One of GENERAL_ACTION_ITEM, EMAIL.
-          default: GENERAL_ACTION_ITEM
-          examples:
-          - GENERAL_ACTION_ITEM
-        assignee_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Assignee Id
-          description: User ID to assign the task to. Defaults to the caller if not provided.
-        due_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Due At
-          description: Due date and time for the task
-          examples:
-          - '2025-07-01T17:00:00Z'
-        message_draft:
-          anyOf:
-          - $ref: '#/components/schemas/MessageDraft'
-          - type: 'null'
-          description: Optional draft message contents. Only valid when `task_type` is `EMAIL`.
-      type: object
-      required:
-      - title
-      title: TaskCreateRequest
-      description: Request body for creating a task via POST.
-    TaskUpdateRequest:
-      properties:
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Title of the task
-          examples:
-          - Send follow-up proposal
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Detailed description of the task
-          examples:
-          - Send the updated pricing proposal to the procurement team
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-          description: Current status of the task. One of TODO, DONE, CANCELLED.
-          examples:
-          - DONE
-        account_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Account Id
-          description: ID of the account to associate the task with. Only supported for manually created tasks.
-        assignee_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Assignee Id
-          description: User ID to assign the task to
-        due_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Due At
-          description: Due date and time for the task
-          examples:
-          - '2025-07-01T17:00:00Z'
-        message_draft:
-          anyOf:
-          - $ref: '#/components/schemas/MessageDraft'
-          - type: 'null'
-          description: Draft message contents. Only valid when the task's `task_type` is `EMAIL`. Replaces the existing draft when provided.
-      type: object
-      title: TaskUpdateRequest
-      description: Request body for updating a task via PATCH.
+      title: PublicItemResponse[TaskResponse]
     ErrorDetail:
       properties:
         code:
@@ -645,90 +666,6 @@ components:
       required:
       - id
       title: OwnerInfo
-    PublicItemResponse_TaskResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/TaskResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[TaskResponse]
-    PublicListRequest:
-      properties:
-        filters:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/FilterRule'
-            type: array
-          - $ref: '#/components/schemas/FilterExpression'
-          title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
-          examples:
-          - - condition: contains
-              field: name
-              value: Acme
-            - condition: is
-              field: status
-              value: active
-          - filters:
-            - condition: is
-              field: status
-              value: active
-            - filters:
-              - condition: contains
-                field: name
-                value: Acme
-              - condition: greater_than
-                field: created_at
-                value: '2026-01-01'
-            operator: or
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          description: Page number (1-indexed)
-          default: 1
-          examples:
-          - 1
-        page_size:
-          type: integer
-          maximum: 500.0
-          minimum: 1.0
-          title: Page Size
-          description: Number of results per page
-          default: 50
-          examples:
-          - 25
-        sort:
-          type: string
-          title: Sort
-          description: Field to sort by. Prefix with '-' for descending order.
-          default: -created_at
-          examples:
-          - -created_at
-      type: object
-      title: PublicListRequest
-    EmailRecipient:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Display name of the recipient
-          examples:
-          - Jane Smith
-        email:
-          type: string
-          title: Email
-          description: Email address of the recipient
-          examples:
-          - jane@acme.com
-      type: object
-      required:
-      - name
-      - email
-      title: EmailRecipient
     FilterExpression:
       properties:
         operator:
@@ -736,12 +673,13 @@ components:
           default: and
         filters:
           items:
-            anyOf:
+            oneOf:
             - $ref: '#/components/schemas/FilterRule'
             - $ref: '#/components/schemas/FilterExpression'
           type: array
           title: Filters
           default: []
+      additionalProperties: false
       type: object
       title: FilterExpression
       description: 'A filter expression with an explicit operator.
@@ -752,3 +690,84 @@ components:
         nested FilterExpression objects (branch nodes), allowing for arbitrarily
 
         nested filter structures.'
+    PublicListResponse_TaskResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[TaskResponse]
+    TaskUpdateRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Title
+          description: Title of the task
+          examples:
+          - Send follow-up proposal
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Detailed description of the task
+          examples:
+          - Send the updated pricing proposal to the procurement team
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Current status of the task. One of TODO, DONE, CANCELLED. Moving to DONE or CANCELLED sets `completed_at`; moving out of those states clears it.
+          examples:
+          - DONE
+        account_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Account Id
+          description: ID of the account to associate the task with. Only supported for manually created tasks.
+        assignee_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Assignee Id
+          description: User ID to assign the task to
+        due_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Due At
+          description: Due date and time for the task
+          examples:
+          - '2025-07-01T17:00:00Z'
+        message_draft:
+          anyOf:
+          - $ref: '#/components/schemas/MessageDraft'
+          - type: 'null'
+          description: Draft message contents. Only valid when the task's `task_type` is `EMAIL`. Replaces the existing draft when provided.
+      type: object
+      title: TaskUpdateRequest
+      description: Request body for updating a task via PATCH.
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.

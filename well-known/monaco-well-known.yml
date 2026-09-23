@@ -1,4 +1,4 @@
-generated: '2026-08-13'
+generated: '2026-09-19'
 method: searched
 source: live probes of every Monaco host
 hosts:
@@ -29,19 +29,17 @@ hosts:
     note: Declared as a Canonical location in the www security.txt (not separately saved).
   - path: /.well-known/agent-card.json
     status: 200
-    note: >-
-      Rejected. The app is a single-page app whose catch-all answers 200 with an
-      HTML shell for every /.well-known/* path; the body is not JSON and carries
-      no AgentCard shape. Recorded as a miss, not a hit.
+    note: Rejected. The app is a single-page app whose catch-all answers 200 with an HTML shell for every
+      /.well-known/* path; the body is not JSON and carries no AgentCard shape. Recorded as a miss, not
+      a hit.
 - host: https://docs.monaco.com
   documents:
   - path: /.well-known/agent-card.json
     status: 200
     file: ../a2a/monaco-agent-card.json
     content_type: application/json
-    note: >-
-      Real A2A agent card (name "Monaco Docs", protocolVersion 0.3, one skill).
-      Saved verbatim under a2a/ and graded in a2a/monaco-a2a.yml.
+    note: Real A2A agent card (name "Monaco Docs", protocolVersion 0.3, one skill). Saved verbatim under
+      a2a/ and graded in a2a/monaco-a2a.yml.
   - path: /.well-known/agent-skills/monaco/skill.md
     status: 200
     file: ../skills/monaco-docs-integration.skill.md
@@ -74,10 +72,8 @@ hosts:
     status: 200
     file: monaco-oauth-protected-resource.json
     content_type: application/json
-    note: >-
-      RFC 9728 OAuth 2.0 Protected Resource Metadata for the MCP server. Names
-      Auth0 (https://monaco-inc.us.auth0.com/) as the authorization server and
-      declares bearer_methods_supported [header] with an empty scopes_supported.
+    note: RFC 9728 OAuth 2.0 Protected Resource Metadata for the MCP server. Names Auth0 (https://monaco-inc.us.auth0.com/)
+      as the authorization server and declares bearer_methods_supported [header] with an empty scopes_supported.
   - path: /.well-known/oauth-protected-resource
     status: 404
     note: Metadata is served per-resource at /.well-known/oauth-protected-resource/mcp.
@@ -86,6 +82,13 @@ hosts:
     note: The MCP server delegates to Auth0; see scopes/monaco-scopes.yml.
   - path: /.well-known/agent-card.json
     status: 404
+- host: https://monaco-inc.us.auth0.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: monaco-monaco-inc-oauth-authorization-server.json
+    bytes: 2705
+  path_echo_control: passed
 summary:
   real_documents: 4
   files:
@@ -93,3 +96,16 @@ summary:
   - monaco-oauth-protected-resource.json
   - ../a2a/monaco-agent-card.json
   - ../llms/monaco-llms.txt
+x-mcp-probe:
+  probed: '2026-09-19'
+  issue: roadmap#321, roadmap#337
+  documents:
+  - host: https://monaco-inc.us.auth0.com
+    path: /.well-known/oauth-authorization-server
+    file: monaco-monaco-inc-oauth-authorization-server.json
+  validated_on: resource (RFC 9728) / issuer (RFC 8414, OIDC)
+  negative_control: one per host; a 2xx JSON object at an impossible path discards the host
+note: 'MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s
+  primary hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed
+  and were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'

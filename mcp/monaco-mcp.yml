@@ -7,11 +7,11 @@ server:
   transport: http
   url: https://mcp.monaco.com/mcp
   auth: oauth2
-  auth_detail: OAuth 2.0; the MCP client handles the flow on first connection. API-key bearer auth is also supported
-    for Codex/ChatGPT (bearer-token env var).
-  permissions: Every request is authenticated as the user who completed login and respects that user's existing
-    Monaco permissions. Reads are auto-approved by the AI client; writes and deletes prompt for confirmation by
-    default.
+  auth_detail: OAuth 2.0; the MCP client handles the flow on first connection. API-key bearer auth is
+    also supported for Codex/ChatGPT (bearer-token env var).
+  permissions: Every request is authenticated as the user who completed login and respects that user's
+    existing Monaco permissions. Reads are auto-approved by the AI client; writes and deletes prompt for
+    confirmation by default.
   rate_limits: 100 requests/minute per organization, shared with the REST API (429 on exceed).
   stability: beta
   oauth:
@@ -104,14 +104,10 @@ tools:
 deployment:
   mode: remote
   endpoint: https://mcp.monaco.com/mcp
-  auth: oauth
   verified: probed
   probe: gated
-  probe_detail: POST tools/list returned HTTP 401 with WWW-Authenticate Bearer error="invalid_token" and resource_metadata=https://mcp.monaco.com/.well-known/oauth-protected-resource/mcp.
-    The server is live and reachable; the tool schemas require an authenticated session. Tool names/descriptions
-    below are from the published docs table.
-  checked: '2026-08-13'
-  source: https://docs.monaco.com/mcp/overview
+  checked: '2026-08-12'
+  source: catalog MCP census
 tool_count: 24
 crosswalk: mcp/monaco-tool-crosswalk.yml
 no_local_package: No npx/stdio package is published; Monaco ships a hosted remote endpoint only.

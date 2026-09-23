@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Monaco Public Accounts Sequences API
+  title: Monaco Public Sequences API
   description: Public API for Monaco
   version: 1.0.0
 servers:
@@ -20,6 +20,33 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PublicListRequest'
+            examples:
+              by_status:
+                summary: Only started sequences
+                value:
+                  filters:
+                  - field: status
+                    condition: is
+                    value: started
+              for_one_contact:
+                summary: Sequences for one contact
+                value:
+                  filters:
+                  - field: contact_id
+                    condition: equals
+                    value: 550e8400-e29b-41d4-a716-446655440000
+              for_one_campaign:
+                summary: Sequences created by one campaign
+                value:
+                  filters:
+                  - field: campaign_id
+                    condition: equals
+                    value: 660e8400-e29b-41d4-a716-446655440000
+              unfiltered:
+                summary: First page, no filters
+                value:
+                  page: 1
+                  page_size: 50
       responses:
         '200':
           description: Successful Response
@@ -44,6 +71,20 @@ paths:
                   meeting_booked_at: '2026-01-22T15:00:00Z'
                   sender_id: usr_jkl012
                   sender_name: Alex Rivera
+                - id: seq_xyz789
+                  contact_id: con_uvw012
+                  name: Enterprise Onboarding
+                  description: Multi-touch onboarding sequence for enterprise accounts
+                  status: Excluded
+                  template_id: seqt_789ghi
+                  created_at: '2026-01-15T10:30:00Z'
+                  updated_at: '2026-05-10T14:22:00Z'
+                  sender_id: usr_jkl012
+                  sender_name: Alex Rivera
+                  exclusion_info:
+                    rule_name: account_cooldown
+                    description: Account was contacted within the cooldown window
+                    overridability: HARD
                 pagination:
                   page: 1
                   page_size: 50
@@ -221,22 +262,39 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicListResponse_SequenceResponse_:
+    ResponseMeta:
       properties:
-        data:
-          items:
-            $ref: '#/components/schemas/SequenceResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
       type: object
       required:
-      - data
-      - pagination
-      title: PublicListResponse[SequenceResponse]
+      - error
+      title: PublicErrorResponse
+    PublicSequenceActionEnum:
+      type: string
+      enum:
+      - pause
+      - resume
+      - stop
+      - enqueue
+      title: PublicSequenceActionEnum
+      description: 'User-callable state transitions on a sequence.
+
+
+        Intentionally a subset of `campaigns.schemas.SequenceActionEnum`: system-only
+
+        transitions (`success`, `fail`) and the payload-bearing `update_copy`
+
+        transition are excluded.'
     SequenceResponse:
       properties:
         id:
@@ -359,6 +417,11 @@ components:
           description: Full name of the user sending this sequence
           examples:
           - Alex Rivera
+        exclusion_info:
+          anyOf:
+          - $ref: '#/components/schemas/SequenceExclusionInfo'
+          - type: 'null'
+          description: Why this sequence was excluded — the most recently triggered rules-of-engagement violation. Null unless the status is `Excluded` and a violation was recorded.
       type: object
       required:
       - id
@@ -366,222 +429,68 @@ components:
       - created_at
       title: SequenceResponse
       description: Sequence resource.
-    PublicSequenceActionEnum:
-      type: string
-      enum:
-      - pause
-      - resume
-      - stop
-      - enqueue
-      title: PublicSequenceActionEnum
-      description: 'User-callable state transitions on a sequence.
-
-
-        Intentionally a subset of `campaigns.schemas.SequenceActionEnum`: system-only
-
-        transitions (`success`, `fail`) and the payload-bearing `update_copy`
-
-        transition are excluded.'
-    FilterRule:
+    SequenceExclusionInfo:
       properties:
-        field:
+        rule_name:
           type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      type: object
-      required:
-      - field
-      - condition
-      title: FilterRule
-    UpdateSequenceRequest:
-      properties:
-        action:
-          $ref: '#/components/schemas/PublicSequenceActionEnum'
-          description: 'State transition to apply:
-
-            - `enqueue` — move a suggested sequence into the queue
-
-            - `pause` — temporarily halt execution
-
-            - `resume` — resume a paused sequence
-
-            - `stop` — end the sequence as failed'
+          title: Rule Name
+          description: Rules-of-engagement rule that was violated
           examples:
-          - enqueue
+          - account_cooldown
+        description:
+          type: string
+          title: Description
+          description: Human-readable reason the sequence was excluded
+          examples:
+          - Account was contacted within the cooldown window
+        overridability:
+          type: string
+          title: Overridability
+          description: Whether the rule can be overridden — `HARD` or `SOFT`
+          examples:
+          - HARD
       type: object
       required:
-      - action
-      title: UpdateSequenceRequest
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    PublicItemResponse_SequenceDetailResponse_:
+      - rule_name
+      - description
+      - overridability
+      title: SequenceExclusionInfo
+      description: Most recently triggered rules-of-engagement violation on an excluded sequence.
+    UpdateSequenceStepRequest:
+      properties:
+        message:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Message
+          description: New message body for the step. Supported on email, InMail, LinkedIn message, LinkedIn connection-note, and gifting-email steps. Provide final per-contact copy as plain text — unresolved placeholders like `{{first_name}}` and HTML are rejected.
+        subject:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Subject
+          description: New subject line for the step. Only supported on subject-bearing channels (email, InMail, gifting email).
+      type: object
+      title: UpdateSequenceStepRequest
+      description: Copy edits for a single sequence step (a per-contact campaign task).
+    PublicListResponse_SequenceResponse_:
       properties:
         data:
-          $ref: '#/components/schemas/SequenceDetailResponse'
+          items:
+            $ref: '#/components/schemas/SequenceResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
         meta:
           $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
       - data
-      title: PublicItemResponse[SequenceDetailResponse]
-    SequenceTaskResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the task
-          examples:
-          - tsk_abc123
-        sequence_id:
-          type: string
-          title: Sequence Id
-          description: ID of the sequence this task belongs to
-          examples:
-          - seq_def456
-        order:
-          type: integer
-          title: Order
-          description: Position of the task within the sequence (1-indexed)
-          examples:
-          - 1
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Display name of the task
-          examples:
-          - Send intro email
-        type:
-          $ref: '#/components/schemas/TaskTypeEnum'
-          description: Type of task
-          examples:
-          - auto_linkedin_connection
-        status:
-          $ref: '#/components/schemas/TaskStatusEnum'
-          description: Current status of the task
-          examples:
-          - pending
-        scheduled_at:
-          type: string
-          format: date-time
-          title: Scheduled At
-          description: Date and time the task is scheduled for
-          examples:
-          - '2026-05-15T09:00:00Z'
-        completed_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Completed At
-          description: Date and time the task was completed
-          examples:
-          - '2026-05-15T10:00:00Z'
-        task_body:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Task Body
-          description: Task message body
-        subject:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subject
-          description: Subject line, for subject-bearing channels (email, InMail, gifting email)
-        outcome:
-          anyOf:
-          - $ref: '#/components/schemas/TaskOutcomeEnum'
-          - type: 'null'
-          description: Observed outcome of the task
-          examples:
-          - positive_reply
-      type: object
-      required:
-      - id
-      - sequence_id
-      - order
-      - type
-      - status
-      - scheduled_at
-      title: SequenceTaskResponse
-      description: Task within a sequence.
-    TaskStatusEnum:
-      type: string
-      enum:
-      - unknown
-      - scheduled
-      - pending
-      - in_progress
-      - paused
-      - completed
-      - failed
-      - cancelled
-      - skipped
-      title: TaskStatusEnum
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
+      - pagination
+      title: PublicListResponse[SequenceResponse]
     TaskOutcomeEnum:
       type: string
       enum:
@@ -590,6 +499,8 @@ components:
       - negative_reply
       - noncommital_reply
       - email_not_found
+      - email_enrichment_failed
+      - email_verification_unavailable
       - email_bounced
       - out_of_office
       - message_opened
@@ -605,6 +516,7 @@ components:
       - linkedin_account_disconnected
       - linkedin_no_inmail_credits
       - linkedin_transient_provider_error
+      - linkedin_self_invite
       - linkedin_account_paused
       - incoming_comms_blocked
       - not_connected
@@ -621,6 +533,80 @@ components:
       - message_evaluation_blocked
       - account_status_excluded
       title: TaskOutcomeEnum
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    PublicItemResponse_SequenceTaskResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/SequenceTaskResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[SequenceTaskResponse]
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    TaskTypeEnum:
+      type: string
+      enum:
+      - generic
+      - auto_email
+      - manual_email
+      - auto_linkedin_connection
+      - manual_linkedin_connection
+      - auto_linkedin_message
+      - manual_linkedin_message
+      - auto_linkedin_inmail
+      - manual_linkedin_inmail
+      - auto_phone
+      - manual_phone
+      - internal_email
+      - gifting_via_email
+      - gifting_via_address
+      - complete_sequence
+      title: TaskTypeEnum
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
     SequenceDetailResponse:
       properties:
         id:
@@ -743,6 +729,11 @@ components:
           description: Full name of the user sending this sequence
           examples:
           - Alex Rivera
+        exclusion_info:
+          anyOf:
+          - $ref: '#/components/schemas/SequenceExclusionInfo'
+          - type: 'null'
+          description: Why this sequence was excluded — the most recently triggered rules-of-engagement violation. Null unless the status is `Excluded` and a violation was recorded.
         tasks:
           items:
             $ref: '#/components/schemas/SequenceTaskResponse'
@@ -756,73 +747,96 @@ components:
       - created_at
       title: SequenceDetailResponse
       description: Sequence resource with its ordered list of tasks.
-    ErrorDetail:
+    PaginationInfo:
       properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
+        page:
+          type: integer
+          title: Page
+          description: Current page number
           examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
           examples:
-          - Resource not found
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
       type: object
       required:
-      - code
-      - message
-      title: ErrorDetail
-    TaskTypeEnum:
-      type: string
-      enum:
-      - generic
-      - auto_email
-      - manual_email
-      - auto_linkedin_connection
-      - manual_linkedin_connection
-      - auto_linkedin_message
-      - manual_linkedin_message
-      - auto_linkedin_inmail
-      - manual_linkedin_inmail
-      - auto_phone
-      - manual_phone
-      - internal_email
-      - gifting_via_email
-      - gifting_via_address
-      - complete_sequence
-      title: TaskTypeEnum
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    PublicItemResponse_SequenceDetailResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/SequenceDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[SequenceDetailResponse]
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
     PublicListRequest:
       properties:
         filters:
-          anyOf:
+          oneOf:
           - items:
               $ref: '#/components/schemas/FilterRule'
             type: array
           - $ref: '#/components/schemas/FilterExpression'
           title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
           examples:
-          - - condition: contains
-              field: name
-              value: Acme
-            - condition: is
-              field: status
-              value: active
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
           - filters:
-            - condition: is
-              field: status
-              value: active
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
             - filters:
-              - condition: contains
-                field: name
-                value: Acme
-              - condition: greater_than
+              - condition: less_than
                 field: created_at
-                value: '2026-01-01'
-            operator: or
+                value: '2026-07-01'
+            operator: and
         page:
           type: integer
           minimum: 1.0
@@ -847,57 +861,121 @@ components:
           default: -created_at
           examples:
           - -created_at
+      additionalProperties: false
       type: object
       title: PublicListRequest
-    FilterExpression:
+    SequenceTaskResponse:
       properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            anyOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
-    PublicItemResponse_SequenceTaskResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/SequenceTaskResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[SequenceTaskResponse]
-    UpdateSequenceStepRequest:
-      properties:
-        message:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the task
+          examples:
+          - tsk_abc123
+        sequence_id:
+          type: string
+          title: Sequence Id
+          description: ID of the sequence this task belongs to
+          examples:
+          - seq_def456
+        order:
+          type: integer
+          title: Order
+          description: Position of the task within the sequence (1-indexed)
+          examples:
+          - 1
+        name:
           anyOf:
           - type: string
-            minLength: 1
           - type: 'null'
-          title: Message
-          description: New message body for the step. Supported on email, InMail, LinkedIn message, LinkedIn connection-note, and gifting-email steps. Provide final per-contact copy as plain text — unresolved placeholders like `{{first_name}}` and HTML are rejected.
+          title: Name
+          description: Display name of the task
+          examples:
+          - Send intro email
+        type:
+          $ref: '#/components/schemas/TaskTypeEnum'
+          description: Type of task
+          examples:
+          - auto_linkedin_connection
+        status:
+          $ref: '#/components/schemas/TaskStatusEnum'
+          description: Current status of the task
+          examples:
+          - pending
+        scheduled_at:
+          type: string
+          format: date-time
+          title: Scheduled At
+          description: Date and time the task is scheduled for
+          examples:
+          - '2026-05-15T09:00:00Z'
+        completed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Completed At
+          description: Date and time the task was completed
+          examples:
+          - '2026-05-15T10:00:00Z'
+        task_body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Body
+          description: Task message body
         subject:
           anyOf:
           - type: string
-            minLength: 1
           - type: 'null'
           title: Subject
-          description: New subject line for the step. Only supported on subject-bearing channels (email, InMail, gifting email).
+          description: Subject line, for subject-bearing channels (email, InMail, gifting email)
+        outcome:
+          anyOf:
+          - $ref: '#/components/schemas/TaskOutcomeEnum'
+          - type: 'null'
+          description: Observed outcome of the task
+          examples:
+          - positive_reply
       type: object
-      title: UpdateSequenceStepRequest
-      description: Copy edits for a single sequence step (a per-contact campaign task).
+      required:
+      - id
+      - sequence_id
+      - order
+      - type
+      - status
+      - scheduled_at
+      title: SequenceTaskResponse
+      description: Task within a sequence.
+    UpdateSequenceRequest:
+      properties:
+        action:
+          $ref: '#/components/schemas/PublicSequenceActionEnum'
+          description: 'State transition to apply:
+
+            - `enqueue` — move a suggested sequence into the queue
+
+            - `pause` — temporarily halt execution
+
+            - `resume` — resume a paused sequence
+
+            - `stop` — end the sequence as failed'
+          examples:
+          - enqueue
+      type: object
+      required:
+      - action
+      title: UpdateSequenceRequest
+    TaskStatusEnum:
+      type: string
+      enum:
+      - unknown
+      - scheduled
+      - pending
+      - in_progress
+      - paused
+      - completed
+      - failed
+      - cancelled
+      - skipped
+      title: TaskStatusEnum

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Monaco Public Accounts Meetings API
+  title: Monaco Public Meetings API
   description: Public API for Monaco
   version: 1.0.0
 servers:
@@ -19,7 +19,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PublicListRequest'
+              $ref: '#/components/schemas/MeetingListRequest'
+            examples:
+              search_by_title:
+                summary: Partial title match
+                value:
+                  filters:
+                  - field: title
+                    condition: contains
+                    value: Kickoff
+              for_one_account:
+                summary: Meetings on one account
+                value:
+                  filters:
+                  - field: account_id
+                    condition: is
+                    value: 550e8400-e29b-41d4-a716-446655440000
+              unfiltered:
+                summary: First page, no filters
+                value:
+                  page: 1
+                  page_size: 50
       responses:
         '200':
           description: Successful Response
@@ -130,6 +150,51 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    MeetingOrganizerInfo:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the organizer
+          examples:
+          - jane@acme.com
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+          description: Display name of the organizer
+          examples:
+          - Jane Smith
+      type: object
+      title: MeetingOrganizerInfo
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PublicListResponse_MeetingResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/MeetingResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[MeetingResponse]
     MeetingDetailResponse:
       properties:
         id:
@@ -286,59 +351,12 @@ components:
           - {}
           - type: 'null'
           title: Value
+      additionalProperties: false
       type: object
       required:
       - field
       - condition
       title: FilterRule
-    TranscriptWord:
-      properties:
-        text:
-          type: string
-          title: Text
-          description: The transcribed word
-        start_timestamp:
-          type: number
-          title: Start Timestamp
-          description: Start time in seconds
-        end_timestamp:
-          type: number
-          title: End Timestamp
-          description: End time in seconds
-      type: object
-      required:
-      - text
-      - start_timestamp
-      - end_timestamp
-      title: TranscriptWord
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    TranscriptSegment:
-      properties:
-        speaker:
-          type: string
-          title: Speaker
-          description: Name of the speaker
-        language:
-          type: string
-          title: Language
-          description: Language code of the segment
-        words:
-          items:
-            $ref: '#/components/schemas/TranscriptWord'
-          type: array
-          title: Words
-          description: Words in this segment
-      type: object
-      required:
-      - speaker
-      - language
-      title: TranscriptSegment
     PublicErrorResponse:
       properties:
         error:
@@ -347,54 +365,49 @@ components:
       required:
       - error
       title: PublicErrorResponse
-    MeetingAttendeeInfo:
+    PaginationInfo:
       properties:
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the attendee
+        page:
+          type: integer
+          title: Page
+          description: Current page number
           examples:
-          - john@acme.com
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-          description: Display name of the attendee
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
           examples:
-          - John Doe
-        response_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Response Status
-          description: RSVP response status
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
           examples:
-          - accepted
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
       type: object
-      title: MeetingAttendeeInfo
-    MeetingOrganizerInfo:
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    PublicItemResponse_MeetingDetailResponse_:
       properties:
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the organizer
-          examples:
-          - jane@acme.com
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-          description: Display name of the organizer
-          examples:
-          - Jane Smith
+        data:
+          $ref: '#/components/schemas/MeetingDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
-      title: MeetingOrganizerInfo
+      required:
+      - data
+      title: PublicItemResponse[MeetingDetailResponse]
     MeetingResponse:
       properties:
         id:
@@ -518,74 +531,6 @@ components:
       required:
       - id
       title: MeetingResponse
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
-    PublicItemResponse_MeetingDetailResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/MeetingDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[MeetingDetailResponse]
-    PublicListResponse_MeetingResponse_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/MeetingResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      - pagination
-      title: PublicListResponse[MeetingResponse]
     ErrorDetail:
       properties:
         code:
@@ -605,35 +550,129 @@ components:
       - code
       - message
       title: ErrorDetail
-    PublicListRequest:
+    TranscriptSegment:
+      properties:
+        speaker:
+          type: string
+          title: Speaker
+          description: Name of the speaker
+        language:
+          type: string
+          title: Language
+          description: Language code of the segment
+        words:
+          items:
+            $ref: '#/components/schemas/TranscriptWord'
+          type: array
+          title: Words
+          description: Words in this segment
+      type: object
+      required:
+      - speaker
+      - language
+      title: TranscriptSegment
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
+    TranscriptWord:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: The transcribed word
+        start_timestamp:
+          type: number
+          title: Start Timestamp
+          description: Start time in seconds
+        end_timestamp:
+          type: number
+          title: End Timestamp
+          description: End time in seconds
+      type: object
+      required:
+      - text
+      - start_timestamp
+      - end_timestamp
+      title: TranscriptWord
+    MeetingAttendeeInfo:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the attendee
+          examples:
+          - john@acme.com
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+          description: Display name of the attendee
+          examples:
+          - John Doe
+        response_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Status
+          description: RSVP response status
+          examples:
+          - accepted
+      type: object
+      title: MeetingAttendeeInfo
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    MeetingListRequest:
       properties:
         filters:
-          anyOf:
+          oneOf:
           - items:
               $ref: '#/components/schemas/FilterRule'
             type: array
           - $ref: '#/components/schemas/FilterExpression'
           title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
           examples:
-          - - condition: contains
-              field: name
-              value: Acme
-            - condition: is
-              field: status
-              value: active
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
           - filters:
-            - condition: is
-              field: status
-              value: active
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
             - filters:
-              - condition: contains
-                field: name
-                value: Acme
-              - condition: greater_than
+              - condition: less_than
                 field: created_at
-                value: '2026-01-01'
-            operator: or
+                value: '2026-07-01'
+            operator: and
         page:
           type: integer
           minimum: 1.0
@@ -655,31 +694,12 @@ components:
           type: string
           title: Sort
           description: Field to sort by. Prefix with '-' for descending order.
-          default: -created_at
+          default: -start_time
           examples:
-          - -created_at
+          - -start_time
+      additionalProperties: false
       type: object
-      title: PublicListRequest
-    FilterExpression:
-      properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            anyOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
+      title: MeetingListRequest
+      description: 'Meetings order by start time, not creation time: `created_at` is not a
 
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
+        sortable meeting field, so the shared `-created_at` default would 422.'

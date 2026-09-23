@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Monaco Public Accounts Sequence Templates API
+  title: Monaco Public Sequence Templates API
   description: Public API for Monaco
   version: 1.0.0
 servers:
@@ -47,10 +47,7 @@ paths:
       description: 'Creates a new sequence template. The template is created as a USER_GENERATED template.
 
 
-        Supply `steps` (ordered by `index`), `transitions`, and `blocks` together; see each field''s schema for its shape and allowed values. A step references a block via a `[[block:<id>]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a branch. Example:
-
-
-        {"steps": [{"index": 1, "day": 0, "hour": 9, "type": "auto_email", "subject": "Quick question", "message": "<p>Hi {{recipient.first_name}} [[block:intro]]</p>"}, {"index": 2, "day": 2, "hour": 9, "type": "auto_linkedin_connection", "message": "Let''s connect"}], "transitions": [{"from_step_index": 1, "to_step_index": 2, "transition_type": "PREVIOUS_STEP_COMPLETES"}], "blocks": {"intro": {"name": "Intro", "block_type": "MANUAL", "content": "..."}}}
+        A step references a block via a `[[block:]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a branch.
 
 
         Template variables must be namespaced. Supported tokens are `{{recipient.first_name}}`, `{{recipient.last_name}}`, `{{recipient.company}}`, `{{recipient.email}}`, `{{sender.first_name}}`, `{{sender.last_name}}`, and `{{sender.company}}`.'
@@ -60,6 +57,34 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateSequenceTemplateRequest'
+            examples:
+              authored:
+                summary: Create a template with steps, transitions, and blocks
+                value:
+                  name: Enterprise Onboarding
+                  description: Multi-touch onboarding sequence for enterprise accounts
+                  steps:
+                  - index: 1
+                    day: 0
+                    hour: 9
+                    type: auto_email
+                    subject: Quick question
+                    message: <p>Hi {{recipient.first_name}} [[block:intro]]</p>
+                  - index: 2
+                    day: 2
+                    hour: 9
+                    type: auto_linkedin_connection
+                    message: Let's connect
+                  transitions:
+                  - from_step_index: 1
+                    to_step_index: 2
+                    transition_type: PREVIOUS_STEP_SCHEDULED
+                    require_all: false
+                  blocks:
+                    intro:
+                      name: Intro
+                      block_type: MANUAL
+                      content: '...'
         required: true
       responses:
         '201':
@@ -148,13 +173,10 @@ paths:
       tags:
       - Sequence Templates
       summary: Update a Sequence Template
-      description: 'Updates an existing sequence template. All fields are optional, but at least one must be provided. `steps`, `transitions`, and `blocks` replace the current value when supplied; each supplied step must include its `id`.
+      description: 'Updates an existing sequence template. `steps`, `transitions`, and `blocks` replace the current value when supplied.
 
 
-        Supply `steps` (ordered by `index`), `transitions`, and `blocks` together; see each field''s schema for its shape and allowed values. A step references a block via a `[[block:<id>]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a branch. Example:
-
-
-        {"steps": [{"index": 1, "day": 0, "hour": 9, "type": "auto_email", "subject": "Quick question", "message": "<p>Hi {{recipient.first_name}} [[block:intro]]</p>"}, {"index": 2, "day": 2, "hour": 9, "type": "auto_linkedin_connection", "message": "Let''s connect"}], "transitions": [{"from_step_index": 1, "to_step_index": 2, "transition_type": "PREVIOUS_STEP_COMPLETES"}], "blocks": {"intro": {"name": "Intro", "block_type": "MANUAL", "content": "..."}}}
+        A step references a block via a `[[block:]]` marker in its `message`/`subject`, and a `transition` links steps by `index` sequentially or on a branch.
 
 
         Template variables must be namespaced. Supported tokens are `{{recipient.first_name}}`, `{{recipient.last_name}}`, `{{recipient.company}}`, `{{recipient.email}}`, `{{sender.first_name}}`, `{{sender.last_name}}`, and `{{sender.company}}`.'
@@ -173,6 +195,36 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateSequenceTemplateRequest'
+            examples:
+              rename:
+                summary: Rename a template
+                value:
+                  name: Enterprise Onboarding v2
+              replace_steps:
+                summary: Replace the steps, transitions, and blocks
+                value:
+                  steps:
+                  - index: 1
+                    day: 0
+                    hour: 9
+                    type: auto_email
+                    subject: Quick question
+                    message: <p>Hi {{recipient.first_name}} [[block:intro]]</p>
+                  - index: 2
+                    day: 2
+                    hour: 9
+                    type: auto_linkedin_connection
+                    message: Let's connect
+                  transitions:
+                  - from_step_index: 1
+                    to_step_index: 2
+                    transition_type: PREVIOUS_STEP_SCHEDULED
+                    require_all: false
+                  blocks:
+                    intro:
+                      name: Intro
+                      block_type: MANUAL
+                      content: '...'
       responses:
         '200':
           description: Successful Response
@@ -188,6 +240,283 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    PublicTaskTypeEnum:
+      type: string
+      enum:
+      - auto_email
+      - auto_linkedin_connection
+      - auto_linkedin_message
+      - auto_linkedin_inmail
+      - gifting_via_email
+      title: PublicTaskTypeEnum
+      description: Step types accepted on the public write surface.
+    UpdateSequenceTemplateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Name
+          description: New name for the sequence template
+          examples:
+          - Enterprise Onboarding v2
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: New description for the sequence template
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/PublicSequenceTemplateStatusEnum'
+          - type: 'null'
+          description: New status for the sequence template
+          examples:
+          - ACTIVE
+        steps:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/SequenceTemplateStepRequest'
+            type: array
+          - type: 'null'
+          title: Steps
+          description: Replacement list of steps (full replacement, not partial). Must be supplied together with `transitions`
+        transitions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/SequenceTemplateTransitionRequest'
+            type: array
+          - type: 'null'
+          title: Transitions
+          description: 'Replacement list of transitions. Must be supplied together with `steps`; pass `[]` if the new step list has no transitions. A transition that omits its lead-time delay defaults to 3 business days: on `post_check_delay` for accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), on `pre_check_delay` for all others. Pass an explicit 0 to evaluate immediately.'
+        blocks:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/SequenceTemplateBlockRequest'
+            type: object
+          - type: 'null'
+          title: Blocks
+          description: Replacement content blocks referenced by this template
+      type: object
+      title: UpdateSequenceTemplateRequest
+      description: Request body for updating a sequence template. All fields optional.
+    SequenceTemplateBlockResponse:
+      additionalProperties: true
+      type: object
+    SequenceTemplateTransitionRequest:
+      properties:
+        from_step_index:
+          type: integer
+          title: From Step Index
+          description: Index of the source step within the template
+          examples:
+          - 1
+        to_step_index:
+          type: integer
+          title: To Step Index
+          description: Index of the destination step within the template
+          examples:
+          - 2
+        transition_type:
+          $ref: '#/components/schemas/SequenceTransitionTypeEnum'
+          description: 'Condition that triggers this transition. Sequential types fire on the source step''s lifecycle: `PREVIOUS_STEP_COMPLETES` (finished successfully), `PREVIOUS_STEP_RUNS` (reached any terminal state — completed, skipped, or failed), `PREVIOUS_STEP_SCHEDULED` (scheduled or terminal), `GIFT_DELIVERED` (gift delivered). Branching types fire on the prospect''s response: `LINKEDIN_REQUEST_ACCEPTED` / `LINKEDIN_REQUEST_NOT_ACCEPTED` (source must be an `auto_linkedin_connection` step) and `GIFT_ACCEPTED` / `GIFT_NOT_ACCEPTED` (source must be a `gifting_via_email` step). IMPORTANT: a non-branching transition between a LinkedIn step and an email step (either direction) crosses channels and must use `PREVIOUS_STEP_SCHEDULED` or `PREVIOUS_STEP_RUNS` — `PREVIOUS_STEP_COMPLETES` is rejected with a 422. `PREVIOUS_STEP_SCHEDULED` and `PREVIOUS_STEP_RUNS` both require `require_all: false`.'
+          examples:
+          - PREVIOUS_STEP_COMPLETES
+          - PREVIOUS_STEP_SCHEDULED
+        pre_check_time_unit:
+          type: string
+          title: Pre Check Time Unit
+          description: Time unit for `pre_check_delay`. One of `seconds`, `minutes`, `hours`, `days`, or `business_days`.
+          default: business_days
+        pre_check_delay:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Pre Check Delay
+          description: A grace window before this transition's condition starts being evaluated, measured from when the source step completed (in `pre_check_time_unit`). Use it when the condition could be satisfied immediately but you want to wait first — e.g. after an email is sent, hold off 2 business days before checking for a reply, giving the prospect time to respond. If omitted or null, defaults to 3 business days — except on accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), where the default lands on `post_check_delay` and this stays null. Pass an explicit 0 to evaluate immediately as soon as the source step completes.
+          examples:
+          - 2
+        post_check_time_unit:
+          type: string
+          title: Post Check Time Unit
+          description: Time unit for `post_check_delay`. One of `seconds`, `minutes`, `hours`, `days`, or `business_days`.
+          default: business_days
+        post_check_delay:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Post Check Delay
+          description: A pacing delay after this transition's condition has passed, before the destination step is scheduled (in `post_check_time_unit`). Use it to avoid an instantaneous, robotic-feeling response to a prospect-driven event — e.g. wait a business day after a LinkedIn connection is accepted before pitching, or after a gift is delivered before the thank-you. For accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), if omitted or null this defaults to 3 business days; pass an explicit 0 to schedule the next step immediately. `null` or `0` schedules immediately for all other transition types.
+          examples:
+          - 1
+        require_all:
+          type: boolean
+          title: Require All
+          description: Whether all conditions must be met (vs. any of them). Must be `false` for `PREVIOUS_STEP_SCHEDULED` and `PREVIOUS_STEP_RUNS` transitions — their conditions are mutually exclusive status checks, so `true` can never be satisfied and the destination step never fires.
+          default: true
+      type: object
+      required:
+      - from_step_index
+      - to_step_index
+      - transition_type
+      title: SequenceTemplateTransitionRequest
+      description: A transition (ordering / branching rule) between two steps (write side).
+    SequenceTemplateResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the sequence template
+          examples:
+          - seqt_abc123
+        name:
+          type: string
+          title: Name
+          description: Name of the sequence template
+          examples:
+          - Enterprise Onboarding
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Description of the sequence template
+          examples:
+          - Multi-touch onboarding sequence for enterprise accounts
+        status:
+          $ref: '#/components/schemas/CampaignStatusEnum'
+          description: Current status of the sequence template
+          examples:
+          - ACTIVE
+        owner_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Id
+          description: ID of the user who owns the sequence template
+          examples:
+          - usr_abc123
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Whether this template is the default for the organization
+          default: false
+          examples:
+          - false
+        archived_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Archived At
+          description: Date and time the sequence template was archived
+          examples:
+          - '2026-05-10T14:22:00Z'
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+          description: Date and time the sequence template was created
+          examples:
+          - '2026-01-15T10:30:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: Date and time the sequence template was last updated
+          examples:
+          - '2026-05-10T14:22:00Z'
+      type: object
+      required:
+      - id
+      - name
+      - status
+      title: SequenceTemplateResponse
+      description: Sequence template resource.
+    SequenceTemplateStepRequest:
+      properties:
+        index:
+          type: integer
+          minimum: 1.0
+          title: Index
+          description: Position of the step within the template (1-based). Must be unique across steps; transitions reference steps by this index.
+          examples:
+          - 1
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Display title of the step
+          examples:
+          - Intro email
+        day:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Day
+          description: Day offset from the start of the sequence
+          examples:
+          - 0
+        hour:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Hour
+          description: Hour of day the step is scheduled for
+          examples:
+          - 9
+        type:
+          $ref: '#/components/schemas/PublicTaskTypeEnum'
+          description: Type of step
+          examples:
+          - auto_email
+        subject:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject
+          description: Subject line. Required (non-empty) for `auto_email` and `gifting_via_email` steps; optional for `auto_linkedin_inmail`.
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+          description: Message body for the step
+        gift_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Gift Id
+          description: ID of the gift attached to a gifting step
+      type: object
+      required:
+      - index
+      - type
+      title: SequenceTemplateStepRequest
+      description: One step in a sequence template (write side).
     SequenceTemplateDetailResponse:
       properties:
         id:
@@ -282,71 +611,6 @@ components:
       - status
       title: SequenceTemplateDetailResponse
       description: Sequence template with its ordered list of steps and transitions.
-    SequenceTransitionTypeEnum:
-      type: string
-      enum:
-      - PREVIOUS_STEP_COMPLETES
-      - PREVIOUS_STEP_RUNS
-      - GIFT_DELIVERED
-      - PREVIOUS_STEP_SCHEDULED
-      - LINKEDIN_REQUEST_ACCEPTED
-      - LINKEDIN_REQUEST_NOT_ACCEPTED
-      - GIFT_ACCEPTED
-      - GIFT_NOT_ACCEPTED
-      title: SequenceTransitionTypeEnum
-    PublicSequenceTemplateStatusEnum:
-      type: string
-      enum:
-      - ACTIVE
-      - INACTIVE
-      - ARCHIVED
-      title: PublicSequenceTemplateStatusEnum
-      description: 'User-settable sequence-template statuses.
-
-
-        Intentionally a subset of `campaigns.types.sequence_template.CampaignStatusEnum`:
-
-        excludes DRAFT, an internal-only authoring state.'
-    CreateSequenceTemplateRequest:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Name of the sequence template
-          examples:
-          - Enterprise Onboarding
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Description of the sequence template
-          examples:
-          - Multi-touch onboarding sequence for enterprise accounts
-        steps:
-          items:
-            $ref: '#/components/schemas/SequenceTemplateStepRequest'
-          type: array
-          title: Steps
-          description: Ordered list of steps in the template
-        transitions:
-          items:
-            $ref: '#/components/schemas/SequenceTemplateTransitionRequest'
-          type: array
-          title: Transitions
-          description: 'Transitions between steps (ordering and branching rules). A transition that omits its lead-time delay defaults to 3 business days: on `post_check_delay` for accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), on `pre_check_delay` for all others. Pass an explicit 0 to evaluate immediately.'
-        blocks:
-          additionalProperties:
-            $ref: '#/components/schemas/SequenceTemplateBlockRequest'
-          type: object
-          title: Blocks
-          description: Content blocks referenced by this template, keyed by block id. A step's subject/message may contain [[block:<uuid>]] markers.
-      type: object
-      required:
-      - name
-      - steps
-      title: CreateSequenceTemplateRequest
-      description: Request body for creating a sequence template.
     ErrorDetail:
       properties:
         code:
@@ -366,16 +630,23 @@ components:
       - code
       - message
       title: ErrorDetail
-    PublicItemResponse_SequenceTemplateDetailResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/SequenceTemplateDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[SequenceTemplateDetailResponse]
+    PublicSequenceTemplateStatusEnum:
+      type: string
+      enum:
+      - ACTIVE
+      - INACTIVE
+      - ARCHIVED
+      title: PublicSequenceTemplateStatusEnum
+      description: 'User-settable sequence-template statuses.
+
+
+        Intentionally a subset of `campaigns.types.sequence_template.CampaignStatusEnum`:
+
+        excludes DRAFT, an internal-only authoring state. INACTIVE is deprecated and
+
+        always rejected — archive the template instead. It stays in the schema only
+
+        for API compatibility until it can be removed through the deprecation process.'
     PublicItemResponse_list_SequenceTemplateResponse__:
       properties:
         data:
@@ -389,14 +660,6 @@ components:
       required:
       - data
       title: PublicItemResponse[list[SequenceTemplateResponse]]
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
     TaskTypeEnum:
       type: string
       enum:
@@ -416,165 +679,30 @@ components:
       - gifting_via_address
       - complete_sequence
       title: TaskTypeEnum
-    SequenceTemplateResponse:
+    PublicItemResponse_SequenceTemplateDetailResponse_:
       properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the sequence template
-          examples:
-          - seqt_abc123
-        name:
-          type: string
-          title: Name
-          description: Name of the sequence template
-          examples:
-          - Enterprise Onboarding
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Description of the sequence template
-          examples:
-          - Multi-touch onboarding sequence for enterprise accounts
-        status:
-          $ref: '#/components/schemas/CampaignStatusEnum'
-          description: Current status of the sequence template
-          examples:
-          - ACTIVE
-        owner_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Owner Id
-          description: ID of the user who owns the sequence template
-          examples:
-          - usr_abc123
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Whether this template is the default for the organization
-          default: false
-          examples:
-          - false
-        archived_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Archived At
-          description: Date and time the sequence template was archived
-          examples:
-          - '2026-05-10T14:22:00Z'
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-          description: Date and time the sequence template was created
-          examples:
-          - '2026-01-15T10:30:00Z'
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-          description: Date and time the sequence template was last updated
-          examples:
-          - '2026-05-10T14:22:00Z'
+        data:
+          $ref: '#/components/schemas/SequenceTemplateDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - id
-      - name
-      - status
-      title: SequenceTemplateResponse
-      description: Sequence template resource.
-    SequenceTemplateTransitionResponse:
-      properties:
-        from_step_index:
-          type: integer
-          title: From Step Index
-          description: Index of the source step within the template
-          examples:
-          - 1
-        to_step_index:
-          type: integer
-          title: To Step Index
-          description: Index of the destination step within the template
-          examples:
-          - 2
-        transition_type:
-          $ref: '#/components/schemas/SequenceTransitionTypeEnum'
-          description: Condition that triggers this transition
-          examples:
-          - PREVIOUS_STEP_COMPLETES
-        pre_check_time_unit:
-          type: string
-          title: Pre Check Time Unit
-          description: Time unit for `pre_check_delay`. One of `seconds`, `minutes`, `hours`, `days`, or `business_days`.
-          default: business_days
-        pre_check_delay:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Pre Check Delay
-          description: A grace window before this transition's condition starts being evaluated, measured from when the source step completed (in `pre_check_time_unit`). Use it when the condition could be satisfied immediately but you want to wait first — e.g. after an email is sent, hold off 2 business days before checking for a reply, giving the prospect time to respond. `null` or `0` evaluates as soon as the source step completes.
-          examples:
-          - 2
-        post_check_time_unit:
-          type: string
-          title: Post Check Time Unit
-          description: Time unit for `post_check_delay`. One of `seconds`, `minutes`, `hours`, `days`, or `business_days`.
-          default: business_days
-        post_check_delay:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Post Check Delay
-          description: A pacing delay after this transition's condition has passed, before the destination step is scheduled (in `post_check_time_unit`). Use it to avoid an instantaneous, robotic-feeling response to a prospect-driven event — e.g. wait a business day after a LinkedIn connection is accepted before pitching, or after a gift is delivered before the thank-you. `null` or `0` schedules the next step immediately.
-          examples:
-          - 1
-        require_all:
-          type: boolean
-          title: Require All
-          description: Whether all conditions must be met (vs. any of them)
-          default: true
-      type: object
-      required:
-      - from_step_index
-      - to_step_index
-      - transition_type
-      title: SequenceTemplateTransitionResponse
-      description: A transition (ordering / branching rule) between two steps in a template.
-    SequenceTemplateBlockRequest:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Human-readable name of the block
-        block_type:
-          $ref: '#/components/schemas/ContentBlockTypeEnum'
-          description: MANUAL or AI_GENERATED
-        content:
-          type: string
-          title: Content
-          description: Block content; may contain template variables
-        fallback_content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fallback Content
-          description: Fallback content used when the primary content can't be resolved. Only relevant for AI_GENERATED blocks.
-      type: object
-      required:
-      - name
-      - block_type
-      - content
-      title: SequenceTemplateBlockRequest
-      description: A content block referenced by a sequence template step (write side).
+      - data
+      title: PublicItemResponse[SequenceTemplateDetailResponse]
+    CampaignStatusEnum:
+      type: string
+      enum:
+      - ACTIVE
+      - INACTIVE
+      - DRAFT
+      - ARCHIVED
+      title: CampaignStatusEnum
+    ContentBlockTypeEnum:
+      type: string
+      enum:
+      - MANUAL
+      - AI_GENERATED
+      title: ContentBlockTypeEnum
     SequenceTemplateStepResponse:
       properties:
         id:
@@ -644,137 +772,86 @@ components:
       - type
       title: SequenceTemplateStepResponse
       description: One step in a sequence template.
-    SequenceTemplateStepRequest:
-      properties:
-        index:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Index
-          description: Position of the step within the template (1-based)
-          examples:
-          - 1
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Display title of the step
-          examples:
-          - Intro email
-        day:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Day
-          description: Day offset from the start of the sequence
-          examples:
-          - 0
-        hour:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Hour
-          description: Hour of day the step is scheduled for
-          examples:
-          - 9
-        type:
-          $ref: '#/components/schemas/TaskTypeEnum'
-          description: Type of step
-          examples:
-          - auto_email
-        subject:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subject
-          description: Subject line (email and gifting steps)
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-          description: Message body for the step
-        gift_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Gift Id
-          description: ID of the gift attached to a gifting step
-      type: object
-      required:
-      - type
-      title: SequenceTemplateStepRequest
-      description: One step in a sequence template (write side).
-    UpdateSequenceTemplateRequest:
+    SequenceTemplateBlockRequest:
       properties:
         name:
+          type: string
+          title: Name
+          description: Human-readable name of the block
+        block_type:
+          $ref: '#/components/schemas/ContentBlockTypeEnum'
+          description: MANUAL or AI_GENERATED
+        content:
+          type: string
+          title: Content
+          description: Block content; may contain template variables
+        fallback_content:
           anyOf:
           - type: string
           - type: 'null'
+          title: Fallback Content
+          description: Fallback content used when the primary content can't be resolved. Only relevant for AI_GENERATED blocks.
+      type: object
+      required:
+      - name
+      - block_type
+      - content
+      title: SequenceTemplateBlockRequest
+      description: A content block referenced by a sequence template step (write side).
+    SequenceTransitionTypeEnum:
+      type: string
+      enum:
+      - PREVIOUS_STEP_COMPLETES
+      - PREVIOUS_STEP_RUNS
+      - GIFT_DELIVERED
+      - PREVIOUS_STEP_SCHEDULED
+      - LINKEDIN_REQUEST_ACCEPTED
+      - LINKEDIN_REQUEST_NOT_ACCEPTED
+      - GIFT_ACCEPTED
+      - GIFT_NOT_ACCEPTED
+      title: SequenceTransitionTypeEnum
+    CreateSequenceTemplateRequest:
+      properties:
+        name:
+          type: string
+          minLength: 1
           title: Name
-          description: New name for the sequence template
+          description: Name of the sequence template
           examples:
-          - Enterprise Onboarding v2
+          - Enterprise Onboarding
         description:
           anyOf:
           - type: string
           - type: 'null'
           title: Description
-          description: New description for the sequence template
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/PublicSequenceTemplateStatusEnum'
-          - type: 'null'
-          description: New status for the sequence template
+          description: Description of the sequence template
           examples:
-          - ACTIVE
+          - Multi-touch onboarding sequence for enterprise accounts
         steps:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/SequenceTemplateStepRequest'
-            type: array
-          - type: 'null'
+          items:
+            $ref: '#/components/schemas/SequenceTemplateStepRequest'
+          type: array
           title: Steps
-          description: Replacement list of steps (full replacement, not partial). Must be supplied together with `transitions`
+          description: Ordered list of steps in the template
         transitions:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/SequenceTemplateTransitionRequest'
-            type: array
-          - type: 'null'
+          items:
+            $ref: '#/components/schemas/SequenceTemplateTransitionRequest'
+          type: array
           title: Transitions
-          description: 'Replacement list of transitions. Must be supplied together with `steps`; pass `[]` if the new step list has no transitions. A transition that omits its lead-time delay defaults to 3 business days: on `post_check_delay` for accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), on `pre_check_delay` for all others. Pass an explicit 0 to evaluate immediately.'
+          description: 'Transitions between steps (ordering and branching rules). A transition that omits its lead-time delay defaults to 3 business days: on `post_check_delay` for accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), on `pre_check_delay` for all others. Pass an explicit 0 to evaluate immediately.'
         blocks:
-          anyOf:
-          - additionalProperties:
-              $ref: '#/components/schemas/SequenceTemplateBlockRequest'
-            type: object
-          - type: 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/SequenceTemplateBlockRequest'
+          type: object
           title: Blocks
-          description: Replacement content blocks referenced by this template
+          description: Content blocks referenced by this template, keyed by block id. A step's subject/message may contain [[block:<uuid>]] markers.
       type: object
-      title: UpdateSequenceTemplateRequest
-      description: Request body for updating a sequence template. All fields optional.
-    ContentBlockTypeEnum:
-      type: string
-      enum:
-      - MANUAL
-      - AI_GENERATED
-      title: ContentBlockTypeEnum
-    SequenceTemplateBlockResponse:
-      additionalProperties: true
-      type: object
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    SequenceTemplateTransitionRequest:
+      required:
+      - name
+      - steps
+      title: CreateSequenceTemplateRequest
+      description: Request body for creating a sequence template.
+    SequenceTemplateTransitionResponse:
       properties:
         from_step_index:
           type: integer
@@ -790,9 +867,10 @@ components:
           - 2
         transition_type:
           $ref: '#/components/schemas/SequenceTransitionTypeEnum'
-          description: Condition that triggers this transition
+          description: 'Condition that triggers this transition. Sequential types fire on the source step''s lifecycle: `PREVIOUS_STEP_COMPLETES` (finished successfully), `PREVIOUS_STEP_RUNS` (reached any terminal state — completed, skipped, or failed), `PREVIOUS_STEP_SCHEDULED` (scheduled or terminal), `GIFT_DELIVERED` (gift delivered). Branching types fire on the prospect''s response: `LINKEDIN_REQUEST_ACCEPTED` / `LINKEDIN_REQUEST_NOT_ACCEPTED` (source must be an `auto_linkedin_connection` step) and `GIFT_ACCEPTED` / `GIFT_NOT_ACCEPTED` (source must be a `gifting_via_email` step). A non-branching transition between a LinkedIn step and an email step (either direction) crosses channels and must use `PREVIOUS_STEP_SCHEDULED` or `PREVIOUS_STEP_RUNS` — `PREVIOUS_STEP_COMPLETES` is rejected with a validation error.'
           examples:
           - PREVIOUS_STEP_COMPLETES
+          - PREVIOUS_STEP_SCHEDULED
         pre_check_time_unit:
           type: string
           title: Pre Check Time Unit
@@ -803,7 +881,7 @@ components:
           - type: integer
           - type: 'null'
           title: Pre Check Delay
-          description: A grace window before this transition's condition starts being evaluated, measured from when the source step completed (in `pre_check_time_unit`). Use it when the condition could be satisfied immediately but you want to wait first — e.g. after an email is sent, hold off 2 business days before checking for a reply, giving the prospect time to respond. If omitted or null, defaults to 3 business days — except on accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), where the default lands on `post_check_delay` and this stays null. Pass an explicit 0 to evaluate immediately as soon as the source step completes.
+          description: A grace window before this transition's condition starts being evaluated, measured from when the source step completed (in `pre_check_time_unit`). Use it when the condition could be satisfied immediately but you want to wait first — e.g. after an email is sent, hold off 2 business days before checking for a reply, giving the prospect time to respond. `null` or `0` evaluates as soon as the source step completes.
           examples:
           - 2
         post_check_time_unit:
@@ -816,26 +894,18 @@ components:
           - type: integer
           - type: 'null'
           title: Post Check Delay
-          description: A pacing delay after this transition's condition has passed, before the destination step is scheduled (in `post_check_time_unit`). Use it to avoid an instantaneous, robotic-feeling response to a prospect-driven event — e.g. wait a business day after a LinkedIn connection is accepted before pitching, or after a gift is delivered before the thank-you. For accepted-branch transitions (LINKEDIN_REQUEST_ACCEPTED, GIFT_ACCEPTED), if omitted or null this defaults to 3 business days; pass an explicit 0 to schedule the next step immediately. `null` or `0` schedules immediately for all other transition types.
+          description: A pacing delay after this transition's condition has passed, before the destination step is scheduled (in `post_check_time_unit`). Use it to avoid an instantaneous, robotic-feeling response to a prospect-driven event — e.g. wait a business day after a LinkedIn connection is accepted before pitching, or after a gift is delivered before the thank-you. `null` or `0` schedules the next step immediately.
           examples:
           - 1
         require_all:
           type: boolean
           title: Require All
-          description: Whether all conditions must be met (vs. any of them)
+          description: Whether all conditions must be met (vs. any of them). Must be `false` for `PREVIOUS_STEP_SCHEDULED` and `PREVIOUS_STEP_RUNS` transitions.
           default: true
       type: object
       required:
       - from_step_index
       - to_step_index
       - transition_type
-      title: SequenceTemplateTransitionRequest
-      description: A transition (ordering / branching rule) between two steps (write side).
-    CampaignStatusEnum:
-      type: string
-      enum:
-      - ACTIVE
-      - INACTIVE
-      - DRAFT
-      - ARCHIVED
-      title: CampaignStatusEnum
+      title: SequenceTemplateTransitionResponse
+      description: A transition (ordering / branching rule) between two steps in a template.

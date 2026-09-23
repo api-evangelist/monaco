@@ -1,21 +1,13 @@
 {
   "provider": "monaco",
   "sources": [
-    "monaco-accounts-api-openapi.yml",
-    "monaco-auth-api-openapi.yml",
-    "monaco-contacts-api-openapi.yml",
-    "monaco-meetings-api-openapi.yml",
-    "monaco-opportunities-api-openapi.yml",
-    "monaco-schemas-api-openapi.yml",
-    "monaco-sequence-templates-api-openapi.yml",
-    "monaco-sequences-api-openapi.yml",
-    "monaco-tags-api-openapi.yml",
-    "monaco-tasks-api-openapi.yml",
-    "monaco-users-api-openapi.yml"
+    "_original/monaco-openapi-original.json"
   ],
   "outputs": [
     "monaco-accounts-api-openapi.yml",
+    "monaco-audiences-api-openapi.yml",
     "monaco-auth-api-openapi.yml",
+    "monaco-campaigns-api-openapi.yml",
     "monaco-contacts-api-openapi.yml",
     "monaco-meetings-api-openapi.yml",
     "monaco-opportunities-api-openapi.yml",
@@ -29,6 +21,37 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "monaco-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "monaco-openapi-original.json: declared missing tag: Accounts",
+    "monaco-openapi-original.json: declared missing tag: Audiences",
+    "monaco-openapi-original.json: declared missing tag: Auth",
+    "monaco-openapi-original.json: declared missing tag: Campaigns",
+    "monaco-openapi-original.json: declared missing tag: Contacts",
+    "monaco-openapi-original.json: declared missing tag: Meetings",
+    "monaco-openapi-original.json: declared missing tag: Opportunities",
+    "monaco-openapi-original.json: declared missing tag: Schemas",
+    "monaco-openapi-original.json: declared missing tag: Sequence Templates",
+    "monaco-openapi-original.json: declared missing tag: Sequences",
+    "monaco-openapi-original.json: declared missing tag: Tags",
+    "monaco-openapi-original.json: declared missing tag: Tasks",
+    "monaco-openapi-original.json: declared missing tag: Users",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "monaco-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-audiences-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-meetings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-opportunities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-schemas-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-sequence-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-sequences-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "monaco-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
