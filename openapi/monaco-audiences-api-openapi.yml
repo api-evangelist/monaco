@@ -284,90 +284,6 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    PublicItemResponse_AudienceResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/AudienceResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[AudienceResponse]
-    AudienceContactsRequest:
-      properties:
-        contact_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          maxItems: 10000
-          minItems: 1
-          title: Contact Ids
-          description: IDs of the contacts to add or remove
-      type: object
-      required:
-      - contact_ids
-      title: AudienceContactsRequest
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    AudienceListRequest:
-      properties:
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          description: Page number (1-indexed)
-          default: 1
-          examples:
-          - 1
-        page_size:
-          type: integer
-          maximum: 500.0
-          minimum: 1.0
-          title: Page Size
-          description: Number of results per page
-          default: 500
-          examples:
-          - 500
-      type: object
-      title: AudienceListRequest
-      description: 'Pagination for the audience list. The default page size covers every
-
-        current org, so body-less calls keep returning all audiences in one page;
-
-        filters and sort follow separately.'
-    PublicListResponse_ContactResponse_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/ContactResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      - pagination
-      title: PublicListResponse[ContactResponse]
     ErrorDetail:
       properties:
         code:
@@ -387,13 +303,58 @@ components:
       - code
       - message
       title: ErrorDetail
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
+    AudienceContactsRequest:
+      properties:
+        contact_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 10000
+          minItems: 1
+          title: Contact Ids
+          description: IDs of the contacts to add or remove
+      type: object
+      required:
+      - contact_ids
+      title: AudienceContactsRequest
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PublicListResponse_ContactResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ContactResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[ContactResponse]
+    api__public_api__schemas__contacts__ScoringInfo:
+      properties:
+        heat_score:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Heat Score
+          description: Heat score tier
+          examples:
+          - Hot
+      type: object
+      title: ScoringInfo
     ContactResponse:
       properties:
         id:
@@ -574,22 +535,39 @@ components:
       - updated_at
       title: ContactResponse
       description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
-    AudienceContactsResponse:
+    PaginationInfo:
       properties:
-        audience_id:
-          type: string
-          title: Audience Id
-          description: ID of the audience that was modified
-        failures:
-          items:
-            $ref: '#/components/schemas/AudienceContactFailureGroup'
-          type: array
-          title: Failures
-          description: Contacts that exist but could not be added or removed, grouped by reason
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
       type: object
       required:
-      - audience_id
-      title: AudienceContactsResponse
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
     CreateAudienceRequest:
       properties:
         name:
@@ -643,58 +621,82 @@ components:
       required:
       - name
       title: CreateAudienceRequest
-    FilterRule:
-      properties:
-        field:
-          type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      additionalProperties: false
-      type: object
-      required:
-      - field
-      - condition
-      title: FilterRule
-    PaginationInfo:
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    AudienceListRequest:
       properties:
         page:
           type: integer
+          minimum: 1.0
           title: Page
-          description: Current page number
+          description: Page number (1-indexed)
+          default: 1
           examples:
           - 1
         page_size:
           type: integer
+          maximum: 500.0
+          minimum: 1.0
           title: Page Size
           description: Number of results per page
+          default: 500
           examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
+          - 500
+      type: object
+      title: AudienceListRequest
+      description: 'Pagination for the audience list. The default page size covers every
+
+        current org, so body-less calls keep returning all audiences in one page;
+
+        filters and sort follow separately.'
+    PublicListResponse_AudienceResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/AudienceResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
+      - data
+      - pagination
+      title: PublicListResponse[AudienceResponse]
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    AudienceContactFailureGroup:
+      properties:
+        reason:
+          type: string
+          title: Reason
+          description: Reason code for the failure
+          examples:
+          - not_in_audience
+        contact_ids:
+          items:
+            type: string
+          type: array
+          title: Contact Ids
+          description: Contact IDs that failed for this reason
+      type: object
+      required:
+      - reason
+      - contact_ids
+      title: AudienceContactFailureGroup
     FilterExpression:
       properties:
         operator:
@@ -719,6 +721,35 @@ components:
         nested FilterExpression objects (branch nodes), allowing for arbitrarily
 
         nested filter structures.'
+    PublicItemResponse_AudienceResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AudienceResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[AudienceResponse]
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
     AudienceResponse:
       properties:
         id:
@@ -781,50 +812,19 @@ components:
       required:
       - data
       title: PublicItemResponse[AudienceContactsResponse]
-    api__public_api__schemas__contacts__ScoringInfo:
+    AudienceContactsResponse:
       properties:
-        heat_score:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Heat Score
-          description: Heat score tier
-          examples:
-          - Hot
-      type: object
-      title: ScoringInfo
-    AudienceContactFailureGroup:
-      properties:
-        reason:
+        audience_id:
           type: string
-          title: Reason
-          description: Reason code for the failure
-          examples:
-          - not_in_audience
-        contact_ids:
+          title: Audience Id
+          description: ID of the audience that was modified
+        failures:
           items:
-            type: string
+            $ref: '#/components/schemas/AudienceContactFailureGroup'
           type: array
-          title: Contact Ids
-          description: Contact IDs that failed for this reason
+          title: Failures
+          description: Contacts that exist but could not be added or removed, grouped by reason
       type: object
       required:
-      - reason
-      - contact_ids
-      title: AudienceContactFailureGroup
-    PublicListResponse_AudienceResponse_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/AudienceResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      - pagination
-      title: PublicListResponse[AudienceResponse]
+      - audience_id
+      title: AudienceContactsResponse

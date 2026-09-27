@@ -378,39 +378,16 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    PublicListResponse_ContactResponse_:
+    PublicItemResponse_ContactDetailResponse_:
       properties:
         data:
-          items:
-            $ref: '#/components/schemas/ContactResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
+          $ref: '#/components/schemas/ContactDetailResponse'
         meta:
           $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
       - data
-      - pagination
-      title: PublicListResponse[ContactResponse]
+      title: PublicItemResponse[ContactDetailResponse]
     ErrorDetail:
       properties:
         code:
@@ -430,23 +407,15 @@ components:
       - code
       - message
       title: ErrorDetail
-    PublicItemResponse_ContactDetailResponse_:
+    ResponseMeta:
       properties:
-        data:
-          $ref: '#/components/schemas/ContactDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
       type: object
-      required:
-      - data
-      title: PublicItemResponse[ContactDetailResponse]
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
+      title: ResponseMeta
     ContactUpdateRequest:
       properties:
         first_name:
@@ -532,186 +501,6 @@ components:
       type: object
       title: ContactUpdateRequest
       description: Request body for updating a contact via PATCH.
-    ContactResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the contact
-          examples:
-          - con_abc123
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-          description: ID of the associated account
-          examples:
-          - acc_def456
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the contact
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the contact
-          examples:
-          - Smith
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the contact
-          examples:
-          - jane@acme.com
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Job title of the contact
-          examples:
-          - VP of Engineering
-        phone_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Phone Number
-          description: Phone number of the contact
-          examples:
-          - +1-415-555-0132
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-          description: LinkedIn profile URL
-          examples:
-          - https://linkedin.com/in/janesmith
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location
-          description: Location of the contact
-          examples:
-          - San Francisco, CA
-        source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source
-          description: Source from which the contact was added
-          examples:
-          - linkedin
-        do_not_contact:
-          type: boolean
-          title: Do Not Contact
-          description: Whether the contact has opted out of outreach
-          default: false
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the contact
-          examples:
-          - Met at SaaStr 2025
-        scoring:
-          anyOf:
-          - $ref: '#/components/schemas/api__public_api__schemas__contacts__ScoringInfo'
-          - type: 'null'
-          description: Contact scoring information
-        tags:
-          items:
-            type: string
-          type: array
-          title: Tags
-          description: List of tag names associated with the contact
-          examples:
-          - - Interested
-            - Decision Maker
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Date and time the contact was created
-          examples:
-          - '2025-06-15T10:30:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: Date and time the contact was last updated
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_activity_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Activity At
-          description: Date and time of the contact's most recent activity (inbound or outbound)
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_activity_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Activity Type
-          description: Type of the contact's most recent activity
-          examples:
-          - outbound_email
-        last_outbound_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Outbound At
-          description: Date and time of the most recent outbound interaction with the contact
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_outbound_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Outbound Type
-          description: Type of the most recent outbound interaction with the contact
-          examples:
-          - email
-        last_inbound_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Inbound At
-          description: Date and time of the most recent inbound interaction from the contact
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_inbound_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Inbound Type
-          description: Type of the most recent inbound interaction from the contact
-          examples:
-          - email
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - created_at
-      - updated_at
-      title: ContactResponse
-      description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
     ContactDetailResponse:
       properties:
         id:
@@ -905,6 +694,297 @@ components:
       - updated_at
       title: ContactDetailResponse
       description: Single-resource contact response, with heat score signals and custom field reasoning.
+    PublicItemResponse_ContactResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ContactResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[ContactResponse]
+    ScoreExplanation:
+      properties:
+        explanations:
+          items:
+            $ref: '#/components/schemas/ScoreSignalExplanation'
+          type: array
+          title: Explanations
+          description: Behavioral and intent signals behind the score
+        firmographic:
+          items:
+            $ref: '#/components/schemas/ScoreSignalExplanation'
+          type: array
+          title: Firmographic
+          description: Firmographic signals behind the score
+      type: object
+      title: ScoreExplanation
+    PublicListResponse_ContactResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ContactResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[ContactResponse]
+    api__public_api__schemas__contacts__ScoringInfo:
+      properties:
+        heat_score:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Heat Score
+          description: Heat score tier
+          examples:
+          - Hot
+      type: object
+      title: ScoringInfo
+    ContactResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the contact
+          examples:
+          - con_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_def456
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact
+          examples:
+          - jane@acme.com
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-415-555-0132
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL
+          examples:
+          - https://linkedin.com/in/janesmith
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: Source from which the contact was added
+          examples:
+          - linkedin
+        do_not_contact:
+          type: boolean
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+          default: false
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the contact
+          examples:
+          - Met at SaaStr 2025
+        scoring:
+          anyOf:
+          - $ref: '#/components/schemas/api__public_api__schemas__contacts__ScoringInfo'
+          - type: 'null'
+          description: Contact scoring information
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: List of tag names associated with the contact
+          examples:
+          - - Interested
+            - Decision Maker
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the contact was created
+          examples:
+          - '2025-06-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the contact was last updated
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Activity At
+          description: Date and time of the contact's most recent activity (inbound or outbound)
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Activity Type
+          description: Type of the contact's most recent activity
+          examples:
+          - outbound_email
+        last_outbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Outbound At
+          description: Date and time of the most recent outbound interaction with the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_outbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Outbound Type
+          description: Type of the most recent outbound interaction with the contact
+          examples:
+          - email
+        last_inbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Inbound At
+          description: Date and time of the most recent inbound interaction from the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_inbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Inbound Type
+          description: Type of the most recent inbound interaction from the contact
+          examples:
+          - email
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      title: ContactResponse
+      description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    CustomFieldCitation:
+      properties:
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+          description: Source URL for the citation
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Title of the cited source
+        excerpts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Excerpts
+          description: Relevant excerpts from the cited source
+      type: object
+      title: CustomFieldCitation
     ContactCreateRequest:
       properties:
         email:
@@ -1000,106 +1080,21 @@ components:
 
 
         Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
-    FilterRule:
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    PublicErrorResponse:
       properties:
-        field:
-          type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      additionalProperties: false
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
       type: object
       required:
-      - field
-      - condition
-      title: FilterRule
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
-    FilterExpression:
-      properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      additionalProperties: false
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
-    CustomFieldCitation:
-      properties:
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-          description: Source URL for the citation
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Title of the cited source
-        excerpts:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Excerpts
-          description: Relevant excerpts from the cited source
-      type: object
-      title: CustomFieldCitation
+      - error
+      title: PublicErrorResponse
     ContactListRequest:
       properties:
         filters:
@@ -1155,44 +1150,68 @@ components:
       additionalProperties: false
       type: object
       title: ContactListRequest
-    ScoreExplanation:
+    FilterExpression:
       properties:
-        explanations:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
           items:
-            $ref: '#/components/schemas/ScoreSignalExplanation'
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
           type: array
-          title: Explanations
-          description: Behavioral and intent signals behind the score
-        firmographic:
-          items:
-            $ref: '#/components/schemas/ScoreSignalExplanation'
-          type: array
-          title: Firmographic
-          description: Firmographic signals behind the score
+          title: Filters
+          default: []
+      additionalProperties: false
       type: object
-      title: ScoreExplanation
-    PublicItemResponse_ContactResponse_:
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
+    FilterRule:
       properties:
-        data:
-          $ref: '#/components/schemas/ContactResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
       type: object
       required:
-      - data
-      title: PublicItemResponse[ContactResponse]
-    api__public_api__schemas__contacts__ScoringInfo:
+      - field
+      - condition
+      title: FilterRule
+    ScoreSignalExplanation:
       properties:
-        heat_score:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Heat Score
-          description: Heat score tier
+        signal_type:
+          type: string
+          title: Signal Type
+          description: Type of signal contributing to the score
           examples:
-          - Hot
+          - web_visit
+        signal_point:
+          type: string
+          title: Signal Point
+          description: Human-readable explanation of the signal's contribution
+          examples:
+          - Visited pricing page 3 times in the last 7 days
       type: object
-      title: ScoringInfo
+      required:
+      - signal_type
+      - signal_point
+      title: ScoreSignalExplanation
     CustomFieldExplanation:
       properties:
         title:
@@ -1224,22 +1243,3 @@ components:
       - title
       - body
       title: CustomFieldExplanation
-    ScoreSignalExplanation:
-      properties:
-        signal_type:
-          type: string
-          title: Signal Type
-          description: Type of signal contributing to the score
-          examples:
-          - web_visit
-        signal_point:
-          type: string
-          title: Signal Point
-          description: Human-readable explanation of the signal's contribution
-          examples:
-          - Visited pricing page 3 times in the last 7 days
-      type: object
-      required:
-      - signal_type
-      - signal_point
-      title: ScoreSignalExplanation

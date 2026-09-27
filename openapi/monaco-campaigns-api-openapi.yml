@@ -437,63 +437,16 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    ResponseMeta:
+    PublicItemResponse_CampaignDetailResponse_:
       properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    EnrollFailureReason:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Failure reason code (e.g. contact_has_active_sequence,)
-          examples:
-          - contact_has_active_sequence
-        description:
-          type: string
-          title: Description
-          description: Human-readable description of the failure reason
-          examples:
-          - existing active sequence
-        count:
-          type: integer
-          title: Count
-          description: Number of contacts that hit this failure
-          examples:
-          - 1
+        data:
+          $ref: '#/components/schemas/CampaignDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - code
-      - description
-      - count
-      title: EnrollFailureReason
-      description: A categorized enrollment failure with the count of affected contacts.
-    SenderPercentage:
-      properties:
-        sender_id:
-          type: string
-          format: uuid
-          title: Sender Id
-          description: ID of the sending user
-          examples:
-          - 550e8400-e29b-41d4-a716-446655440001
-        percentage:
-          type: integer
-          minimum: 0.0
-          title: Percentage
-          description: Share of sends routed to this sender; must be non-negative
-          examples:
-          - 50
-      type: object
-      required:
-      - sender_id
-      - percentage
-      title: SenderPercentage
+      - data
+      title: PublicItemResponse[CampaignDetailResponse]
     PublicRulesOfEngagement-Output:
       properties:
         do_not_contact:
@@ -544,186 +497,6 @@ components:
         Only the rules you include are overridden, rules you omit keep
 
         their org default.'
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    EnrollContactsInCampaignRequest:
-      properties:
-        audience_name:
-          type: string
-          maxLength: 255
-          minLength: 1
-          title: Audience Name
-          description: Name for the new audience created to hold these contacts; pick something short and relevant to the enrollment. Must be unique within the organization — a duplicate name is rejected, so vary it and retry.
-          examples:
-          - Q3 Enterprise Outbound — July batch
-        contact_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          maxItems: 10000
-          minItems: 1
-          title: Contact Ids
-          description: IDs of the contacts to enroll in the campaign
-          examples:
-          - - 550e8400-e29b-41d4-a716-446655440020
-      type: object
-      required:
-      - audience_name
-      - contact_ids
-      title: EnrollContactsInCampaignRequest
-    PublicStopAndDismissRule:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          description: Whether to stop and dismiss a contact's active sequences when its account transitions into one of the trigger statuses
-          examples:
-          - true
-        statuses:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/AccountStatusEnum'
-            type: array
-          - type: 'null'
-          title: Statuses
-          description: Account statuses whose transition triggers stop-and-dismiss; omit to inherit the org's default set
-          examples:
-          - - OPPORTUNITY
-            - CUSTOMER
-      type: object
-      required:
-      - enabled
-      title: PublicStopAndDismissRule
-      description: 'Stop and dismiss a contact''s active sequences when its account transitions
-
-        into one of the configured statuses.'
-    PublicAutopilotMode:
-      type: string
-      enum:
-      - autopilot
-      - supervised
-      - hybrid
-      title: PublicAutopilotMode
-    PublicToggleRule:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          description: Whether this rule is enforced for the campaign
-          examples:
-          - true
-      type: object
-      required:
-      - enabled
-      title: PublicToggleRule
-      description: A rule controlled by a single on/off switch.
-    AccountStatusEnum:
-      type: string
-      enum:
-      - NEW
-      - PROSPECTING
-      - OPPORTUNITY
-      - CUSTOMER
-      - DISQUALIFIED
-      - NURTURE
-      - INBOUND
-      - CHURNED
-      title: AccountStatusEnum
-      description: 'Represents the status of an account in the sales process.
-
-        These are suggested values, but the field accepts any string for flexibility.'
-    CampaignResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the campaign
-          examples:
-          - cmp_abc123
-        name:
-          type: string
-          title: Name
-          description: Name of the campaign
-          examples:
-          - Q3 Enterprise Outbound
-        status:
-          $ref: '#/components/schemas/CampaignStatus'
-          description: Current lifecycle status of the campaign
-          examples:
-          - active
-        prioritized:
-          type: boolean
-          title: Prioritized
-          description: Whether this campaign takes priority over non-prioritized campaigns
-          examples:
-          - false
-        end_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: End Date
-          description: Date the campaign stops enrolling
-          examples:
-          - '2026-12-31'
-        template_id:
-          type: string
-          title: Template Id
-          description: ID of the template enrolled contacts are placed on
-          examples:
-          - seqt_789ghi
-        template_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Template Name
-          description: Title of the template
-          examples:
-          - Enterprise Onboarding
-        audiences:
-          items:
-            $ref: '#/components/schemas/CampaignAudienceRef'
-          type: array
-          title: Audiences
-          description: Audiences enrolled in this campaign
-        enrollment_status:
-          $ref: '#/components/schemas/PublicEnrollmentStatus'
-          description: Progress of the async task enrolling this campaign's audiences
-          examples:
-          - completed
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Date and time the campaign was created
-          examples:
-          - '2026-01-15T10:30:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: Date and time the campaign was last updated
-          examples:
-          - '2026-05-10T14:22:00Z'
-      type: object
-      required:
-      - id
-      - name
-      - status
-      - prioritized
-      - template_id
-      - enrollment_status
-      - created_at
-      - updated_at
-      title: CampaignResponse
-      description: Campaign summary, as returned by `list_campaigns`.
     ErrorDetail:
       properties:
         code:
@@ -743,150 +516,37 @@ components:
       - code
       - message
       title: ErrorDetail
-    CampaignStatus:
+    AccountStatusEnum:
       type: string
       enum:
-      - active
-      - paused
-      - completed
-      - draft
-      - archived
-      title: CampaignStatus
-      description: Lifecycle status of a campaign.
-    PublicAutopilotSettings:
-      properties:
-        sender_rates:
-          items:
-            $ref: '#/components/schemas/SenderAutopilotRate'
-          type: array
-          title: Sender Rates
-      type: object
-      title: PublicAutopilotSettings
-      description: 'Senders on autopilot for this campaign and their daily send-release cap.
+      - NEW
+      - PROSPECTING
+      - OPPORTUNITY
+      - CUSTOMER
+      - DISQUALIFIED
+      - NURTURE
+      - INBOUND
+      - CHURNED
+      title: AccountStatusEnum
+      description: 'Represents the status of an account in the sales process.
 
-
-        Senders omitted here (but present in `distribution`) require manual approval
-
-        before each send starts. An empty list moves every sender to supervised.'
-    PublicMaxContactsInSequenceRule:
+        These are suggested values, but the field accepts any string for flexibility.'
+    ResponseMeta:
       properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          description: Whether the cap is enforced
-          examples:
-          - true
-        max_contacts:
-          type: integer
-          title: Max Contacts
-          description: Maximum contacts per account allowed in sequences simultaneously
-          default: 5
-          examples:
-          - 3
-      type: object
-      required:
-      - enabled
-      title: PublicMaxContactsInSequenceRule
-      description: Cap how many contacts from one account can be active in sequences at once.
-    PercentageDistribution:
-      properties:
-        mode:
+        timestamp:
           type: string
-          const: percentage
-          title: Mode
-          description: Distribution mode discriminator
-          examples:
-          - percentage
-        sender_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          minItems: 1
-          title: Sender Ids
-          description: IDs of the users sending on this campaign
-          examples:
-          - - 550e8400-e29b-41d4-a716-446655440001
-        percentages:
-          items:
-            $ref: '#/components/schemas/SenderPercentage'
-          type: array
-          title: Percentages
-          description: Per-sender percentages; must cover every sender_id and sum to 100
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
       type: object
-      required:
-      - mode
-      - sender_ids
-      - percentages
-      title: PercentageDistribution
-      description: Split sends across named senders by fixed percentages that sum to 100.
-    PublicCooldownRule:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          description: Whether the cooldown is enforced
-          examples:
-          - true
-        days:
-          type: integer
-          title: Days
-          description: Length of the cooldown window in days
-          default: 90
-          examples:
-          - 90
-      type: object
-      required:
-      - enabled
-      title: PublicCooldownRule
-      description: Suppress re-contacting the same contact or account within a cooldown window.
-    SenderAutopilotRate:
-      properties:
-        sender_id:
-          type: string
-          format: uuid
-          title: Sender Id
-          description: ID of the sending user
-          examples:
-          - 550e8400-e29b-41d4-a716-446655440001
-        daily_rate_target:
-          type: integer
-          exclusiveMinimum: 0.0
-          title: Daily Rate Target
-          description: Daily cap on auto-released sends for this sender; must be positive
-          examples:
-          - 25
-      type: object
-      required:
-      - sender_id
-      - daily_rate_target
-      title: SenderAutopilotRate
-    LogicalOperatorEnum:
+      title: ResponseMeta
+    PublicAutopilotMode:
       type: string
       enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    PublicItemResponse_CampaignDetailResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/CampaignDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[CampaignDetailResponse]
-    PublicEnrollmentStatus:
-      type: string
-      enum:
-      - pending
-      - running
-      - completed
-      - failed
-      title: PublicEnrollmentStatus
-      description: Progress of the async audience-enrollment task behind create/update.
+      - autopilot
+      - supervised
+      - hybrid
+      title: PublicAutopilotMode
     PublicRulesOfEngagement-Input:
       properties:
         do_not_contact:
@@ -937,6 +597,27 @@ components:
         Only the rules you include are overridden, rules you omit keep
 
         their org default.'
+    SenderAutopilotRate:
+      properties:
+        sender_id:
+          type: string
+          format: uuid
+          title: Sender Id
+          description: ID of the sending user
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440001
+        daily_rate_target:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Daily Rate Target
+          description: Daily cap on auto-released sends for this sender; must be positive
+          examples:
+          - 25
+      type: object
+      required:
+      - sender_id
+      - daily_rate_target
+      title: SenderAutopilotRate
     PublicListResponse_CampaignResponse_:
       properties:
         data:
@@ -953,35 +634,36 @@ components:
       - data
       - pagination
       title: PublicListResponse[CampaignResponse]
-    FilterRule:
+    CampaignAudienceRef:
       properties:
-        field:
+        id:
           type: string
-          title: Field
-        condition:
+          title: Id
+          description: Unique identifier for the audience
+          examples:
+          - aud_abc123
+        name:
           type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      additionalProperties: false
+          title: Name
+          description: Name of the audience
+          examples:
+          - Enterprise West
       type: object
       required:
-      - field
-      - condition
-      title: FilterRule
-    PublicItemResponse_EnrollContactsInCampaignResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/EnrollContactsInCampaignResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[EnrollContactsInCampaignResponse]
+      - id
+      - name
+      title: CampaignAudienceRef
+      description: An audience attached to a campaign.
+    CampaignStatus:
+      type: string
+      enum:
+      - active
+      - paused
+      - completed
+      - draft
+      - archived
+      title: CampaignStatus
+      description: Lifecycle status of a campaign.
     PaginationInfo:
       properties:
         page:
@@ -1015,174 +697,43 @@ components:
       - total_count
       - total_pages
       title: PaginationInfo
-    FilterExpression:
+    PublicMaxContactsInSequenceRule:
       properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      additionalProperties: false
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
-    UpdateCampaignRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            minLength: 1
-          - type: 'null'
-          title: Name
-          description: New name for the campaign; must be unique within the organization
+        enabled:
+          type: boolean
+          title: Enabled
+          description: Whether the cap is enforced
           examples:
-          - Q3 Enterprise Outbound (revised)
-        end_date:
-          anyOf:
-          - type: string
-            format: date
-          - type: 'null'
-          title: End Date
-          description: New end date; must not be in the past
+          - true
+        max_contacts:
+          type: integer
+          title: Max Contacts
+          description: Maximum contacts per account allowed in sequences simultaneously
+          default: 5
           examples:
-          - '2026-12-31'
-        audience_ids:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Audience Ids
-          description: Deprecated — use `add_audiences_to_campaign` / `remove_audiences_from_campaign` instead. The complete set of audiences for this campaign; REPLACES the current set, and any audience you omit is detached (tearing down in-flight sequences for its contacts).
-          deprecated: true
-          examples:
-          - - 550e8400-e29b-41d4-a716-446655440010
-        distribution:
-          anyOf:
-          - oneOf:
-            - $ref: '#/components/schemas/PercentageDistribution'
-            - $ref: '#/components/schemas/AccountOwnerDistribution'
-            discriminator:
-              propertyName: mode
-              mapping:
-                account_owner: '#/components/schemas/AccountOwnerDistribution'
-                percentage: '#/components/schemas/PercentageDistribution'
-          - type: 'null'
-          title: Distribution
-          description: Replacement send distribution. Only reassigns contacts who haven't been sent to yet (queued/pending review); contacts already receiving sends keep their original sender permanently — this never reassigns in place.
-        rules_of_engagement:
-          anyOf:
-          - $ref: '#/components/schemas/PublicRulesOfEngagement-Input'
-          - type: 'null'
-          description: Per-rule overrides on the org's default rules of engagement
-          examples:
-          - max_contacts_in_sequence:
-              enabled: true
-              max_contacts: 3
-        autopilot_settings:
-          anyOf:
-          - $ref: '#/components/schemas/PublicAutopilotSettings'
-          - type: 'null'
-          description: Replacement autopilot roster. Senders listed here auto-send up to their daily cap; senders in `distribution` but omitted here require manual approval per send. An empty `sender_rates` list moves every sender to supervised.
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/PublicCampaignUpdateStatusEnum'
-          - type: 'null'
-          description: Target lifecycle status. `paused` halts new sends, `active` resumes a paused campaign, `completed` stops all of its sequences (terminal), and `archived` permanently stops the campaign and halts all of its active/paused sequences — terminal and cannot be reversed via the public API.
-          examples:
-          - paused
-      type: object
-      title: UpdateCampaignRequest
-      description: 'Content edits and status transitions for a campaign.
-
-
-        Any combination of content fields may be supplied. When ``status`` is set it
-
-        is routed to the matching lifecycle transition (pause / resume / complete / archive).'
-    CampaignAudienceRef:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the audience
-          examples:
-          - aud_abc123
-        name:
-          type: string
-          title: Name
-          description: Name of the audience
-          examples:
-          - Enterprise West
+          - 3
       type: object
       required:
-      - id
-      - name
-      title: CampaignAudienceRef
-      description: An audience attached to a campaign.
-    PublicListRequest:
+      - enabled
+      title: PublicMaxContactsInSequenceRule
+      description: Cap how many contacts from one account can be active in sequences at once.
+    PublicItemResponse_EnrollContactsInCampaignResponse_:
       properties:
-        filters:
-          oneOf:
-          - items:
-              $ref: '#/components/schemas/FilterRule'
-            type: array
-          - $ref: '#/components/schemas/FilterExpression'
-          title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
-          examples:
-          - - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-          - filters:
-            - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-            - filters:
-              - condition: less_than
-                field: created_at
-                value: '2026-07-01'
-            operator: and
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          description: Page number (1-indexed)
-          default: 1
-          examples:
-          - 1
-        page_size:
-          type: integer
-          maximum: 500.0
-          minimum: 1.0
-          title: Page Size
-          description: Number of results per page
-          default: 50
-          examples:
-          - 25
-        sort:
-          type: string
-          title: Sort
-          description: Field to sort by. Prefix with '-' for descending order.
-          default: -created_at
-          examples:
-          - -created_at
-      additionalProperties: false
+        data:
+          $ref: '#/components/schemas/EnrollContactsInCampaignResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
-      title: PublicListRequest
+      required:
+      - data
+      title: PublicItemResponse[EnrollContactsInCampaignResponse]
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
     CreateCampaignRequest:
       properties:
         name:
@@ -1257,58 +808,6 @@ components:
       - audience_ids
       - distribution
       title: CreateCampaignRequest
-    AccountOwnerDistribution:
-      properties:
-        mode:
-          type: string
-          const: account_owner
-          title: Mode
-          description: Distribution mode discriminator
-          examples:
-          - account_owner
-        sender_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          minItems: 1
-          title: Sender Ids
-          description: IDs of the users eligible to send on this campaign; a contact is routed to its account owner only when the owner appears in this list
-          examples:
-          - - 550e8400-e29b-41d4-a716-446655440001
-        fallback_sender_id:
-          type: string
-          format: uuid
-          title: Fallback Sender Id
-          description: Sender used whenever a contact's account is unassigned or its owner is not in `sender_ids`. Required for `account_owner` mode.
-          examples:
-          - 550e8400-e29b-41d4-a716-446655440002
-      type: object
-      required:
-      - mode
-      - sender_ids
-      - fallback_sender_id
-      title: AccountOwnerDistribution
-      description: 'Route each contact''s sends to the owner of its account.
-
-
-        A contact''s sends go to its account owner when that owner is one of
-
-        ``sender_ids``; otherwise they fall back to ``fallback_sender_id``.'
-    PublicCampaignUpdateStatusEnum:
-      type: string
-      enum:
-      - active
-      - paused
-      - completed
-      - archived
-      title: PublicCampaignUpdateStatusEnum
-      description: 'Lifecycle statuses settable via the public API''s update-campaign endpoint.
-
-
-        Subset of `campaigns.models._campaign_enums.CampaignStatus` — excludes
-
-        `draft` (internal-only authoring state).'
     CampaignDetailResponse:
       properties:
         id:
@@ -1424,6 +923,398 @@ components:
       description: 'Full campaign resource, as returned by `get_campaign`, `create_campaign`,
 
         and `update_campaign`.'
+    PublicCampaignUpdateStatusEnum:
+      type: string
+      enum:
+      - active
+      - paused
+      - completed
+      - archived
+      title: PublicCampaignUpdateStatusEnum
+      description: 'Lifecycle statuses settable via the public API''s update-campaign endpoint.
+
+
+        Subset of `campaigns.models._campaign_enums.CampaignStatus` — excludes
+
+        `draft` (internal-only authoring state).'
+    PublicStopAndDismissRule:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          description: Whether to stop and dismiss a contact's active sequences when its account transitions into one of the trigger statuses
+          examples:
+          - true
+        statuses:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/AccountStatusEnum'
+            type: array
+          - type: 'null'
+          title: Statuses
+          description: Account statuses whose transition triggers stop-and-dismiss; omit to inherit the org's default set
+          examples:
+          - - OPPORTUNITY
+            - CUSTOMER
+      type: object
+      required:
+      - enabled
+      title: PublicStopAndDismissRule
+      description: 'Stop and dismiss a contact''s active sequences when its account transitions
+
+        into one of the configured statuses.'
+    PercentageDistribution:
+      properties:
+        mode:
+          type: string
+          const: percentage
+          title: Mode
+          description: Distribution mode discriminator
+          examples:
+          - percentage
+        sender_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          minItems: 1
+          title: Sender Ids
+          description: IDs of the users sending on this campaign
+          examples:
+          - - 550e8400-e29b-41d4-a716-446655440001
+        percentages:
+          items:
+            $ref: '#/components/schemas/SenderPercentage'
+          type: array
+          title: Percentages
+          description: Per-sender percentages; must cover every sender_id and sum to 100
+      type: object
+      required:
+      - mode
+      - sender_ids
+      - percentages
+      title: PercentageDistribution
+      description: Split sends across named senders by fixed percentages that sum to 100.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    PublicToggleRule:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          description: Whether this rule is enforced for the campaign
+          examples:
+          - true
+      type: object
+      required:
+      - enabled
+      title: PublicToggleRule
+      description: A rule controlled by a single on/off switch.
+    EnrollContactsInCampaignRequest:
+      properties:
+        audience_name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: Audience Name
+          description: Name for the new audience created to hold these contacts; pick something short and relevant to the enrollment. Must be unique within the organization — a duplicate name is rejected, so vary it and retry.
+          examples:
+          - Q3 Enterprise Outbound — July batch
+        contact_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          maxItems: 10000
+          minItems: 1
+          title: Contact Ids
+          description: IDs of the contacts to enroll in the campaign
+          examples:
+          - - 550e8400-e29b-41d4-a716-446655440020
+      type: object
+      required:
+      - audience_name
+      - contact_ids
+      title: EnrollContactsInCampaignRequest
+    PublicCooldownRule:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          description: Whether the cooldown is enforced
+          examples:
+          - true
+        days:
+          type: integer
+          title: Days
+          description: Length of the cooldown window in days
+          default: 90
+          examples:
+          - 90
+      type: object
+      required:
+      - enabled
+      title: PublicCooldownRule
+      description: Suppress re-contacting the same contact or account within a cooldown window.
+    EnrollFailureReason:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Failure reason code (e.g. contact_has_active_sequence,)
+          examples:
+          - contact_has_active_sequence
+        description:
+          type: string
+          title: Description
+          description: Human-readable description of the failure reason
+          examples:
+          - existing active sequence
+        count:
+          type: integer
+          title: Count
+          description: Number of contacts that hit this failure
+          examples:
+          - 1
+      type: object
+      required:
+      - code
+      - description
+      - count
+      title: EnrollFailureReason
+      description: A categorized enrollment failure with the count of affected contacts.
+    UpdateCampaignRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Name
+          description: New name for the campaign; must be unique within the organization
+          examples:
+          - Q3 Enterprise Outbound (revised)
+        end_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: End Date
+          description: New end date; must not be in the past
+          examples:
+          - '2026-12-31'
+        audience_ids:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Audience Ids
+          description: Deprecated — use `add_audiences_to_campaign` / `remove_audiences_from_campaign` instead. The complete set of audiences for this campaign; REPLACES the current set, and any audience you omit is detached (tearing down in-flight sequences for its contacts).
+          deprecated: true
+          examples:
+          - - 550e8400-e29b-41d4-a716-446655440010
+        distribution:
+          anyOf:
+          - oneOf:
+            - $ref: '#/components/schemas/PercentageDistribution'
+            - $ref: '#/components/schemas/AccountOwnerDistribution'
+            discriminator:
+              propertyName: mode
+              mapping:
+                account_owner: '#/components/schemas/AccountOwnerDistribution'
+                percentage: '#/components/schemas/PercentageDistribution'
+          - type: 'null'
+          title: Distribution
+          description: Replacement send distribution. Only reassigns contacts who haven't been sent to yet (queued/pending review); contacts already receiving sends keep their original sender permanently — this never reassigns in place.
+        rules_of_engagement:
+          anyOf:
+          - $ref: '#/components/schemas/PublicRulesOfEngagement-Input'
+          - type: 'null'
+          description: Per-rule overrides on the org's default rules of engagement
+          examples:
+          - max_contacts_in_sequence:
+              enabled: true
+              max_contacts: 3
+        autopilot_settings:
+          anyOf:
+          - $ref: '#/components/schemas/PublicAutopilotSettings'
+          - type: 'null'
+          description: Replacement autopilot roster. Senders listed here auto-send up to their daily cap; senders in `distribution` but omitted here require manual approval per send. An empty `sender_rates` list moves every sender to supervised.
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/PublicCampaignUpdateStatusEnum'
+          - type: 'null'
+          description: Target lifecycle status. `paused` halts new sends, `active` resumes a paused campaign, `completed` stops all of its sequences (terminal), and `archived` permanently stops the campaign and halts all of its active/paused sequences — terminal and cannot be reversed via the public API.
+          examples:
+          - paused
+      type: object
+      title: UpdateCampaignRequest
+      description: 'Content edits and status transitions for a campaign.
+
+
+        Any combination of content fields may be supplied. When ``status`` is set it
+
+        is routed to the matching lifecycle transition (pause / resume / complete / archive).'
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
+    AccountOwnerDistribution:
+      properties:
+        mode:
+          type: string
+          const: account_owner
+          title: Mode
+          description: Distribution mode discriminator
+          examples:
+          - account_owner
+        sender_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          minItems: 1
+          title: Sender Ids
+          description: IDs of the users eligible to send on this campaign; a contact is routed to its account owner only when the owner appears in this list
+          examples:
+          - - 550e8400-e29b-41d4-a716-446655440001
+        fallback_sender_id:
+          type: string
+          format: uuid
+          title: Fallback Sender Id
+          description: Sender used whenever a contact's account is unassigned or its owner is not in `sender_ids`. Required for `account_owner` mode.
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440002
+      type: object
+      required:
+      - mode
+      - sender_ids
+      - fallback_sender_id
+      title: AccountOwnerDistribution
+      description: 'Route each contact''s sends to the owner of its account.
+
+
+        A contact''s sends go to its account owner when that owner is one of
+
+        ``sender_ids``; otherwise they fall back to ``fallback_sender_id``.'
+    PublicListRequest:
+      properties:
+        filters:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+          - filters:
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+            - filters:
+              - condition: less_than
+                field: created_at
+                value: '2026-07-01'
+            operator: and
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+      additionalProperties: false
+      type: object
+      title: PublicListRequest
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    SenderPercentage:
+      properties:
+        sender_id:
+          type: string
+          format: uuid
+          title: Sender Id
+          description: ID of the sending user
+          examples:
+          - 550e8400-e29b-41d4-a716-446655440001
+        percentage:
+          type: integer
+          minimum: 0.0
+          title: Percentage
+          description: Share of sends routed to this sender; must be non-negative
+          examples:
+          - 50
+      type: object
+      required:
+      - sender_id
+      - percentage
+      title: SenderPercentage
     CampaignAudiencesRequest:
       properties:
         audience_ids:
@@ -1440,6 +1331,115 @@ components:
       required:
       - audience_ids
       title: CampaignAudiencesRequest
+    PublicEnrollmentStatus:
+      type: string
+      enum:
+      - pending
+      - running
+      - completed
+      - failed
+      title: PublicEnrollmentStatus
+      description: Progress of the async audience-enrollment task behind create/update.
+    PublicAutopilotSettings:
+      properties:
+        sender_rates:
+          items:
+            $ref: '#/components/schemas/SenderAutopilotRate'
+          type: array
+          title: Sender Rates
+      type: object
+      title: PublicAutopilotSettings
+      description: 'Senders on autopilot for this campaign and their daily send-release cap.
+
+
+        Senders omitted here (but present in `distribution`) require manual approval
+
+        before each send starts. An empty list moves every sender to supervised.'
+    CampaignResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the campaign
+          examples:
+          - cmp_abc123
+        name:
+          type: string
+          title: Name
+          description: Name of the campaign
+          examples:
+          - Q3 Enterprise Outbound
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+          description: Current lifecycle status of the campaign
+          examples:
+          - active
+        prioritized:
+          type: boolean
+          title: Prioritized
+          description: Whether this campaign takes priority over non-prioritized campaigns
+          examples:
+          - false
+        end_date:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: End Date
+          description: Date the campaign stops enrolling
+          examples:
+          - '2026-12-31'
+        template_id:
+          type: string
+          title: Template Id
+          description: ID of the template enrolled contacts are placed on
+          examples:
+          - seqt_789ghi
+        template_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Template Name
+          description: Title of the template
+          examples:
+          - Enterprise Onboarding
+        audiences:
+          items:
+            $ref: '#/components/schemas/CampaignAudienceRef'
+          type: array
+          title: Audiences
+          description: Audiences enrolled in this campaign
+        enrollment_status:
+          $ref: '#/components/schemas/PublicEnrollmentStatus'
+          description: Progress of the async task enrolling this campaign's audiences
+          examples:
+          - completed
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the campaign was created
+          examples:
+          - '2026-01-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the campaign was last updated
+          examples:
+          - '2026-05-10T14:22:00Z'
+      type: object
+      required:
+      - id
+      - name
+      - status
+      - prioritized
+      - template_id
+      - enrollment_status
+      - created_at
+      - updated_at
+      title: CampaignResponse
+      description: Campaign summary, as returned by `list_campaigns`.
     EnrollContactsInCampaignResponse:
       properties:
         success_count:

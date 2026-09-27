@@ -299,100 +299,6 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    OpportunityUpdateRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Name of the opportunity
-          examples:
-          - Acme Corp - Enterprise License
-        owner_user_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Owner User Id
-          description: User ID to assign as opportunity owner
-        stage:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stage
-          description: Pipeline stage key for the opportunity
-          examples:
-          - Negotiation
-        estimated_value:
-          anyOf:
-          - $ref: '#/components/schemas/EstimatedValue'
-          - type: 'null'
-          description: Estimated monetary value of the opportunity
-        estimated_close_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Estimated Close Date
-          description: Expected close date (YYYY-MM-DD)
-          examples:
-          - '2025-09-30'
-        actual_close_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actual Close Date
-          description: Actual date the opportunity was closed (YYYY-MM-DD)
-          examples:
-          - '2025-10-15'
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the opportunity
-          examples:
-          - Follow up after Q3 board meeting
-        tags:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Tags
-          description: Tag IDs for the opportunity. Replaces the opportunity's existing tags.
-      additionalProperties: true
-      type: object
-      title: OpportunityUpdateRequest
-      description: Request body for updating an opportunity via PATCH.
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    PublicItemResponse_OpportunityDetailResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/OpportunityDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[OpportunityDetailResponse]
     ErrorDetail:
       properties:
         code:
@@ -412,34 +318,35 @@ components:
       - code
       - message
       title: ErrorDetail
-    OwnerInfo:
+    ResponseMeta:
       properties:
-        id:
+        timestamp:
           type: string
-          title: Id
-          description: Unique identifier of the user
-          examples:
-          - usr_abc123
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the user
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the user
-          examples:
-          - Smith
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
       type: object
-      required:
-      - id
-      title: OwnerInfo
+      title: ResponseMeta
+    EstimatedValue:
+      properties:
+        currency_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency Code
+          description: ISO 4217 currency code
+          examples:
+          - USD
+        amount:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount
+          description: Unit quantity of the specified currency
+          examples:
+          - 50000
+      type: object
+      title: EstimatedValue
     OpportunityDetailResponse:
       properties:
         id:
@@ -570,22 +477,91 @@ components:
       - created_at
       title: OpportunityDetailResponse
       description: Single-resource opportunity response, with AI reasoning behind custom fields.
-    PublicListResponse_OpportunityResponse_:
+    PaginationInfo:
       properties:
-        data:
-          items:
-            $ref: '#/components/schemas/OpportunityResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
       type: object
       required:
-      - data
-      - pagination
-      title: PublicListResponse[OpportunityResponse]
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    CustomFieldCitation:
+      properties:
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+          description: Source URL for the citation
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Title of the cited source
+        excerpts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Excerpts
+          description: Relevant excerpts from the cited source
+      type: object
+      title: CustomFieldCitation
+    OwnerInfo:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier of the user
+          examples:
+          - usr_abc123
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the user
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the user
+          examples:
+          - Smith
+      type: object
+      required:
+      - id
+      title: OwnerInfo
     LogicalOperatorEnum:
       type: string
       enum:
@@ -593,45 +569,78 @@ components:
       - or
       title: LogicalOperatorEnum
       description: Logical operators to combine filters or filter expressions.
-    EstimatedValue:
+    OpportunityCreateRequest:
       properties:
-        currency_code:
+        name:
+          type: string
+          title: Name
+          description: Name of the opportunity
+          examples:
+          - Acme Corp - Enterprise License
+        account_id:
+          type: string
+          format: uuid
+          title: Account Id
+          description: ID of the account to associate the opportunity with
+        owner_user_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Owner User Id
+          description: User ID to assign as opportunity owner
+        stage:
           anyOf:
           - type: string
           - type: 'null'
-          title: Currency Code
-          description: ISO 4217 currency code
+          title: Stage
+          description: Pipeline stage key for the opportunity. If omitted, the opportunity is placed in the first stage of the org's pipeline.
           examples:
-          - USD
-        amount:
+          - Negotiation
+        estimated_value:
           anyOf:
-          - type: integer
+          - $ref: '#/components/schemas/EstimatedValue'
           - type: 'null'
-          title: Amount
-          description: Unit quantity of the specified currency
+          description: Estimated monetary value of the opportunity
+        estimated_close_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Estimated Close Date
+          description: Expected close date (YYYY-MM-DD)
           examples:
-          - 50000
-      type: object
-      title: EstimatedValue
-    FilterRule:
-      properties:
-        field:
-          type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
+          - '2025-09-30'
+        notes:
           anyOf:
-          - {}
+          - type: string
           - type: 'null'
-          title: Value
-      additionalProperties: false
+          title: Notes
+          description: Notes about the opportunity
+          examples:
+          - Follow up after Q3 board meeting
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: List of tag IDs to associate with the opportunity
+        idempotency_key:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Idempotency Key
+          description: Client-provided idempotency key to prevent duplicate creation
+      additionalProperties: true
       type: object
       required:
-      - field
-      - condition
-      title: FilterRule
+      - name
+      - account_id
+      title: OpportunityCreateRequest
+      description: Request body for creating an opportunity via POST.
     OpportunityListRequest:
       properties:
         filters:
@@ -687,87 +696,6 @@ components:
       additionalProperties: false
       type: object
       title: OpportunityListRequest
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
-    FilterExpression:
-      properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      additionalProperties: false
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
-    CustomFieldCitation:
-      properties:
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-          description: Source URL for the citation
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Title of the cited source
-        excerpts:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Excerpts
-          description: Relevant excerpts from the cited source
-      type: object
-      title: CustomFieldCitation
     OpportunityResponse:
       properties:
         id:
@@ -893,19 +821,24 @@ components:
 
 
         Custom fields appear as additional keys prefixed with ``custom_field_``.'
-    OpportunityCreateRequest:
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    OpportunityUpdateRequest:
       properties:
         name:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Name
           description: Name of the opportunity
           examples:
           - Acme Corp - Enterprise License
-        account_id:
-          type: string
-          format: uuid
-          title: Account Id
-          description: ID of the account to associate the opportunity with
         owner_user_id:
           anyOf:
           - type: string
@@ -918,7 +851,7 @@ components:
           - type: string
           - type: 'null'
           title: Stage
-          description: Pipeline stage key for the opportunity. If omitted, the opportunity is placed in the first stage of the org's pipeline.
+          description: Pipeline stage key for the opportunity
           examples:
           - Negotiation
         estimated_value:
@@ -934,6 +867,14 @@ components:
           description: Expected close date (YYYY-MM-DD)
           examples:
           - '2025-09-30'
+        actual_close_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actual Close Date
+          description: Actual date the opportunity was closed (YYYY-MM-DD)
+          examples:
+          - '2025-10-15'
         notes:
           anyOf:
           - type: string
@@ -950,21 +891,35 @@ components:
             type: array
           - type: 'null'
           title: Tags
-          description: List of tag IDs to associate with the opportunity
-        idempotency_key:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Idempotency Key
-          description: Client-provided idempotency key to prevent duplicate creation
+          description: Tag IDs for the opportunity. Replaces the opportunity's existing tags.
       additionalProperties: true
       type: object
-      required:
-      - name
-      - account_id
-      title: OpportunityCreateRequest
-      description: Request body for creating an opportunity via POST.
+      title: OpportunityUpdateRequest
+      description: Request body for updating an opportunity via PATCH.
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
     PublicItemResponse_OpportunityResponse_:
       properties:
         data:
@@ -975,6 +930,51 @@ components:
       required:
       - data
       title: PublicItemResponse[OpportunityResponse]
+    PublicListResponse_OpportunityResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/OpportunityResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[OpportunityResponse]
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    PublicItemResponse_OpportunityDetailResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/OpportunityDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[OpportunityDetailResponse]
     CustomFieldExplanation:
       properties:
         title:

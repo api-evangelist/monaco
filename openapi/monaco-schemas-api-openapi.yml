@@ -160,51 +160,25 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    ResponseMeta:
+    ErrorDetail:
       properties:
-        timestamp:
+        code:
           type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    EnumValueOption:
-      properties:
-        key:
-          type: string
-          title: Key
-          description: The value to use in filter rules
+          title: Code
+          description: Machine-readable error code
           examples:
-          - usr_abc123
-        display_value:
+          - not_found
+        message:
           type: string
-          title: Display Value
-          description: Human-readable label for the value
+          title: Message
+          description: Human-readable error message
           examples:
-          - Jane Smith
+          - Resource not found
       type: object
       required:
-      - key
-      - display_value
-      title: EnumValueOption
-      description: A single allowed value for an enum field.
-    EnumFieldSettings:
-      properties:
-        allowed_values:
-          items:
-            $ref: '#/components/schemas/EnumValueOption'
-          type: array
-          title: Allowed Values
-          description: The list of valid values that can be used in filters
-          examples:
-          - - display_value: Active
-              key: active
-      type: object
-      required:
-      - allowed_values
-      title: EnumFieldSettings
-      description: Settings present only for enum/select fields.
+      - code
+      - message
+      title: ErrorDetail
     FieldSchemaResponse:
       properties:
         name:
@@ -294,6 +268,64 @@ components:
       - sortable
       - allowed_operators
       title: FieldSchemaResponse
+    PublicItemResponse_list_FieldSchemaResponse__:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/FieldSchemaResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[list[FieldSchemaResponse]]
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    EnumFieldSettings:
+      properties:
+        allowed_values:
+          items:
+            $ref: '#/components/schemas/EnumValueOption'
+          type: array
+          title: Allowed Values
+          description: The list of valid values that can be used in filters
+          examples:
+          - - display_value: Active
+              key: active
+      type: object
+      required:
+      - allowed_values
+      title: EnumFieldSettings
+      description: Settings present only for enum/select fields.
+    EnumValueOption:
+      properties:
+        key:
+          type: string
+          title: Key
+          description: The value to use in filter rules
+          examples:
+          - usr_abc123
+        display_value:
+          type: string
+          title: Display Value
+          description: Human-readable label for the value
+          examples:
+          - Jane Smith
+      type: object
+      required:
+      - key
+      - display_value
+      title: EnumValueOption
+      description: A single allowed value for an enum field.
     PublicErrorResponse:
       properties:
         error:
@@ -322,35 +354,3 @@ components:
       - is_ai_auto_filled
       title: CustomFieldSettings
       description: Settings present only for custom fields.
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
-    PublicItemResponse_list_FieldSchemaResponse__:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/FieldSchemaResponse'
-          type: array
-          title: Data
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[list[FieldSchemaResponse]]
