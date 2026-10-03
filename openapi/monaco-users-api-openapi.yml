@@ -49,6 +49,14 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
     ErrorDetail:
       properties:
         code:
@@ -77,6 +85,19 @@ components:
           description: Server timestamp of the response
       type: object
       title: ResponseMeta
+    PublicItemResponse_list_UserResponse__:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/UserResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[list[UserResponse]]
     UserResponse:
       properties:
         id:
@@ -109,24 +130,3 @@ components:
       required:
       - id
       title: UserResponse
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    PublicItemResponse_list_UserResponse__:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/UserResponse'
-          type: array
-          title: Data
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[list[UserResponse]]

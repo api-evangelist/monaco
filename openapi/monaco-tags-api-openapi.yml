@@ -182,6 +182,55 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    DisplayColorEnum:
+      type: string
+      enum:
+      - green
+      - blue
+      - red
+      - yellow
+      - purple
+      - berry
+      - peach
+      - gray
+      title: DisplayColorEnum
+    PublicItemResponse_TagResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/TagResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[TagResponse]
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
     TagResponse:
       properties:
         id:
@@ -208,35 +257,6 @@ components:
       - id
       - name
       title: TagResponse
-    PublicItemResponse_TagResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/TagResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[TagResponse]
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
     PublicItemResponse_list_TagResponse__:
       properties:
         data:
@@ -259,14 +279,29 @@ components:
           description: Server timestamp of the response
       type: object
       title: ResponseMeta
-    PublicErrorResponse:
+    TagUpdateRequest:
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+            pattern: ^[a-zA-Z0-9\s]+$
+          - type: 'null'
+          title: Name
+          description: Display name of the tag. Letters, numbers, and spaces only. Must be unique per object type within the organization.
+          examples:
+          - Enterprise
+        color:
+          anyOf:
+          - $ref: '#/components/schemas/DisplayColorEnum'
+          - type: 'null'
+          description: Display color of the tag.
+          examples:
+          - blue
       type: object
-      required:
-      - error
-      title: PublicErrorResponse
+      title: TagUpdateRequest
+      description: Request body for updating a tag via PATCH.
     TagCreateRequest:
       properties:
         object:
@@ -304,38 +339,3 @@ components:
       - opportunities
       title: TagObject
       description: Object type a tag applies to, as exposed in the public API.
-    DisplayColorEnum:
-      type: string
-      enum:
-      - green
-      - blue
-      - red
-      - yellow
-      - purple
-      - berry
-      - peach
-      - gray
-      title: DisplayColorEnum
-    TagUpdateRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-            pattern: ^[a-zA-Z0-9\s]+$
-          - type: 'null'
-          title: Name
-          description: Display name of the tag. Letters, numbers, and spaces only. Must be unique per object type within the organization.
-          examples:
-          - Enterprise
-        color:
-          anyOf:
-          - $ref: '#/components/schemas/DisplayColorEnum'
-          - type: 'null'
-          description: Display color of the tag.
-          examples:
-          - blue
-      type: object
-      title: TagUpdateRequest
-      description: Request body for updating a tag via PATCH.

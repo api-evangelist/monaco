@@ -160,6 +160,14 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
     ErrorDetail:
       properties:
         code:
@@ -179,6 +187,15 @@ components:
       - code
       - message
       title: ErrorDetail
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
     FieldSchemaResponse:
       properties:
         name:
@@ -281,15 +298,26 @@ components:
       required:
       - data
       title: PublicItemResponse[list[FieldSchemaResponse]]
-    ResponseMeta:
+    CustomFieldSettings:
       properties:
-        timestamp:
+        id:
           type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
+          title: Id
+          description: Unique identifier of the custom field schema
+          examples:
+          - cf_abc123
+        is_ai_auto_filled:
+          type: boolean
+          title: Is Ai Auto Filled
+          description: Whether this custom field is automatically populated by AI
+          examples:
+          - false
       type: object
-      title: ResponseMeta
+      required:
+      - id
+      - is_ai_auto_filled
+      title: CustomFieldSettings
+      description: Settings present only for custom fields.
     EnumFieldSettings:
       properties:
         allowed_values:
@@ -326,31 +354,3 @@ components:
       - display_value
       title: EnumValueOption
       description: A single allowed value for an enum field.
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    CustomFieldSettings:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier of the custom field schema
-          examples:
-          - cf_abc123
-        is_ai_auto_filled:
-          type: boolean
-          title: Is Ai Auto Filled
-          description: Whether this custom field is automatically populated by AI
-          examples:
-          - false
-      type: object
-      required:
-      - id
-      - is_ai_auto_filled
-      title: CustomFieldSettings
-      description: Settings present only for custom fields.

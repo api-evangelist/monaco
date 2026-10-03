@@ -378,16 +378,38 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicItemResponse_ContactDetailResponse_:
+    PublicErrorResponse:
       properties:
-        data:
-          $ref: '#/components/schemas/ContactDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
       type: object
       required:
-      - data
-      title: PublicItemResponse[ContactDetailResponse]
+      - error
+      title: PublicErrorResponse
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
     ErrorDetail:
       properties:
         code:
@@ -407,100 +429,92 @@ components:
       - code
       - message
       title: ErrorDetail
-    ResponseMeta:
+    CustomFieldExplanation:
       properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    ContactUpdateRequest:
-      properties:
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the contact
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the contact
-          examples:
-          - Smith
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the contact
-          examples:
-          - jane@acme.com
         title:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Title
-          description: Job title of the contact
+          description: Explanation heading
           examples:
-          - VP of Engineering
-        phone_number:
+          - Reasoning
+        body:
+          type: string
+          title: Body
+          description: AI-generated explanation for the custom field value
+        confidence:
           anyOf:
           - type: string
           - type: 'null'
-          title: Phone Number
-          description: Phone number of the contact
-          examples:
-          - +1-415-555-0132
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-          description: LinkedIn profile URL
-          examples:
-          - https://linkedin.com/in/janesmith
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location
-          description: Location of the contact
-          examples:
-          - San Francisco, CA
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the contact
-          examples:
-          - Met at SaaStr 2025
-        do_not_contact:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Do Not Contact
-          description: Whether the contact has opted out of outreach
-        tags:
+          title: Confidence
+          description: Confidence level of the AI-generated explanation
+        citations:
           anyOf:
           - items:
-              type: string
-              format: uuid
+              $ref: '#/components/schemas/CustomFieldCitation'
             type: array
           - type: 'null'
-          title: Tags
-          description: Tag IDs for the contact. Replaces the contact's existing tags.
-      additionalProperties: true
+          title: Citations
+          description: Sources backing the explanation, capped and empty-pruned
       type: object
-      title: ContactUpdateRequest
-      description: Request body for updating a contact via PATCH.
+      required:
+      - title
+      - body
+      title: CustomFieldExplanation
+    ContactListRequest:
+      properties:
+        filters:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+          - filters:
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+            - filters:
+              - condition: less_than
+                field: created_at
+                value: '2026-07-01'
+            operator: and
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+        include_custom_fields:
+          type: boolean
+          title: Include Custom Fields
+          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned contact. Defaults to true. Set false to omit them for leaner responses; GET /v1/contacts/{contact_id} always returns them.
+          default: true
+      additionalProperties: false
+      type: object
+      title: ContactListRequest
     ContactDetailResponse:
       properties:
         id:
@@ -694,16 +708,6 @@ components:
       - updated_at
       title: ContactDetailResponse
       description: Single-resource contact response, with heat score signals and custom field reasoning.
-    PublicItemResponse_ContactResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/ContactResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[ContactResponse]
     ScoreExplanation:
       properties:
         explanations:
@@ -720,6 +724,57 @@ components:
           description: Firmographic signals behind the score
       type: object
       title: ScoreExplanation
+    PublicItemResponse_ContactDetailResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ContactDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[ContactDetailResponse]
+    CustomFieldCitation:
+      properties:
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+          description: Source URL for the citation
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Title of the cited source
+        excerpts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Excerpts
+          description: Relevant excerpts from the cited source
+      type: object
+      title: CustomFieldCitation
+    PublicItemResponse_ContactResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ContactResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[ContactResponse]
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
     PublicListResponse_ContactResponse_:
       properties:
         data:
@@ -748,6 +803,247 @@ components:
           - Hot
       type: object
       title: ScoringInfo
+    ContactCreateRequest:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact. Either email or linkedin_url is required.
+          examples:
+          - jane@acme.com
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL. Either email or linkedin_url is required.
+          examples:
+          - https://linkedin.com/in/janesmith
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-415-555-0132
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        account_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Account Id
+          description: ID of the account to associate the contact with
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+          description: Domain of the contact's company (used for account resolution)
+          examples:
+          - acme.com
+        do_not_contact:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: Tag IDs to associate with the contact. Appended to the contact's existing tags.
+      additionalProperties: true
+      type: object
+      title: ContactCreateRequest
+      description: 'Request body for creating a contact via POST or upserting via PUT.
+
+
+        Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
+    ContactUpdateRequest:
+      properties:
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact
+          examples:
+          - jane@acme.com
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-415-555-0132
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL
+          examples:
+          - https://linkedin.com/in/janesmith
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the contact
+          examples:
+          - Met at SaaStr 2025
+        do_not_contact:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: Tag IDs for the contact. Replaces the contact's existing tags.
+      additionalProperties: true
+      type: object
+      title: ContactUpdateRequest
+      description: Request body for updating a contact via PATCH.
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
     ContactResponse:
       properties:
         id:
@@ -928,271 +1224,6 @@ components:
       - updated_at
       title: ContactResponse
       description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
-    CustomFieldCitation:
-      properties:
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-          description: Source URL for the citation
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Title of the cited source
-        excerpts:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Excerpts
-          description: Relevant excerpts from the cited source
-      type: object
-      title: CustomFieldCitation
-    ContactCreateRequest:
-      properties:
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the contact. Either email or linkedin_url is required.
-          examples:
-          - jane@acme.com
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-          description: LinkedIn profile URL. Either email or linkedin_url is required.
-          examples:
-          - https://linkedin.com/in/janesmith
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the contact
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the contact
-          examples:
-          - Smith
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Job title of the contact
-          examples:
-          - VP of Engineering
-        phone_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Phone Number
-          description: Phone number of the contact
-          examples:
-          - +1-415-555-0132
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location
-          description: Location of the contact
-          examples:
-          - San Francisco, CA
-        account_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Account Id
-          description: ID of the account to associate the contact with
-        domain:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Domain
-          description: Domain of the contact's company (used for account resolution)
-          examples:
-          - acme.com
-        do_not_contact:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Do Not Contact
-          description: Whether the contact has opted out of outreach
-        tags:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Tags
-          description: Tag IDs to associate with the contact. Appended to the contact's existing tags.
-      additionalProperties: true
-      type: object
-      title: ContactCreateRequest
-      description: 'Request body for creating a contact via POST or upserting via PUT.
-
-
-        Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    ContactListRequest:
-      properties:
-        filters:
-          oneOf:
-          - items:
-              $ref: '#/components/schemas/FilterRule'
-            type: array
-          - $ref: '#/components/schemas/FilterExpression'
-          title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
-          examples:
-          - - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-          - filters:
-            - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-            - filters:
-              - condition: less_than
-                field: created_at
-                value: '2026-07-01'
-            operator: and
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          description: Page number (1-indexed)
-          default: 1
-          examples:
-          - 1
-        page_size:
-          type: integer
-          maximum: 500.0
-          minimum: 1.0
-          title: Page Size
-          description: Number of results per page
-          default: 50
-          examples:
-          - 25
-        sort:
-          type: string
-          title: Sort
-          description: Field to sort by. Prefix with '-' for descending order.
-          default: -created_at
-          examples:
-          - -created_at
-        include_custom_fields:
-          type: boolean
-          title: Include Custom Fields
-          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned contact. Defaults to true. Set false to omit them for leaner responses; GET /v1/contacts/{contact_id} always returns them.
-          default: true
-      additionalProperties: false
-      type: object
-      title: ContactListRequest
-    FilterExpression:
-      properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      additionalProperties: false
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
-    FilterRule:
-      properties:
-        field:
-          type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      additionalProperties: false
-      type: object
-      required:
-      - field
-      - condition
-      title: FilterRule
     ScoreSignalExplanation:
       properties:
         signal_type:
@@ -1212,34 +1243,3 @@ components:
       - signal_type
       - signal_point
       title: ScoreSignalExplanation
-    CustomFieldExplanation:
-      properties:
-        title:
-          type: string
-          title: Title
-          description: Explanation heading
-          examples:
-          - Reasoning
-        body:
-          type: string
-          title: Body
-          description: AI-generated explanation for the custom field value
-        confidence:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Confidence
-          description: Confidence level of the AI-generated explanation
-        citations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CustomFieldCitation'
-            type: array
-          - type: 'null'
-          title: Citations
-          description: Sources backing the explanation, capped and empty-pruned
-      type: object
-      required:
-      - title
-      - body
-      title: CustomFieldExplanation

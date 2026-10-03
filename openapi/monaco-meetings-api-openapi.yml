@@ -150,6 +150,54 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    TranscriptSegment:
+      properties:
+        speaker:
+          type: string
+          title: Speaker
+          description: Name of the speaker
+        language:
+          type: string
+          title: Language
+          description: Language code of the segment
+        words:
+          items:
+            $ref: '#/components/schemas/TranscriptWord'
+          type: array
+          title: Words
+          description: Words in this segment
+      type: object
+      required:
+      - speaker
+      - language
+      title: TranscriptSegment
     LogicalOperatorEnum:
       type: string
       enum:
@@ -181,226 +229,6 @@ components:
         nested FilterExpression objects (branch nodes), allowing for arbitrarily
 
         nested filter structures.'
-    PublicItemResponse_MeetingDetailResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/MeetingDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[MeetingDetailResponse]
-    MeetingDetailResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the meeting
-          examples:
-          - mtg_abc123
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-          description: ID of the associated account
-          examples:
-          - acc_abc123
-        opportunity_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Opportunity Id
-          description: ID of the associated opportunity
-          examples:
-          - opp_abc123
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Meeting title from calendar event
-          examples:
-          - Discovery Call
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Meeting description
-          examples:
-          - Initial discovery call with Acme
-        start_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Start Time
-          description: Meeting start time (ISO 8601)
-          examples:
-          - '2026-03-01T10:00:00Z'
-        end_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: End Time
-          description: Meeting end time (ISO 8601)
-          examples:
-          - '2026-03-01T10:30:00Z'
-        occurred_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Occurred At
-          description: 'When the meeting actually occurred: recording start time of the completed conversation (ISO 8601). Null for meetings that were never recorded, including future and declined calendar events.'
-          examples:
-          - '2026-03-01T10:02:14Z'
-        meeting_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Meeting Platform
-          description: Video conferencing platform
-          examples:
-          - Zoom
-        meeting_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Meeting Url
-          description: URL to join the meeting
-        organizer:
-          anyOf:
-          - $ref: '#/components/schemas/MeetingOrganizerInfo'
-          - type: 'null'
-          description: Meeting organizer
-        attendees:
-          items:
-            $ref: '#/components/schemas/MeetingAttendeeInfo'
-          type: array
-          title: Attendees
-          description: List of meeting attendees
-        next_actions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Next Actions
-          description: AI-generated action items from the meeting
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-          description: When the meeting was created in Monaco
-          examples:
-          - '2026-03-01T09:00:00Z'
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-          description: When the meeting was last updated in Monaco
-          examples:
-          - '2026-03-01T09:30:00Z'
-        meeting_summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Meeting Summary
-          description: AI-generated meeting summary
-        video_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Video Url
-          description: Presigned URL to the meeting recording video
-        transcript:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/TranscriptSegment'
-            type: array
-          - type: 'null'
-          title: Transcript
-          description: Meeting transcript segments with speaker attribution
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      title: MeetingDetailResponse
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
-    MeetingOrganizerInfo:
-      properties:
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the organizer
-          examples:
-          - jane@acme.com
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-          description: Display name of the organizer
-          examples:
-          - Jane Smith
-      type: object
-      title: MeetingOrganizerInfo
-    FilterRule:
-      properties:
-        field:
-          type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      additionalProperties: false
-      type: object
-      required:
-      - field
-      - condition
-      title: FilterRule
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
     MeetingListRequest:
       properties:
         filters:
@@ -454,6 +282,70 @@ components:
       description: 'Meetings order by start time, not creation time: `created_at` is not a
 
         sortable meeting field, so the shared `-created_at` default would 422.'
+    PublicListResponse_MeetingResponse_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/MeetingResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      - pagination
+      title: PublicListResponse[MeetingResponse]
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    MeetingOrganizerInfo:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the organizer
+          examples:
+          - jane@acme.com
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+          description: Display name of the organizer
+          examples:
+          - Jane Smith
+      type: object
+      title: MeetingOrganizerInfo
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
     PaginationInfo:
       properties:
         page:
@@ -487,6 +379,16 @@ components:
       - total_count
       - total_pages
       title: PaginationInfo
+    PublicItemResponse_MeetingDetailResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/MeetingDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[MeetingDetailResponse]
     MeetingAttendeeInfo:
       properties:
         email:
@@ -515,30 +417,6 @@ components:
           - accepted
       type: object
       title: MeetingAttendeeInfo
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    PublicListResponse_MeetingResponse_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/MeetingResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      - pagination
-      title: PublicListResponse[MeetingResponse]
     MeetingResponse:
       properties:
         id:
@@ -682,24 +560,146 @@ components:
       - start_timestamp
       - end_timestamp
       title: TranscriptWord
-    TranscriptSegment:
+    MeetingDetailResponse:
       properties:
-        speaker:
+        id:
           type: string
-          title: Speaker
-          description: Name of the speaker
-        language:
-          type: string
-          title: Language
-          description: Language code of the segment
-        words:
+          title: Id
+          description: Unique identifier for the meeting
+          examples:
+          - mtg_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_abc123
+        opportunity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Opportunity Id
+          description: ID of the associated opportunity
+          examples:
+          - opp_abc123
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Meeting title from calendar event
+          examples:
+          - Discovery Call
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Meeting description
+          examples:
+          - Initial discovery call with Acme
+        start_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Start Time
+          description: Meeting start time (ISO 8601)
+          examples:
+          - '2026-03-01T10:00:00Z'
+        end_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Time
+          description: Meeting end time (ISO 8601)
+          examples:
+          - '2026-03-01T10:30:00Z'
+        occurred_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Occurred At
+          description: 'When the meeting actually occurred: recording start time of the completed conversation (ISO 8601). Null for meetings that were never recorded, including future and declined calendar events.'
+          examples:
+          - '2026-03-01T10:02:14Z'
+        meeting_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Platform
+          description: Video conferencing platform
+          examples:
+          - Zoom
+        meeting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Url
+          description: URL to join the meeting
+        organizer:
+          anyOf:
+          - $ref: '#/components/schemas/MeetingOrganizerInfo'
+          - type: 'null'
+          description: Meeting organizer
+        attendees:
           items:
-            $ref: '#/components/schemas/TranscriptWord'
+            $ref: '#/components/schemas/MeetingAttendeeInfo'
           type: array
-          title: Words
-          description: Words in this segment
+          title: Attendees
+          description: List of meeting attendees
+        next_actions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Next Actions
+          description: AI-generated action items from the meeting
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+          description: When the meeting was created in Monaco
+          examples:
+          - '2026-03-01T09:00:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: When the meeting was last updated in Monaco
+          examples:
+          - '2026-03-01T09:30:00Z'
+        meeting_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Summary
+          description: AI-generated meeting summary
+        video_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Video Url
+          description: Presigned URL to the meeting recording video
+        transcript:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/TranscriptSegment'
+            type: array
+          - type: 'null'
+          title: Transcript
+          description: Meeting transcript segments with speaker attribution
+      additionalProperties: true
       type: object
       required:
-      - speaker
-      - language
-      title: TranscriptSegment
+      - id
+      title: MeetingDetailResponse
