@@ -458,6 +458,9 @@ apis:
   - type: Conformance
     url: conformance/monaco-conformance.yml
 common:
+- type: CapabilityMap
+  url: capabilities/monaco-capability-edges.yml
+  name: Monaco Business Capability Map
 - type: Overlay
   url: overlays/monaco-openapi-overlay.yaml
 - type: DeveloperPortal
