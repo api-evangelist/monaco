@@ -160,14 +160,68 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicErrorResponse:
+    PublicItemResponse_list_FieldSchemaResponse__:
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
+        data:
+          items:
+            $ref: '#/components/schemas/FieldSchemaResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - error
-      title: PublicErrorResponse
+      - data
+      title: PublicItemResponse[list[FieldSchemaResponse]]
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    CustomFieldSettings:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier of the custom field schema
+          examples:
+          - cf_abc123
+        is_ai_auto_filled:
+          type: boolean
+          title: Is Ai Auto Filled
+          description: Whether this custom field is automatically populated by AI
+          examples:
+          - false
+      type: object
+      required:
+      - id
+      - is_ai_auto_filled
+      title: CustomFieldSettings
+      description: Settings present only for custom fields.
+    EnumValueOption:
+      properties:
+        key:
+          type: string
+          title: Key
+          description: The value to use in filter rules
+          examples:
+          - usr_abc123
+        display_value:
+          type: string
+          title: Display Value
+          description: Human-readable label for the value
+          examples:
+          - Jane Smith
+      type: object
+      required:
+      - key
+      - display_value
+      title: EnumValueOption
+      description: A single allowed value for an enum field.
     ErrorDetail:
       properties:
         code:
@@ -187,15 +241,6 @@ components:
       - code
       - message
       title: ErrorDetail
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
     FieldSchemaResponse:
       properties:
         name:
@@ -285,39 +330,14 @@ components:
       - sortable
       - allowed_operators
       title: FieldSchemaResponse
-    PublicItemResponse_list_FieldSchemaResponse__:
+    PublicErrorResponse:
       properties:
-        data:
-          items:
-            $ref: '#/components/schemas/FieldSchemaResponse'
-          type: array
-          title: Data
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
       type: object
       required:
-      - data
-      title: PublicItemResponse[list[FieldSchemaResponse]]
-    CustomFieldSettings:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier of the custom field schema
-          examples:
-          - cf_abc123
-        is_ai_auto_filled:
-          type: boolean
-          title: Is Ai Auto Filled
-          description: Whether this custom field is automatically populated by AI
-          examples:
-          - false
-      type: object
-      required:
-      - id
-      - is_ai_auto_filled
-      title: CustomFieldSettings
-      description: Settings present only for custom fields.
+      - error
+      title: PublicErrorResponse
     EnumFieldSettings:
       properties:
         allowed_values:
@@ -334,23 +354,3 @@ components:
       - allowed_values
       title: EnumFieldSettings
       description: Settings present only for enum/select fields.
-    EnumValueOption:
-      properties:
-        key:
-          type: string
-          title: Key
-          description: The value to use in filter rules
-          examples:
-          - usr_abc123
-        display_value:
-          type: string
-          title: Display Value
-          description: Human-readable label for the value
-          examples:
-          - Jane Smith
-      type: object
-      required:
-      - key
-      - display_value
-      title: EnumValueOption
-      description: A single allowed value for an enum field.

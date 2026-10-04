@@ -329,16 +329,327 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicItemResponse_AccountResponse_:
+    ResponseMeta:
       properties:
-        data:
-          $ref: '#/components/schemas/AccountResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    CustomFieldExplanation:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: Explanation heading
+          examples:
+          - Reasoning
+        body:
+          type: string
+          title: Body
+          description: AI-generated explanation for the custom field value
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          description: Confidence level of the AI-generated explanation
+        citations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CustomFieldCitation'
+            type: array
+          - type: 'null'
+          title: Citations
+          description: Sources backing the explanation, capped and empty-pruned
       type: object
       required:
-      - data
-      title: PublicItemResponse[AccountResponse]
+      - title
+      - body
+      title: CustomFieldExplanation
+    AccountUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Display name for the account
+          examples:
+          - Acme Corp
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Account status
+          examples:
+          - PROSPECTING
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the account
+        owner:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Owner
+          description: User ID to assign as account owner
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: Tag IDs for the account. Replaces the account's existing tags.
+      additionalProperties: true
+      type: object
+      title: AccountUpdateRequest
+    CompanyInfo:
+      properties:
+        domain:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Domain
+          description: Primary website domain
+          examples:
+          - acme.com
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn company page URL
+          examples:
+          - https://linkedin.com/company/acme
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Company description
+          examples:
+          - Enterprise software company specializing in AI-driven sales tools
+        employee_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Employee Count
+          description: Number of employees
+          examples:
+          - 250
+        founded_year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Founded Year
+          description: Year the company was founded
+          examples:
+          - 2019
+        industries:
+          items:
+            type: string
+          type: array
+          title: Industries
+          description: List of industry classifications
+          examples:
+          - - Software
+            - Artificial Intelligence
+        total_funding_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Total Funding Usd
+          description: Total funding raised in USD
+          examples:
+          - 50000000.0
+        last_funding_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Funding Date
+          description: Date of the most recent funding round
+          examples:
+          - '2024-03-15'
+      type: object
+      title: CompanyInfo
+    AccountResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the account
+          examples:
+          - acc_abc123
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Name of the account
+          examples:
+          - Acme Corp
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Current status of the account
+          examples:
+          - active
+        owner:
+          anyOf:
+          - $ref: '#/components/schemas/OwnerInfo'
+          - type: 'null'
+          description: User who owns the account
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the account
+          examples:
+          - Key enterprise prospect
+        company:
+          anyOf:
+          - $ref: '#/components/schemas/CompanyInfo'
+          - type: 'null'
+          description: Company information associated with the account
+        scoring:
+          anyOf:
+          - $ref: '#/components/schemas/api__public_api__schemas__accounts__ScoringInfo'
+          - type: 'null'
+          description: Account scoring information
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: List of tag names associated with the account
+          examples:
+          - - Enterprise
+            - High Priority
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the account was created
+          examples:
+          - '2025-06-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the account was last updated
+          examples:
+          - '2025-06-15T10:30:00Z'
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - created_at
+      - updated_at
+      title: AccountResponse
+      description: Account resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
+    AccountUpsertRequest:
+      properties:
+        domain:
+          type: string
+          title: Domain
+          description: Company domain for matching or creating the account
+          examples:
+          - acme.com
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn company page URL for matching or creating the account
+          examples:
+          - https://linkedin.com/company/acme
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Display name for the account
+          examples:
+          - Acme Corp
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+          description: Account status
+          examples:
+          - NEW
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the account
+          examples:
+          - Key enterprise prospect
+        owner:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Owner
+          description: User ID to assign as account owner
+        tags:
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
+          title: Tags
+          description: Tag IDs to associate with the account. Appended to the account's existing tags.
+      additionalProperties: true
+      type: object
+      required:
+      - domain
+      title: AccountUpsertRequest
+      description: 'Request body for upserting an account.
+
+
+        Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
     PublicErrorResponse:
       properties:
         error:
@@ -347,6 +658,55 @@ components:
       required:
       - error
       title: PublicErrorResponse
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    api__public_api__schemas__accounts__ScoringInfo:
+      properties:
+        tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tier
+          description: Firmographic tier
+          examples:
+          - A
+        heat_score:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Heat Score
+          description: Heat score tier
+          examples:
+          - Hot
+      type: object
+      title: ScoringInfo
+    PublicItemResponse_AccountDetailResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[AccountDetailResponse]
     FilterExpression:
       properties:
         operator:
@@ -371,6 +731,77 @@ components:
         nested FilterExpression objects (branch nodes), allowing for arbitrarily
 
         nested filter structures.'
+    ScoreSignalExplanation:
+      properties:
+        signal_type:
+          type: string
+          title: Signal Type
+          description: Type of signal contributing to the score
+          examples:
+          - web_visit
+        signal_point:
+          type: string
+          title: Signal Point
+          description: Human-readable explanation of the signal's contribution
+          examples:
+          - Visited pricing page 3 times in the last 7 days
+      type: object
+      required:
+      - signal_type
+      - signal_point
+      title: ScoreSignalExplanation
+    OwnerInfo:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier of the user
+          examples:
+          - usr_abc123
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the user
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the user
+          examples:
+          - Smith
+      type: object
+      required:
+      - id
+      title: OwnerInfo
+    CustomFieldCitation:
+      properties:
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+          description: Source URL for the citation
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Title of the cited source
+        excerpts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Excerpts
+          description: Relevant excerpts from the cited source
+      type: object
+      title: CustomFieldCitation
     AccountDetailResponse:
       properties:
         id:
@@ -462,34 +893,65 @@ components:
       - updated_at
       title: AccountDetailResponse
       description: Single-resource account response, with heat score signals and custom field reasoning.
-    OwnerInfo:
+    PublicListResponse_AccountResponse_:
       properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier of the user
-          examples:
-          - usr_abc123
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the user
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the user
-          examples:
-          - Smith
+        data:
+          items:
+            $ref: '#/components/schemas/AccountResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - id
-      title: OwnerInfo
+      - data
+      - pagination
+      title: PublicListResponse[AccountResponse]
+    PublicItemResponse_AccountResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[AccountResponse]
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
     AccountListRequest:
       properties:
         filters:
@@ -545,197 +1007,6 @@ components:
       additionalProperties: false
       type: object
       title: AccountListRequest
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
-    AccountResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the account
-          examples:
-          - acc_abc123
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Name of the account
-          examples:
-          - Acme Corp
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-          description: Current status of the account
-          examples:
-          - active
-        owner:
-          anyOf:
-          - $ref: '#/components/schemas/OwnerInfo'
-          - type: 'null'
-          description: User who owns the account
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the account
-          examples:
-          - Key enterprise prospect
-        company:
-          anyOf:
-          - $ref: '#/components/schemas/CompanyInfo'
-          - type: 'null'
-          description: Company information associated with the account
-        scoring:
-          anyOf:
-          - $ref: '#/components/schemas/api__public_api__schemas__accounts__ScoringInfo'
-          - type: 'null'
-          description: Account scoring information
-        tags:
-          items:
-            type: string
-          type: array
-          title: Tags
-          description: List of tag names associated with the account
-          examples:
-          - - Enterprise
-            - High Priority
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Date and time the account was created
-          examples:
-          - '2025-06-15T10:30:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: Date and time the account was last updated
-          examples:
-          - '2025-06-15T10:30:00Z'
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - created_at
-      - updated_at
-      title: AccountResponse
-      description: Account resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
-    AccountUpdateRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Display name for the account
-          examples:
-          - Acme Corp
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-          description: Account status
-          examples:
-          - PROSPECTING
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the account
-        owner:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Owner
-          description: User ID to assign as account owner
-        tags:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Tags
-          description: Tag IDs for the account. Replaces the account's existing tags.
-      additionalProperties: true
-      type: object
-      title: AccountUpdateRequest
-    CustomFieldExplanation:
-      properties:
-        title:
-          type: string
-          title: Title
-          description: Explanation heading
-          examples:
-          - Reasoning
-        body:
-          type: string
-          title: Body
-          description: AI-generated explanation for the custom field value
-        confidence:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Confidence
-          description: Confidence level of the AI-generated explanation
-        citations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CustomFieldCitation'
-            type: array
-          - type: 'null'
-          title: Citations
-          description: Sources backing the explanation, capped and empty-pruned
-      type: object
-      required:
-      - title
-      - body
-      title: CustomFieldExplanation
-    api__public_api__schemas__accounts__ScoringInfo:
-      properties:
-        tier:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tier
-          description: Firmographic tier
-          examples:
-          - A
-        heat_score:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Heat Score
-          description: Heat score tier
-          examples:
-          - Hot
-      type: object
-      title: ScoringInfo
     ScoreExplanation:
       properties:
         explanations:
@@ -752,274 +1023,3 @@ components:
           description: Firmographic signals behind the score
       type: object
       title: ScoreExplanation
-    PublicListResponse_AccountResponse_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/AccountResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      - pagination
-      title: PublicListResponse[AccountResponse]
-    AccountUpsertRequest:
-      properties:
-        domain:
-          type: string
-          title: Domain
-          description: Company domain for matching or creating the account
-          examples:
-          - acme.com
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-          description: LinkedIn company page URL for matching or creating the account
-          examples:
-          - https://linkedin.com/company/acme
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Display name for the account
-          examples:
-          - Acme Corp
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-          description: Account status
-          examples:
-          - NEW
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the account
-          examples:
-          - Key enterprise prospect
-        owner:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Owner
-          description: User ID to assign as account owner
-        tags:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Tags
-          description: Tag IDs to associate with the account. Appended to the account's existing tags.
-      additionalProperties: true
-      type: object
-      required:
-      - domain
-      title: AccountUpsertRequest
-      description: 'Request body for upserting an account.
-
-
-        Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
-    CustomFieldCitation:
-      properties:
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-          description: Source URL for the citation
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Title of the cited source
-        excerpts:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Excerpts
-          description: Relevant excerpts from the cited source
-      type: object
-      title: CustomFieldCitation
-    CompanyInfo:
-      properties:
-        domain:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Domain
-          description: Primary website domain
-          examples:
-          - acme.com
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-          description: LinkedIn company page URL
-          examples:
-          - https://linkedin.com/company/acme
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Company description
-          examples:
-          - Enterprise software company specializing in AI-driven sales tools
-        employee_count:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Employee Count
-          description: Number of employees
-          examples:
-          - 250
-        founded_year:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Founded Year
-          description: Year the company was founded
-          examples:
-          - 2019
-        industries:
-          items:
-            type: string
-          type: array
-          title: Industries
-          description: List of industry classifications
-          examples:
-          - - Software
-            - Artificial Intelligence
-        total_funding_usd:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Total Funding Usd
-          description: Total funding raised in USD
-          examples:
-          - 50000000.0
-        last_funding_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Funding Date
-          description: Date of the most recent funding round
-          examples:
-          - '2024-03-15'
-      type: object
-      title: CompanyInfo
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    PublicItemResponse_AccountDetailResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/AccountDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[AccountDetailResponse]
-    FilterRule:
-      properties:
-        field:
-          type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      additionalProperties: false
-      type: object
-      required:
-      - field
-      - condition
-      title: FilterRule
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
-    ScoreSignalExplanation:
-      properties:
-        signal_type:
-          type: string
-          title: Signal Type
-          description: Type of signal contributing to the score
-          examples:
-          - web_visit
-        signal_point:
-          type: string
-          title: Signal Point
-          description: Human-readable explanation of the signal's contribution
-          examples:
-          - Visited pricing page 3 times in the last 7 days
-      type: object
-      required:
-      - signal_type
-      - signal_point
-      title: ScoreSignalExplanation

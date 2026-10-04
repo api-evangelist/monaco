@@ -378,143 +378,280 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicErrorResponse:
+    ResponseMeta:
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
       type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    FilterExpression:
+      title: ResponseMeta
+    ContactUpdateRequest:
       properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      additionalProperties: false
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
-    CustomFieldExplanation:
-      properties:
-        title:
-          type: string
-          title: Title
-          description: Explanation heading
-          examples:
-          - Reasoning
-        body:
-          type: string
-          title: Body
-          description: AI-generated explanation for the custom field value
-        confidence:
+        first_name:
           anyOf:
           - type: string
           - type: 'null'
-          title: Confidence
-          description: Confidence level of the AI-generated explanation
-        citations:
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact
+          examples:
+          - jane@acme.com
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-415-555-0132
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL
+          examples:
+          - https://linkedin.com/in/janesmith
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the contact
+          examples:
+          - Met at SaaStr 2025
+        do_not_contact:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+        tags:
           anyOf:
           - items:
-              $ref: '#/components/schemas/CustomFieldCitation'
+              type: string
+              format: uuid
             type: array
           - type: 'null'
-          title: Citations
-          description: Sources backing the explanation, capped and empty-pruned
+          title: Tags
+          description: Tag IDs for the contact. Replaces the contact's existing tags.
+      additionalProperties: true
+      type: object
+      title: ContactUpdateRequest
+      description: Request body for updating a contact via PATCH.
+    ContactResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the contact
+          examples:
+          - con_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_def456
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the contact
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the contact
+          examples:
+          - Smith
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the contact
+          examples:
+          - jane@acme.com
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Job title of the contact
+          examples:
+          - VP of Engineering
+        phone_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Phone Number
+          description: Phone number of the contact
+          examples:
+          - +1-415-555-0132
+        linkedin_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Linkedin Url
+          description: LinkedIn profile URL
+          examples:
+          - https://linkedin.com/in/janesmith
+        location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location
+          description: Location of the contact
+          examples:
+          - San Francisco, CA
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+          description: Source from which the contact was added
+          examples:
+          - linkedin
+        do_not_contact:
+          type: boolean
+          title: Do Not Contact
+          description: Whether the contact has opted out of outreach
+          default: false
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the contact
+          examples:
+          - Met at SaaStr 2025
+        scoring:
+          anyOf:
+          - $ref: '#/components/schemas/api__public_api__schemas__contacts__ScoringInfo'
+          - type: 'null'
+          description: Contact scoring information
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: List of tag names associated with the contact
+          examples:
+          - - Interested
+            - Decision Maker
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the contact was created
+          examples:
+          - '2025-06-15T10:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+          description: Date and time the contact was last updated
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Activity At
+          description: Date and time of the contact's most recent activity (inbound or outbound)
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_activity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Activity Type
+          description: Type of the contact's most recent activity
+          examples:
+          - outbound_email
+        last_outbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Outbound At
+          description: Date and time of the most recent outbound interaction with the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_outbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Outbound Type
+          description: Type of the most recent outbound interaction with the contact
+          examples:
+          - email
+        last_inbound_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Inbound At
+          description: Date and time of the most recent inbound interaction from the contact
+          examples:
+          - '2025-06-15T10:30:00Z'
+        last_inbound_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Inbound Type
+          description: Type of the most recent inbound interaction from the contact
+          examples:
+          - email
+      additionalProperties: true
       type: object
       required:
-      - title
-      - body
-      title: CustomFieldExplanation
-    ContactListRequest:
-      properties:
-        filters:
-          oneOf:
-          - items:
-              $ref: '#/components/schemas/FilterRule'
-            type: array
-          - $ref: '#/components/schemas/FilterExpression'
-          title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
-          examples:
-          - - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-          - filters:
-            - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-            - filters:
-              - condition: less_than
-                field: created_at
-                value: '2026-07-01'
-            operator: and
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          description: Page number (1-indexed)
-          default: 1
-          examples:
-          - 1
-        page_size:
-          type: integer
-          maximum: 500.0
-          minimum: 1.0
-          title: Page Size
-          description: Number of results per page
-          default: 50
-          examples:
-          - 25
-        sort:
-          type: string
-          title: Sort
-          description: Field to sort by. Prefix with '-' for descending order.
-          default: -created_at
-          examples:
-          - -created_at
-        include_custom_fields:
-          type: boolean
-          title: Include Custom Fields
-          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned contact. Defaults to true. Set false to omit them for leaner responses; GET /v1/contacts/{contact_id} always returns them.
-          default: true
-      additionalProperties: false
-      type: object
-      title: ContactListRequest
+      - id
+      - created_at
+      - updated_at
+      title: ContactResponse
+      description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
     ContactDetailResponse:
       properties:
         id:
@@ -708,32 +845,204 @@ components:
       - updated_at
       title: ContactDetailResponse
       description: Single-resource contact response, with heat score signals and custom field reasoning.
-    ScoreExplanation:
+    ContactListRequest:
       properties:
-        explanations:
-          items:
-            $ref: '#/components/schemas/ScoreSignalExplanation'
-          type: array
-          title: Explanations
-          description: Behavioral and intent signals behind the score
-        firmographic:
-          items:
-            $ref: '#/components/schemas/ScoreSignalExplanation'
-          type: array
-          title: Firmographic
-          description: Firmographic signals behind the score
+        filters:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+          - filters:
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+            - filters:
+              - condition: less_than
+                field: created_at
+                value: '2026-07-01'
+            operator: and
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+        include_custom_fields:
+          type: boolean
+          title: Include Custom Fields
+          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned contact. Defaults to true. Set false to omit them for leaner responses; GET /v1/contacts/{contact_id} always returns them.
+          default: true
+      additionalProperties: false
       type: object
-      title: ScoreExplanation
-    PublicItemResponse_ContactDetailResponse_:
+      title: ContactListRequest
+    CustomFieldExplanation:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: Explanation heading
+          examples:
+          - Reasoning
+        body:
+          type: string
+          title: Body
+          description: AI-generated explanation for the custom field value
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          description: Confidence level of the AI-generated explanation
+        citations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CustomFieldCitation'
+            type: array
+          - type: 'null'
+          title: Citations
+          description: Sources backing the explanation, capped and empty-pruned
+      type: object
+      required:
+      - title
+      - body
+      title: CustomFieldExplanation
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    FilterRule:
+      properties:
+        field:
+          type: string
+          title: Field
+        condition:
+          type: string
+          title: Condition
+        value:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Value
+      additionalProperties: false
+      type: object
+      required:
+      - field
+      - condition
+      title: FilterRule
+    FilterExpression:
+      properties:
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
+    PublicListResponse_ContactResponse_:
       properties:
         data:
-          $ref: '#/components/schemas/ContactDetailResponse'
+          items:
+            $ref: '#/components/schemas/ContactResponse'
+          type: array
+          title: Data
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
         meta:
           $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
       - data
-      title: PublicItemResponse[ContactDetailResponse]
+      - pagination
+      title: PublicListResponse[ContactResponse]
+    ScoreSignalExplanation:
+      properties:
+        signal_type:
+          type: string
+          title: Signal Type
+          description: Type of signal contributing to the score
+          examples:
+          - web_visit
+        signal_point:
+          type: string
+          title: Signal Point
+          description: Human-readable explanation of the signal's contribution
+          examples:
+          - Visited pricing page 3 times in the last 7 days
+      type: object
+      required:
+      - signal_type
+      - signal_point
+      title: ScoreSignalExplanation
     CustomFieldCitation:
       properties:
         url:
@@ -758,39 +1067,6 @@ components:
           description: Relevant excerpts from the cited source
       type: object
       title: CustomFieldCitation
-    PublicItemResponse_ContactResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/ContactResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[ContactResponse]
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    PublicListResponse_ContactResponse_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/ContactResponse'
-          type: array
-          title: Data
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      - pagination
-      title: PublicListResponse[ContactResponse]
     api__public_api__schemas__contacts__ScoringInfo:
       properties:
         heat_score:
@@ -803,6 +1079,49 @@ components:
           - Hot
       type: object
       title: ScoringInfo
+    PublicItemResponse_ContactResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/ContactResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[ContactResponse]
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
     ContactCreateRequest:
       properties:
         email:
@@ -898,348 +1217,29 @@ components:
 
 
         Custom fields can be passed as additional keys prefixed with ``custom_field_``.'
-    ContactUpdateRequest:
+    ScoreExplanation:
       properties:
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the contact
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the contact
-          examples:
-          - Smith
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the contact
-          examples:
-          - jane@acme.com
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Job title of the contact
-          examples:
-          - VP of Engineering
-        phone_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Phone Number
-          description: Phone number of the contact
-          examples:
-          - +1-415-555-0132
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-          description: LinkedIn profile URL
-          examples:
-          - https://linkedin.com/in/janesmith
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location
-          description: Location of the contact
-          examples:
-          - San Francisco, CA
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the contact
-          examples:
-          - Met at SaaStr 2025
-        do_not_contact:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Do Not Contact
-          description: Whether the contact has opted out of outreach
-        tags:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Tags
-          description: Tag IDs for the contact. Replaces the contact's existing tags.
-      additionalProperties: true
-      type: object
-      title: ContactUpdateRequest
-      description: Request body for updating a contact via PATCH.
-    FilterRule:
-      properties:
-        field:
-          type: string
-          title: Field
-        condition:
-          type: string
-          title: Condition
-        value:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Value
-      additionalProperties: false
-      type: object
-      required:
-      - field
-      - condition
-      title: FilterRule
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
-    ContactResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the contact
-          examples:
-          - con_abc123
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-          description: ID of the associated account
-          examples:
-          - acc_def456
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the contact
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the contact
-          examples:
-          - Smith
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the contact
-          examples:
-          - jane@acme.com
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Job title of the contact
-          examples:
-          - VP of Engineering
-        phone_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Phone Number
-          description: Phone number of the contact
-          examples:
-          - +1-415-555-0132
-        linkedin_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Linkedin Url
-          description: LinkedIn profile URL
-          examples:
-          - https://linkedin.com/in/janesmith
-        location:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location
-          description: Location of the contact
-          examples:
-          - San Francisco, CA
-        source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source
-          description: Source from which the contact was added
-          examples:
-          - linkedin
-        do_not_contact:
-          type: boolean
-          title: Do Not Contact
-          description: Whether the contact has opted out of outreach
-          default: false
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the contact
-          examples:
-          - Met at SaaStr 2025
-        scoring:
-          anyOf:
-          - $ref: '#/components/schemas/api__public_api__schemas__contacts__ScoringInfo'
-          - type: 'null'
-          description: Contact scoring information
-        tags:
+        explanations:
           items:
-            type: string
+            $ref: '#/components/schemas/ScoreSignalExplanation'
           type: array
-          title: Tags
-          description: List of tag names associated with the contact
-          examples:
-          - - Interested
-            - Decision Maker
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Date and time the contact was created
-          examples:
-          - '2025-06-15T10:30:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          title: Updated At
-          description: Date and time the contact was last updated
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_activity_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Activity At
-          description: Date and time of the contact's most recent activity (inbound or outbound)
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_activity_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Activity Type
-          description: Type of the contact's most recent activity
-          examples:
-          - outbound_email
-        last_outbound_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Outbound At
-          description: Date and time of the most recent outbound interaction with the contact
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_outbound_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Outbound Type
-          description: Type of the most recent outbound interaction with the contact
-          examples:
-          - email
-        last_inbound_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Last Inbound At
-          description: Date and time of the most recent inbound interaction from the contact
-          examples:
-          - '2025-06-15T10:30:00Z'
-        last_inbound_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Inbound Type
-          description: Type of the most recent inbound interaction from the contact
-          examples:
-          - email
-      additionalProperties: true
+          title: Explanations
+          description: Behavioral and intent signals behind the score
+        firmographic:
+          items:
+            $ref: '#/components/schemas/ScoreSignalExplanation'
+          type: array
+          title: Firmographic
+          description: Firmographic signals behind the score
       type: object
-      required:
-      - id
-      - created_at
-      - updated_at
-      title: ContactResponse
-      description: Contact resource. Custom fields appear as additional keys prefixed with ``custom_field_``.
-    ScoreSignalExplanation:
+      title: ScoreExplanation
+    PublicItemResponse_ContactDetailResponse_:
       properties:
-        signal_type:
-          type: string
-          title: Signal Type
-          description: Type of signal contributing to the score
-          examples:
-          - web_visit
-        signal_point:
-          type: string
-          title: Signal Point
-          description: Human-readable explanation of the signal's contribution
-          examples:
-          - Visited pricing page 3 times in the last 7 days
+        data:
+          $ref: '#/components/schemas/ContactDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - signal_type
-      - signal_point
-      title: ScoreSignalExplanation
+      - data
+      title: PublicItemResponse[ContactDetailResponse]

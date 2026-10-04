@@ -299,101 +299,34 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicErrorResponse:
+    OpportunityCreateRequest:
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    FilterExpression:
-      properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      additionalProperties: false
-      type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
-    OwnerInfo:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier of the user
-          examples:
-          - usr_abc123
-        first_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: First Name
-          description: First name of the user
-          examples:
-          - Jane
-        last_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Name
-          description: Last name of the user
-          examples:
-          - Smith
-      type: object
-      required:
-      - id
-      title: OwnerInfo
-    OpportunityDetailResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the opportunity
-          examples:
-          - opp_abc123
-        account_id:
-          type: string
-          title: Account Id
-          description: ID of the associated account
-          examples:
-          - acc_def456
         name:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Name
           description: Name of the opportunity
           examples:
           - Acme Corp - Enterprise License
-        owner:
+        account_id:
+          type: string
+          format: uuid
+          title: Account Id
+          description: ID of the account to associate the opportunity with
+        owner_user_id:
           anyOf:
-          - $ref: '#/components/schemas/OwnerInfo'
+          - type: string
+            format: uuid
           - type: 'null'
-          description: User who owns the opportunity
+          title: Owner User Id
+          description: User ID to assign as opportunity owner
         stage:
           anyOf:
           - type: string
           - type: 'null'
           title: Stage
-          description: Current pipeline stage of the opportunity
+          description: Pipeline stage key for the opportunity. If omitted, the opportunity is placed in the first stage of the org's pipeline.
           examples:
-          - negotiation
+          - Negotiation
         estimated_value:
           anyOf:
           - $ref: '#/components/schemas/EstimatedValue'
@@ -404,34 +337,9 @@ components:
           - type: string
           - type: 'null'
           title: Estimated Close Date
-          description: Expected close date for the opportunity
+          description: Expected close date (YYYY-MM-DD)
           examples:
           - '2025-09-30'
-        actual_close_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actual Close Date
-          description: Actual date the opportunity was closed
-          examples:
-          - '2025-10-15'
-        summary:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Summary
-          description: AI-generated summary of the opportunity
-          examples:
-          - Enterprise deal with strong champion. Procurement review in progress.
-        risks:
-          items:
-            type: string
-          type: array
-          title: Risks
-          description: Identified risks for the opportunity
-          examples:
-          - - Budget constraints
-            - Competing vendor evaluation
         notes:
           anyOf:
           - type: string
@@ -441,64 +349,98 @@ components:
           examples:
           - Follow up after Q3 board meeting
         tags:
-          items:
-            type: string
-          type: array
+          anyOf:
+          - items:
+              type: string
+              format: uuid
+            type: array
+          - type: 'null'
           title: Tags
-          description: List of tag names associated with the opportunity
-          examples:
-          - - High Priority
-        last_activity_at:
+          description: List of tag IDs to associate with the opportunity
+        idempotency_key:
           anyOf:
           - type: string
-            format: date-time
+            format: uuid
           - type: 'null'
-          title: Last Activity At
-          description: Date and time of the last activity on the opportunity
-          examples:
-          - '2025-08-20T14:30:00Z'
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-          description: Date and time the opportunity record was last updated
-          examples:
-          - '2025-08-21T14:30:00Z'
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-          description: Date and time the opportunity was created
-          examples:
-          - '2025-06-01T09:00:00Z'
-        custom_field_explanations:
-          anyOf:
-          - additionalProperties:
-              $ref: '#/components/schemas/CustomFieldExplanation'
-            type: object
-          - type: 'null'
-          title: Custom Field Explanations
-          description: AI-generated reasoning behind custom field values, keyed by the same `custom_field_<uuid>` key as the value itself.
+          title: Idempotency Key
+          description: Client-provided idempotency key to prevent duplicate creation
       additionalProperties: true
       type: object
       required:
-      - id
+      - name
       - account_id
-      - created_at
-      title: OpportunityDetailResponse
-      description: Single-resource opportunity response, with AI reasoning behind custom fields.
-    PublicItemResponse_OpportunityResponse_:
+      title: OpportunityCreateRequest
+      description: Request body for creating an opportunity via POST.
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
+    EstimatedValue:
+      properties:
+        currency_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Currency Code
+          description: ISO 4217 currency code
+          examples:
+          - USD
+        amount:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount
+          description: Unit quantity of the specified currency
+          examples:
+          - 50000
+      type: object
+      title: EstimatedValue
+    PublicItemResponse_OpportunityDetailResponse_:
       properties:
         data:
-          $ref: '#/components/schemas/OpportunityResponse'
+          $ref: '#/components/schemas/OpportunityDetailResponse'
         meta:
           $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
       - data
-      title: PublicItemResponse[OpportunityResponse]
+      title: PublicItemResponse[OpportunityDetailResponse]
+    CustomFieldExplanation:
+      properties:
+        title:
+          type: string
+          title: Title
+          description: Explanation heading
+          examples:
+          - Reasoning
+        body:
+          type: string
+          title: Body
+          description: AI-generated explanation for the custom field value
+        confidence:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confidence
+          description: Confidence level of the AI-generated explanation
+        citations:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/CustomFieldCitation'
+            type: array
+          - type: 'null'
+          title: Citations
+          description: Sources backing the explanation, capped and empty-pruned
+      type: object
+      required:
+      - title
+      - body
+      title: CustomFieldExplanation
     ErrorDetail:
       properties:
         code:
@@ -643,187 +585,6 @@ components:
 
 
         Custom fields appear as additional keys prefixed with ``custom_field_``.'
-    PublicItemResponse_OpportunityDetailResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/OpportunityDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[OpportunityDetailResponse]
-    OpportunityCreateRequest:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Name of the opportunity
-          examples:
-          - Acme Corp - Enterprise License
-        account_id:
-          type: string
-          format: uuid
-          title: Account Id
-          description: ID of the account to associate the opportunity with
-        owner_user_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Owner User Id
-          description: User ID to assign as opportunity owner
-        stage:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stage
-          description: Pipeline stage key for the opportunity. If omitted, the opportunity is placed in the first stage of the org's pipeline.
-          examples:
-          - Negotiation
-        estimated_value:
-          anyOf:
-          - $ref: '#/components/schemas/EstimatedValue'
-          - type: 'null'
-          description: Estimated monetary value of the opportunity
-        estimated_close_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Estimated Close Date
-          description: Expected close date (YYYY-MM-DD)
-          examples:
-          - '2025-09-30'
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-          description: Notes about the opportunity
-          examples:
-          - Follow up after Q3 board meeting
-        tags:
-          anyOf:
-          - items:
-              type: string
-              format: uuid
-            type: array
-          - type: 'null'
-          title: Tags
-          description: List of tag IDs to associate with the opportunity
-        idempotency_key:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Idempotency Key
-          description: Client-provided idempotency key to prevent duplicate creation
-      additionalProperties: true
-      type: object
-      required:
-      - name
-      - account_id
-      title: OpportunityCreateRequest
-      description: Request body for creating an opportunity via POST.
-    OpportunityListRequest:
-      properties:
-        filters:
-          oneOf:
-          - items:
-              $ref: '#/components/schemas/FilterRule'
-            type: array
-          - $ref: '#/components/schemas/FilterExpression'
-          title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
-          examples:
-          - - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-          - filters:
-            - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-            - filters:
-              - condition: less_than
-                field: created_at
-                value: '2026-07-01'
-            operator: and
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          description: Page number (1-indexed)
-          default: 1
-          examples:
-          - 1
-        page_size:
-          type: integer
-          maximum: 500.0
-          minimum: 1.0
-          title: Page Size
-          description: Number of results per page
-          default: 50
-          examples:
-          - 25
-        sort:
-          type: string
-          title: Sort
-          description: Field to sort by. Prefix with '-' for descending order.
-          default: -created_at
-          examples:
-          - -created_at
-        include_custom_fields:
-          type: boolean
-          title: Include Custom Fields
-          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned opportunity. Defaults to true. Set false to omit them for leaner responses; GET /v1/opportunities/{opportunity_id} always returns them.
-          default: true
-      additionalProperties: false
-      type: object
-      title: OpportunityListRequest
-    EstimatedValue:
-      properties:
-        currency_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Currency Code
-          description: ISO 4217 currency code
-          examples:
-          - USD
-        amount:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Amount
-          description: Unit quantity of the specified currency
-          examples:
-          - 50000
-      type: object
-      title: EstimatedValue
-    CustomFieldCitation:
-      properties:
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-          description: Source URL for the citation
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Title of the cited source
-        excerpts:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Excerpts
-          description: Relevant excerpts from the cited source
-      type: object
-      title: CustomFieldCitation
     LogicalOperatorEnum:
       type: string
       enum:
@@ -831,6 +592,14 @@ components:
       - or
       title: LogicalOperatorEnum
       description: Logical operators to combine filters or filter expressions.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
     FilterRule:
       properties:
         field:
@@ -850,48 +619,30 @@ components:
       - field
       - condition
       title: FilterRule
-    ResponseMeta:
+    FilterExpression:
       properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
       type: object
-      title: ResponseMeta
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
     OpportunityUpdateRequest:
       properties:
         name:
@@ -959,6 +710,286 @@ components:
       type: object
       title: OpportunityUpdateRequest
       description: Request body for updating an opportunity via PATCH.
+    OwnerInfo:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier of the user
+          examples:
+          - usr_abc123
+        first_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: First Name
+          description: First name of the user
+          examples:
+          - Jane
+        last_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Name
+          description: Last name of the user
+          examples:
+          - Smith
+      type: object
+      required:
+      - id
+      title: OwnerInfo
+    PublicItemResponse_OpportunityResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/OpportunityResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[OpportunityResponse]
+    CustomFieldCitation:
+      properties:
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+          description: Source URL for the citation
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Title of the cited source
+        excerpts:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Excerpts
+          description: Relevant excerpts from the cited source
+      type: object
+      title: CustomFieldCitation
+    OpportunityDetailResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the opportunity
+          examples:
+          - opp_abc123
+        account_id:
+          type: string
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_def456
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Name of the opportunity
+          examples:
+          - Acme Corp - Enterprise License
+        owner:
+          anyOf:
+          - $ref: '#/components/schemas/OwnerInfo'
+          - type: 'null'
+          description: User who owns the opportunity
+        stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stage
+          description: Current pipeline stage of the opportunity
+          examples:
+          - negotiation
+        estimated_value:
+          anyOf:
+          - $ref: '#/components/schemas/EstimatedValue'
+          - type: 'null'
+          description: Estimated monetary value of the opportunity
+        estimated_close_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Estimated Close Date
+          description: Expected close date for the opportunity
+          examples:
+          - '2025-09-30'
+        actual_close_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actual Close Date
+          description: Actual date the opportunity was closed
+          examples:
+          - '2025-10-15'
+        summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Summary
+          description: AI-generated summary of the opportunity
+          examples:
+          - Enterprise deal with strong champion. Procurement review in progress.
+        risks:
+          items:
+            type: string
+          type: array
+          title: Risks
+          description: Identified risks for the opportunity
+          examples:
+          - - Budget constraints
+            - Competing vendor evaluation
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+          description: Notes about the opportunity
+          examples:
+          - Follow up after Q3 board meeting
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+          description: List of tag names associated with the opportunity
+          examples:
+          - - High Priority
+        last_activity_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Last Activity At
+          description: Date and time of the last activity on the opportunity
+          examples:
+          - '2025-08-20T14:30:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: Date and time the opportunity record was last updated
+          examples:
+          - '2025-08-21T14:30:00Z'
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+          description: Date and time the opportunity was created
+          examples:
+          - '2025-06-01T09:00:00Z'
+        custom_field_explanations:
+          anyOf:
+          - additionalProperties:
+              $ref: '#/components/schemas/CustomFieldExplanation'
+            type: object
+          - type: 'null'
+          title: Custom Field Explanations
+          description: AI-generated reasoning behind custom field values, keyed by the same `custom_field_<uuid>` key as the value itself.
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - account_id
+      - created_at
+      title: OpportunityDetailResponse
+      description: Single-resource opportunity response, with AI reasoning behind custom fields.
+    OpportunityListRequest:
+      properties:
+        filters:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+          - filters:
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+            - filters:
+              - condition: less_than
+                field: created_at
+                value: '2026-07-01'
+            operator: and
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
+          type: string
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -created_at
+          examples:
+          - -created_at
+        include_custom_fields:
+          type: boolean
+          title: Include Custom Fields
+          description: Whether to include custom fields (`custom_field_<uuid>` keys) on each returned opportunity. Defaults to true. Set false to omit them for leaner responses; GET /v1/opportunities/{opportunity_id} always returns them.
+          default: true
+      additionalProperties: false
+      type: object
+      title: OpportunityListRequest
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
     PublicListResponse_OpportunityResponse_:
       properties:
         data:
@@ -975,34 +1006,3 @@ components:
       - data
       - pagination
       title: PublicListResponse[OpportunityResponse]
-    CustomFieldExplanation:
-      properties:
-        title:
-          type: string
-          title: Title
-          description: Explanation heading
-          examples:
-          - Reasoning
-        body:
-          type: string
-          title: Body
-          description: AI-generated explanation for the custom field value
-        confidence:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Confidence
-          description: Confidence level of the AI-generated explanation
-        citations:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/CustomFieldCitation'
-            type: array
-          - type: 'null'
-          title: Citations
-          description: Sources backing the explanation, capped and empty-pruned
-      type: object
-      required:
-      - title
-      - body
-      title: CustomFieldExplanation

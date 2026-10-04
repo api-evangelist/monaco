@@ -194,82 +194,14 @@ components:
       - peach
       - gray
       title: DisplayColorEnum
-    PublicItemResponse_TagResponse_:
-      properties:
-        data:
-          $ref: '#/components/schemas/TagResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[TagResponse]
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
-    TagResponse:
-      properties:
-        id:
-          type: string
-          format: uuid
-          title: Id
-          description: Unique identifier for the tag
-        name:
-          type: string
-          title: Name
-          description: Display name of the tag
-          examples:
-          - Enterprise
-        color:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Color
-          description: Display color of the tag
-          examples:
-          - blue
-      type: object
-      required:
-      - id
-      - name
-      title: TagResponse
-    PublicItemResponse_list_TagResponse__:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/TagResponse'
-          type: array
-          title: Data
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
-      type: object
-      required:
-      - data
-      title: PublicItemResponse[list[TagResponse]]
+    TagObject:
+      type: string
+      enum:
+      - contacts
+      - accounts
+      - opportunities
+      title: TagObject
+      description: Object type a tag applies to, as exposed in the public API.
     ResponseMeta:
       properties:
         timestamp:
@@ -279,29 +211,6 @@ components:
           description: Server timestamp of the response
       type: object
       title: ResponseMeta
-    TagUpdateRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-            pattern: ^[a-zA-Z0-9\s]+$
-          - type: 'null'
-          title: Name
-          description: Display name of the tag. Letters, numbers, and spaces only. Must be unique per object type within the organization.
-          examples:
-          - Enterprise
-        color:
-          anyOf:
-          - $ref: '#/components/schemas/DisplayColorEnum'
-          - type: 'null'
-          description: Display color of the tag.
-          examples:
-          - blue
-      type: object
-      title: TagUpdateRequest
-      description: Request body for updating a tag via PATCH.
     TagCreateRequest:
       properties:
         object:
@@ -331,11 +240,102 @@ components:
       - name
       title: TagCreateRequest
       description: Request body for creating a tag via POST.
-    TagObject:
-      type: string
-      enum:
-      - contacts
-      - accounts
-      - opportunities
-      title: TagObject
-      description: Object type a tag applies to, as exposed in the public API.
+    PublicItemResponse_list_TagResponse__:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/TagResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[list[TagResponse]]
+    PublicItemResponse_TagResponse_:
+      properties:
+        data:
+          $ref: '#/components/schemas/TagResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+      type: object
+      required:
+      - data
+      title: PublicItemResponse[TagResponse]
+    TagResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+          description: Unique identifier for the tag
+        name:
+          type: string
+          title: Name
+          description: Display name of the tag
+          examples:
+          - Enterprise
+        color:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Color
+          description: Display color of the tag
+          examples:
+          - blue
+      type: object
+      required:
+      - id
+      - name
+      title: TagResponse
+    TagUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+            pattern: ^[a-zA-Z0-9\s]+$
+          - type: 'null'
+          title: Name
+          description: Display name of the tag. Letters, numbers, and spaces only. Must be unique per object type within the organization.
+          examples:
+          - Enterprise
+        color:
+          anyOf:
+          - $ref: '#/components/schemas/DisplayColorEnum'
+          - type: 'null'
+          description: Display color of the tag.
+          examples:
+          - blue
+      type: object
+      title: TagUpdateRequest
+      description: Request body for updating a tag via PATCH.
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
