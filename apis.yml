@@ -47,7 +47,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-08-13'
+modified: '2026-10-06'
 tags:
 - Company
 - CRM
@@ -458,6 +458,8 @@ apis:
   - type: Conformance
     url: conformance/monaco-conformance.yml
 common:
+- url: https://www.monaco.com/blog/rss.xml
+  type: BlogRSS
 - type: CapabilityMap
   url: capabilities/monaco-capability-edges.yml
   name: Monaco Business Capability Map
