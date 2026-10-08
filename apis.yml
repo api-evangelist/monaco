@@ -458,6 +458,8 @@ apis:
   - type: Conformance
     url: conformance/monaco-conformance.yml
 common:
+- type: RateLimits
+  url: rate-limits/monaco-rate-limits.yml
 - url: https://www.monaco.com/blog/rss.xml
   type: BlogRSS
 - type: CapabilityMap
