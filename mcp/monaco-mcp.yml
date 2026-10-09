@@ -111,3 +111,18 @@ deployment:
 tool_count: 24
 crosswalk: mcp/monaco-tool-crosswalk.yml
 no_local_package: No npx/stdio package is published; Monaco ships a hosted remote endpoint only.
+rfc9728:
+  endpoint: https://mcp.monaco.com/mcp
+  metadata_url: https://mcp.monaco.com/.well-known/oauth-protected-resource/mcp
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://mcp.monaco.com/mcp
+    authorization_servers:
+    - https://monaco-inc.us.auth0.com/
+    scopes_supported: []
+    bearer_methods_supported:
+    - header
+    resource_name: Monaco Public MCP
