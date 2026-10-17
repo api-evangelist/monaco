@@ -150,6 +150,25 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
+    ErrorDetail:
+      properties:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
     TranscriptSegment:
       properties:
         speaker:
@@ -171,16 +190,221 @@ components:
       - speaker
       - language
       title: TranscriptSegment
-    PublicItemResponse_MeetingDetailResponse_:
+    FilterExpression:
       properties:
-        data:
-          $ref: '#/components/schemas/MeetingDetailResponse'
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        operator:
+          $ref: '#/components/schemas/LogicalOperatorEnum'
+          default: and
+        filters:
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/FilterRule'
+            - $ref: '#/components/schemas/FilterExpression'
+          type: array
+          title: Filters
+          default: []
+      additionalProperties: false
+      type: object
+      title: FilterExpression
+      description: 'A filter expression with an explicit operator.
+
+
+        Contains filters that can be either FilterRule objects (leaf nodes) or
+
+        nested FilterExpression objects (branch nodes), allowing for arbitrarily
+
+        nested filter structures.'
+    LogicalOperatorEnum:
+      type: string
+      enum:
+      - and
+      - or
+      title: LogicalOperatorEnum
+      description: Logical operators to combine filters or filter expressions.
+    MeetingResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique identifier for the meeting
+          examples:
+          - mtg_abc123
+        account_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Account Id
+          description: ID of the associated account
+          examples:
+          - acc_abc123
+        opportunity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Opportunity Id
+          description: ID of the associated opportunity
+          examples:
+          - opp_abc123
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+          description: Meeting title from calendar event
+          examples:
+          - Discovery Call
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Meeting description
+          examples:
+          - Initial discovery call with Acme
+        start_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Start Time
+          description: Meeting start time (ISO 8601)
+          examples:
+          - '2026-03-01T10:00:00Z'
+        end_time:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Time
+          description: Meeting end time (ISO 8601)
+          examples:
+          - '2026-03-01T10:30:00Z'
+        occurred_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Occurred At
+          description: 'When the meeting actually occurred: recording start time of the completed conversation (ISO 8601). Null for meetings that were never recorded, including future and declined calendar events.'
+          examples:
+          - '2026-03-01T10:02:14Z'
+        meeting_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Platform
+          description: Video conferencing platform
+          examples:
+          - Zoom
+        meeting_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Meeting Url
+          description: URL to join the meeting
+        organizer:
+          anyOf:
+          - $ref: '#/components/schemas/MeetingOrganizerInfo'
+          - type: 'null'
+          description: Meeting organizer
+        attendees:
+          items:
+            $ref: '#/components/schemas/MeetingAttendeeInfo'
+          type: array
+          title: Attendees
+          description: List of meeting attendees
+        next_actions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Next Actions
+          description: AI-generated action items from the meeting
+        created_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Created At
+          description: When the meeting was created in Monaco
+          examples:
+          - '2026-03-01T09:00:00Z'
+        updated_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Updated At
+          description: When the meeting was last updated in Monaco
+          examples:
+          - '2026-03-01T09:30:00Z'
+      additionalProperties: true
       type: object
       required:
-      - data
-      title: PublicItemResponse[MeetingDetailResponse]
+      - id
+      title: MeetingResponse
+    PaginationInfo:
+      properties:
+        page:
+          type: integer
+          title: Page
+          description: Current page number
+          examples:
+          - 1
+        page_size:
+          type: integer
+          title: Page Size
+          description: Number of results per page
+          examples:
+          - 25
+        total_count:
+          type: integer
+          title: Total Count
+          description: Total number of matching records
+          examples:
+          - 142
+        total_pages:
+          type: integer
+          title: Total Pages
+          description: Total number of pages
+          examples:
+          - 6
+      type: object
+      required:
+      - page
+      - page_size
+      - total_count
+      - total_pages
+      title: PaginationInfo
+    MeetingAttendeeInfo:
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: Email address of the attendee
+          examples:
+          - john@acme.com
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+          description: Display name of the attendee
+          examples:
+          - John Doe
+        response_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Status
+          description: RSVP response status
+          examples:
+          - accepted
+      type: object
+      title: MeetingAttendeeInfo
     PublicListResponse_MeetingResponse_:
       properties:
         data:
@@ -197,15 +421,59 @@ components:
       - data
       - pagination
       title: PublicListResponse[MeetingResponse]
-    ResponseMeta:
+    MeetingListRequest:
       properties:
-        timestamp:
+        filters:
+          oneOf:
+          - items:
+              $ref: '#/components/schemas/FilterRule'
+            type: array
+          - $ref: '#/components/schemas/FilterExpression'
+          title: Filters
+          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
+          examples:
+          - - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+          - filters:
+            - condition: greater_than
+              field: created_at
+              value: '2026-01-01'
+            - filters:
+              - condition: less_than
+                field: created_at
+                value: '2026-07-01'
+            operator: and
+        page:
+          type: integer
+          minimum: 1.0
+          title: Page
+          description: Page number (1-indexed)
+          default: 1
+          examples:
+          - 1
+        page_size:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Page Size
+          description: Number of results per page
+          default: 50
+          examples:
+          - 25
+        sort:
           type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
+          title: Sort
+          description: Field to sort by. Prefix with '-' for descending order.
+          default: -start_time
+          examples:
+          - -start_time
+      additionalProperties: false
       type: object
-      title: ResponseMeta
+      title: MeetingListRequest
+      description: 'Meetings order by start time, not creation time: `created_at` is not a
+
+        sortable meeting field, so the shared `-created_at` default would 422.'
     MeetingDetailResponse:
       properties:
         id:
@@ -349,229 +617,23 @@ components:
       required:
       - id
       title: MeetingDetailResponse
-    MeetingResponse:
+    PublicErrorResponse:
       properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier for the meeting
-          examples:
-          - mtg_abc123
-        account_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Account Id
-          description: ID of the associated account
-          examples:
-          - acc_abc123
-        opportunity_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Opportunity Id
-          description: ID of the associated opportunity
-          examples:
-          - opp_abc123
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-          description: Meeting title from calendar event
-          examples:
-          - Discovery Call
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Meeting description
-          examples:
-          - Initial discovery call with Acme
-        start_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Start Time
-          description: Meeting start time (ISO 8601)
-          examples:
-          - '2026-03-01T10:00:00Z'
-        end_time:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: End Time
-          description: Meeting end time (ISO 8601)
-          examples:
-          - '2026-03-01T10:30:00Z'
-        occurred_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Occurred At
-          description: 'When the meeting actually occurred: recording start time of the completed conversation (ISO 8601). Null for meetings that were never recorded, including future and declined calendar events.'
-          examples:
-          - '2026-03-01T10:02:14Z'
-        meeting_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Meeting Platform
-          description: Video conferencing platform
-          examples:
-          - Zoom
-        meeting_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Meeting Url
-          description: URL to join the meeting
-        organizer:
-          anyOf:
-          - $ref: '#/components/schemas/MeetingOrganizerInfo'
-          - type: 'null'
-          description: Meeting organizer
-        attendees:
-          items:
-            $ref: '#/components/schemas/MeetingAttendeeInfo'
-          type: array
-          title: Attendees
-          description: List of meeting attendees
-        next_actions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Next Actions
-          description: AI-generated action items from the meeting
-        created_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Created At
-          description: When the meeting was created in Monaco
-          examples:
-          - '2026-03-01T09:00:00Z'
-        updated_at:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          title: Updated At
-          description: When the meeting was last updated in Monaco
-          examples:
-          - '2026-03-01T09:30:00Z'
-      additionalProperties: true
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
       type: object
       required:
-      - id
-      title: MeetingResponse
-    TranscriptWord:
+      - error
+      title: PublicErrorResponse
+    ResponseMeta:
       properties:
-        text:
+        timestamp:
           type: string
-          title: Text
-          description: The transcribed word
-        start_timestamp:
-          type: number
-          title: Start Timestamp
-          description: Start time in seconds
-        end_timestamp:
-          type: number
-          title: End Timestamp
-          description: End time in seconds
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
       type: object
-      required:
-      - text
-      - start_timestamp
-      - end_timestamp
-      title: TranscriptWord
-    PaginationInfo:
-      properties:
-        page:
-          type: integer
-          title: Page
-          description: Current page number
-          examples:
-          - 1
-        page_size:
-          type: integer
-          title: Page Size
-          description: Number of results per page
-          examples:
-          - 25
-        total_count:
-          type: integer
-          title: Total Count
-          description: Total number of matching records
-          examples:
-          - 142
-        total_pages:
-          type: integer
-          title: Total Pages
-          description: Total number of pages
-          examples:
-          - 6
-      type: object
-      required:
-      - page
-      - page_size
-      - total_count
-      - total_pages
-      title: PaginationInfo
-    MeetingAttendeeInfo:
-      properties:
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: Email address of the attendee
-          examples:
-          - john@acme.com
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-          description: Display name of the attendee
-          examples:
-          - John Doe
-        response_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Response Status
-          description: RSVP response status
-          examples:
-          - accepted
-      type: object
-      title: MeetingAttendeeInfo
-    ErrorDetail:
-      properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
-      type: object
-      required:
-      - code
-      - message
-      title: ErrorDetail
+      title: ResponseMeta
     MeetingOrganizerInfo:
       properties:
         email:
@@ -592,74 +654,16 @@ components:
           - Jane Smith
       type: object
       title: MeetingOrganizerInfo
-    LogicalOperatorEnum:
-      type: string
-      enum:
-      - and
-      - or
-      title: LogicalOperatorEnum
-      description: Logical operators to combine filters or filter expressions.
-    MeetingListRequest:
+    PublicItemResponse_MeetingDetailResponse_:
       properties:
-        filters:
-          oneOf:
-          - items:
-              $ref: '#/components/schemas/FilterRule'
-            type: array
-          - $ref: '#/components/schemas/FilterExpression'
-          title: Filters
-          description: Filters to apply. Accepts either a flat list of filter rules, implicitly ANDed together, or a recursive filter expression with 'operator' and 'filters'. When an expression omits 'operator', it defaults to 'and'. The flat form must be a JSON array — a single rule sent as a bare object is not a valid filter. Filter field names, their valid operators, and allowed values come from GET /v1/schemas/{entity} — each field lists 'allowed_operators' and 'enum_field_settings.allowed_values'; field names differ per entity, so the examples on each list endpoint show fields valid for that entity. Custom fields are keyed 'custom_field_<uuid>'; related-entity custom fields use '<relation>.custom_field_<uuid>' and are filter-only.
-          examples:
-          - - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-          - filters:
-            - condition: greater_than
-              field: created_at
-              value: '2026-01-01'
-            - filters:
-              - condition: less_than
-                field: created_at
-                value: '2026-07-01'
-            operator: and
-        page:
-          type: integer
-          minimum: 1.0
-          title: Page
-          description: Page number (1-indexed)
-          default: 1
-          examples:
-          - 1
-        page_size:
-          type: integer
-          maximum: 500.0
-          minimum: 1.0
-          title: Page Size
-          description: Number of results per page
-          default: 50
-          examples:
-          - 25
-        sort:
-          type: string
-          title: Sort
-          description: Field to sort by. Prefix with '-' for descending order.
-          default: -start_time
-          examples:
-          - -start_time
-      additionalProperties: false
-      type: object
-      title: MeetingListRequest
-      description: 'Meetings order by start time, not creation time: `created_at` is not a
-
-        sortable meeting field, so the shared `-created_at` default would 422.'
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
+        data:
+          $ref: '#/components/schemas/MeetingDetailResponse'
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - error
-      title: PublicErrorResponse
+      - data
+      title: PublicItemResponse[MeetingDetailResponse]
     FilterRule:
       properties:
         field:
@@ -679,27 +683,23 @@ components:
       - field
       - condition
       title: FilterRule
-    FilterExpression:
+    TranscriptWord:
       properties:
-        operator:
-          $ref: '#/components/schemas/LogicalOperatorEnum'
-          default: and
-        filters:
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/FilterRule'
-            - $ref: '#/components/schemas/FilterExpression'
-          type: array
-          title: Filters
-          default: []
-      additionalProperties: false
+        text:
+          type: string
+          title: Text
+          description: The transcribed word
+        start_timestamp:
+          type: number
+          title: Start Timestamp
+          description: Start time in seconds
+        end_timestamp:
+          type: number
+          title: End Timestamp
+          description: End time in seconds
       type: object
-      title: FilterExpression
-      description: 'A filter expression with an explicit operator.
-
-
-        Contains filters that can be either FilterRule objects (leaf nodes) or
-
-        nested FilterExpression objects (branch nodes), allowing for arbitrarily
-
-        nested filter structures.'
+      required:
+      - text
+      - start_timestamp
+      - end_timestamp
+      title: TranscriptWord

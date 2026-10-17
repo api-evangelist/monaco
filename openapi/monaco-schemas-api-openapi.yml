@@ -160,48 +160,41 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicItemResponse_list_FieldSchemaResponse__:
+    ErrorDetail:
       properties:
-        data:
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
+      type: object
+      required:
+      - code
+      - message
+      title: ErrorDetail
+    EnumFieldSettings:
+      properties:
+        allowed_values:
           items:
-            $ref: '#/components/schemas/FieldSchemaResponse'
+            $ref: '#/components/schemas/EnumValueOption'
           type: array
-          title: Data
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+          title: Allowed Values
+          description: The list of valid values that can be used in filters
+          examples:
+          - - display_value: Active
+              key: active
       type: object
       required:
-      - data
-      title: PublicItemResponse[list[FieldSchemaResponse]]
-    ResponseMeta:
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-          description: Server timestamp of the response
-      type: object
-      title: ResponseMeta
-    CustomFieldSettings:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Unique identifier of the custom field schema
-          examples:
-          - cf_abc123
-        is_ai_auto_filled:
-          type: boolean
-          title: Is Ai Auto Filled
-          description: Whether this custom field is automatically populated by AI
-          examples:
-          - false
-      type: object
-      required:
-      - id
-      - is_ai_auto_filled
-      title: CustomFieldSettings
-      description: Settings present only for custom fields.
+      - allowed_values
+      title: EnumFieldSettings
+      description: Settings present only for enum/select fields.
     EnumValueOption:
       properties:
         key:
@@ -222,25 +215,43 @@ components:
       - display_value
       title: EnumValueOption
       description: A single allowed value for an enum field.
-    ErrorDetail:
+    CustomFieldSettings:
       properties:
-        code:
+        id:
           type: string
-          title: Code
-          description: Machine-readable error code
+          title: Id
+          description: Unique identifier of the custom field schema
           examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
+          - cf_abc123
+        is_ai_auto_filled:
+          type: boolean
+          title: Is Ai Auto Filled
+          description: Whether this custom field is automatically populated by AI
           examples:
-          - Resource not found
+          - false
       type: object
       required:
-      - code
-      - message
-      title: ErrorDetail
+      - id
+      - is_ai_auto_filled
+      title: CustomFieldSettings
+      description: Settings present only for custom fields.
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
+    ResponseMeta:
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          description: Server timestamp of the response
+      type: object
+      title: ResponseMeta
     FieldSchemaResponse:
       properties:
         name:
@@ -330,27 +341,16 @@ components:
       - sortable
       - allowed_operators
       title: FieldSchemaResponse
-    PublicErrorResponse:
+    PublicItemResponse_list_FieldSchemaResponse__:
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
-    EnumFieldSettings:
-      properties:
-        allowed_values:
+        data:
           items:
-            $ref: '#/components/schemas/EnumValueOption'
+            $ref: '#/components/schemas/FieldSchemaResponse'
           type: array
-          title: Allowed Values
-          description: The list of valid values that can be used in filters
-          examples:
-          - - display_value: Active
-              key: active
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - allowed_values
-      title: EnumFieldSettings
-      description: Settings present only for enum/select fields.
+      - data
+      title: PublicItemResponse[list[FieldSchemaResponse]]

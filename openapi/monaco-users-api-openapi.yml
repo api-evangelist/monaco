@@ -49,19 +49,33 @@ paths:
                 $ref: '#/components/schemas/PublicErrorResponse'
 components:
   schemas:
-    PublicItemResponse_list_UserResponse__:
+    ErrorDetail:
       properties:
-        data:
-          items:
-            $ref: '#/components/schemas/UserResponse'
-          type: array
-          title: Data
-        meta:
-          $ref: '#/components/schemas/ResponseMeta'
+        code:
+          type: string
+          title: Code
+          description: Machine-readable error code
+          examples:
+          - not_found
+        message:
+          type: string
+          title: Message
+          description: Human-readable error message
+          examples:
+          - Resource not found
       type: object
       required:
-      - data
-      title: PublicItemResponse[list[UserResponse]]
+      - code
+      - message
+      title: ErrorDetail
+    PublicErrorResponse:
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      type: object
+      required:
+      - error
+      title: PublicErrorResponse
     ResponseMeta:
       properties:
         timestamp:
@@ -103,30 +117,16 @@ components:
       required:
       - id
       title: UserResponse
-    ErrorDetail:
+    PublicItemResponse_list_UserResponse__:
       properties:
-        code:
-          type: string
-          title: Code
-          description: Machine-readable error code
-          examples:
-          - not_found
-        message:
-          type: string
-          title: Message
-          description: Human-readable error message
-          examples:
-          - Resource not found
+        data:
+          items:
+            $ref: '#/components/schemas/UserResponse'
+          type: array
+          title: Data
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
       type: object
       required:
-      - code
-      - message
-      title: ErrorDetail
-    PublicErrorResponse:
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      type: object
-      required:
-      - error
-      title: PublicErrorResponse
+      - data
+      title: PublicItemResponse[list[UserResponse]]
